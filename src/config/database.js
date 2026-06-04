@@ -33,7 +33,6 @@ const sequelize = new Sequelize(
 const connectDatabase = async () => {
   await sequelize.authenticate();
   console.log('Kết nối database thành công.');
-
 };
 
 module.exports = { sequelize, connectDatabase };

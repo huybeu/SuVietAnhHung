@@ -9,12 +9,18 @@
 require('dotenv').config();
 
 const app = require('./app');
-const { connectDatabase } = require('./config/database');
+const { connectDatabase, sequelize } = require('./config/database');
+// Load tất cả models và associations
+require('./models');
 
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   await connectDatabase();
+
+  // Tạo bảng mới nếu chưa tồn tại (không sửa bảng cũ)
+  await sequelize.sync();
+  console.log('Đồng bộ database thành công.');
 
   const server = app.listen(PORT, () => {
     console.log(`Server đang chạy tại http://localhost:${PORT}`);
