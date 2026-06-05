@@ -1,10 +1,7 @@
 # Dependencies
-node_modules/
 FrontEnd/node_modules/
-BackEnd/node_modules/
 
 # Build output
-dist/
 FrontEnd/dist/
 
 # Environment
