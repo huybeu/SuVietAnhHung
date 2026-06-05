@@ -34,7 +34,7 @@ const errorHandler = (err, req, res, next) => {
     error = new AppError('Lỗi hệ thống, vui lòng thử lại sau', 500);
   }
 
-  return sendError(res, error.message, error.statusCode);
+  return sendError(res, error.message, error.statusCode, error.errors || null);
 };
 
 module.exports = errorHandler;

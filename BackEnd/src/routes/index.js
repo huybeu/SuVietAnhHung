@@ -10,10 +10,14 @@ const express = require('express');
 const router = express.Router();
 const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');
+const eraRoutes = require('./eraRoutes');
+const adminEraRoutes = require('./adminEraRoutes');
 const AppError = require('../utils/AppError');
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
+router.use('/eras', eraRoutes);
+router.use('/admin/eras', adminEraRoutes);
 
 // Catch-all cho route không tồn tại
 router.all('*', (req, res, next) => {

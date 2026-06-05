@@ -10,31 +10,35 @@ const Era = sequelize.define(
       primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
-    period: {
-      type: DataTypes.STRING(100),
+    slug: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
     },
-    year_start: {
+    start_year: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    year_end: {
+    end_year: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
     },
-    cover_url: {
+    cover_image: {
       type: DataTypes.TEXT,
     },
-    sort_order: {
+    order: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    is_active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    status: {
+      type: DataTypes.ENUM('published', 'draft'),
+      defaultValue: 'draft',
     },
     created_by: {
       type: DataTypes.BIGINT,
