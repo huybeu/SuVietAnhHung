@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 
 const LEADER_IMG =
@@ -28,42 +28,42 @@ function pad(n) {
 }
 
 const MARQUEE_NAMES_LEFT =
-  "Nguyễn Văn An • Trần Thị Bích • Lê Minh Đức • Phạm Thu Hà • Hoàng Quốc Bảo • Vũ Thị Lan • Đặng Hữu Phước • Bùi Thị Ngọc • Ngô Văn Thành • Lý Thị Mai • Đinh Xuân Hùng • Cao Thị Thanh • ".repeat(
-    3
-  );
+  "Nguyễn Văn An • Trần Thị Bích • Lê Minh Đức • Phạm Thu Hà • Hoàng Quốc Bảo • Vũ Thị Lan • Đặng Hữu Phước • Bùi Thị Ngọc • Ngô Văn Thành • Lý Thị Mai • Đinh Xuân Hùng • Cao Thị Thanh • ".repeat(3);
 
 const MARQUEE_NAMES_RIGHT =
-  "Trịnh Thị Hoa • Dương Văn Minh • Tô Thị Xuân • Hồ Văn Long • Nguyễn Thị Dung • Lê Văn Quân • Phạm Thị Yến • Hoàng Văn Dũng • Vũ Thị Phương • Đặng Văn Khoa • Bùi Thị Hằng • Ngô Thị Linh • ".repeat(
-    3
-  );
+  "Trịnh Thị Hoa • Dương Văn Minh • Tô Thị Xuân • Hồ Văn Long • Nguyễn Thị Dung • Lê Văn Quân • Phạm Thị Yến • Hoàng Văn Dũng • Vũ Thị Phương • Đặng Văn Khoa • Bùi Thị Hằng • Ngô Thị Linh • ".repeat(3);
 
 const TIMELINE = [
   {
     period: "Thời Hồng Bàng",
     years: "2879 TCN – 258 TCN",
     desc: "Khởi nguồn dân tộc Việt, thời đại các Vua Hùng dựng nước Văn Lang. Nền văn minh lúa nước, trống đồng Đông Sơn vang vọng ngàn đời.",
-    color: "#8B4513",
+    color: "#7B4A00",
+    dotBorder: "#FAE8DA",
     align: "right",
   },
   {
     period: "Thời Bắc Thuộc",
     years: "111 TCN – 938 SCN",
     desc: "Hơn 1000 năm đô hộ phương Bắc nhưng không thể dập tắt ngọn lửa yêu nước. Hai Bà Trưng, Lý Bí, Mai Thúc Loan... những anh hùng bất khuất.",
-    color: "#B8860B",
+    color: "#5C3A1E",
+    dotBorder: "#FAE8DA",
     align: "left",
   },
   {
     period: "Thời Phong Kiến Độc Lập",
     years: "938 – 1884",
     desc: "Ngô Quyền chiến thắng Bạch Đằng, mở ra kỷ nguyên độc lập. Các triều đại Đinh, Lý, Trần, Lê... xây dựng nền văn hiến rực rỡ.",
-    color: "#f6be3b",
+    color: "#C4956A",
+    dotBorder: "#FAE8DA",
     align: "right",
   },
   {
     period: "Cận – Hiện Đại",
     years: "1884 – Nay",
     desc: "Chống Pháp, chống Mỹ, thống nhất đất nước. Hồ Chí Minh, Võ Nguyên Giáp... những huyền thoại của thế kỷ XX.",
-    color: "#dc143c",
+    color: "#8B1A1A",
+    dotBorder: "#FAE8DA",
     align: "left",
   },
 ];
@@ -114,43 +114,23 @@ const STATS_HONOR = [
 ];
 
 export default function LandingPage() {
-  const navbarRef = useRef(null);
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Navbar scroll effect
-  useEffect(() => {
-    const navbar = navbarRef.current;
-    if (!navbar) return;
-    const handleScroll = () => {
-      if (window.scrollY > 60) {
-        navbar.style.background = "rgba(10,4,2,0.95)";
-        navbar.classList.add("shadow-xl");
-      } else {
-        navbar.style.background = "";
-        navbar.classList.remove("shadow-xl");
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Countdown timer
+  /* ── Countdown ── */
   useEffect(() => {
     const id = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  // Reveal on scroll
+  /* ── Reveal on scroll ── */
   useEffect(() => {
     const revealEls = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-          }
+          if (entry.isIntersecting) entry.target.classList.add("revealed");
         });
       },
       { threshold: 0.1 }
@@ -160,46 +140,94 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div
-      className="min-h-screen font-sans"
-      style={{ background: "#0a0402", color: "#e8dcc8" }}
-    >
-      {/* ── Inline styles for custom animations & classes ── */}
+    <div className="min-h-screen" style={{ background: "#FDF5EE", color: "#3D2B1A" }}>
+
+      {/* ── Scoped animations ── */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-
-        .font-cinzel { font-family: 'Cinzel', serif; }
-        .font-baskerville { font-family: 'Libre Baskerville', serif; }
-
-        .dong-son-bg {
-          background-image: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 40px,
-            rgba(220,20,60,0.03) 40px,
-            rgba(220,20,60,0.03) 41px
-          ),
-          repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 40px,
-            rgba(246,190,59,0.03) 40px,
-            rgba(246,190,59,0.03) 41px
-          );
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33% { transform: translateY(-12px) rotate(1deg); }
-          66% { transform: translateY(-6px) rotate(-1deg); }
-        }
-        .float-anim { animation: float 4s ease-in-out infinite; }
-
         @keyframes bounce-arrow {
           0%, 100% { transform: translateY(0); opacity: 1; }
-          50% { transform: translateY(10px); opacity: 0.5; }
+          50% { transform: translateY(10px); opacity: 0.4; }
         }
-        .bounce-arrow { animation: bounce-arrow 1.5s ease-in-out infinite; }
+        .bounce-arrow { animation: bounce-arrow 1.8s ease-in-out infinite; }
+
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spin-slow 4s linear infinite; }
+
+        .video-thumb {
+          position: relative;
+          overflow: hidden;
+          border-radius: 0.75rem;
+          cursor: pointer;
+          box-shadow: 0 2px 12px rgba(61,43,26,0.1);
+        }
+        .video-thumb img {
+          width: 100%;
+          aspect-ratio: 16/9;
+          object-fit: cover;
+          transition: transform 0.4s;
+          filter: brightness(0.85);
+        }
+        .video-thumb:hover img {
+          transform: scale(1.05);
+          filter: brightness(0.65);
+        }
+        .video-thumb .play-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s;
+          background: rgba(139,26,26,0.12);
+        }
+        .video-thumb:hover .play-overlay { opacity: 1; }
+
+        .mission-img-wrap {
+          position: relative;
+          overflow: hidden;
+          border-radius: 0.75rem;
+          box-shadow: 0 4px 24px rgba(61,43,26,0.12);
+        }
+        .mission-img-wrap img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: grayscale(20%);
+          transition: filter 0.6s;
+        }
+        .mission-img-wrap:hover img { filter: grayscale(0%); }
+        .mission-img-wrap .deco-ring {
+          position: absolute;
+          inset: -8px;
+          border: 0.5px solid rgba(139,26,26,0.25);
+          border-radius: 1rem;
+          pointer-events: none;
+        }
+        .mission-img-wrap .deco-ring-2 {
+          position: absolute;
+          inset: -16px;
+          border: 0.5px solid rgba(196,149,106,0.18);
+          border-radius: 1.25rem;
+          pointer-events: none;
+        }
+
+        .progress-fill {
+          background: linear-gradient(90deg, #8B1A1A, #C4956A);
+          height: 100%;
+          border-radius: 9999px;
+          transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .reveal {
+          opacity: 0;
+          transform: translateY(28px);
+          transition: opacity 0.75s ease, transform 0.75s ease;
+        }
+        .reveal.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
 
         @keyframes marquee-left {
           0% { transform: translateX(0); }
@@ -212,154 +240,38 @@ export default function LandingPage() {
         .marquee-left { animation: marquee-left 30s linear infinite; display: flex; white-space: nowrap; }
         .marquee-right { animation: marquee-right 30s linear infinite; display: flex; white-space: nowrap; }
 
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-14px); }
         }
-        .animate-spin-slow { animation: spin-slow 4s linear infinite; }
-
-        .reveal {
-          opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .reveal.revealed {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .progress-fill {
-          background: linear-gradient(90deg, #dc143c, #f6be3b);
-          height: 100%;
-          border-radius: 9999px;
-          transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-        }
+        .float-anim { animation: float 5s ease-in-out infinite; }
 
         .tier-card {
-          border: 1px solid rgba(220,20,60,0.3);
-          border-radius: 1rem;
+          border: 0.5px solid #D4B896;
+          border-radius: 12px;
           padding: 2rem;
-          background: rgba(30,10,8,0.7);
-          transition: transform 0.3s, box-shadow 0.3s;
+          background: #FDF5EE;
+          box-shadow: 0 2px 12px rgba(61,43,26,0.07);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .tier-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 20px 40px rgba(220,20,60,0.2);
+          transform: translateY(-5px);
+          box-shadow: 0 12px 32px rgba(139,26,26,0.12);
         }
         .tier-card.highlighted {
-          border-color: #f6be3b;
-          background: rgba(40,15,5,0.9);
-          box-shadow: 0 0 30px rgba(246,190,59,0.2);
-          transform: scale(1.05);
+          border-color: #C4956A;
+          background: #FDF5EE;
+          box-shadow: 0 4px 24px rgba(196,149,106,0.15);
+          transform: scale(1.04);
         }
         .tier-card.highlighted:hover {
-          transform: scale(1.05) translateY(-6px);
-        }
-
-        .video-thumb {
-          position: relative;
-          overflow: hidden;
-          border-radius: 0.75rem;
-          cursor: pointer;
-        }
-        .video-thumb img {
-          width: 100%;
-          aspect-ratio: 16/9;
-          object-fit: cover;
-          transition: transform 0.4s;
-          filter: brightness(0.7);
-        }
-        .video-thumb:hover img {
-          transform: scale(1.05);
-          filter: brightness(0.5);
-        }
-        .video-thumb .play-overlay {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          transition: opacity 0.3s;
-          background: rgba(220,20,60,0.15);
-        }
-        .video-thumb:hover .play-overlay {
-          opacity: 1;
-        }
-
-        .mission-img-wrap {
-          position: relative;
-          overflow: hidden;
-          border-radius: 1rem;
-        }
-        .mission-img-wrap img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          filter: grayscale(100%);
-          transition: filter 0.6s;
-        }
-        .mission-img-wrap:hover img {
-          filter: grayscale(0%);
-        }
-        .mission-img-wrap .deco-ring {
-          position: absolute;
-          inset: -8px;
-          border: 2px solid rgba(220,20,60,0.4);
-          border-radius: 1.2rem;
-          pointer-events: none;
-        }
-        .mission-img-wrap .deco-ring-2 {
-          position: absolute;
-          inset: -16px;
-          border: 1px solid rgba(246,190,59,0.2);
-          border-radius: 1.4rem;
-          pointer-events: none;
-        }
-
-        .timeline-dot {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          border: 3px solid #0a0402;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          top: 50%;
-          margin-top: -8px;
-        }
-
-        .social-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          border: 1px solid rgba(220,20,60,0.4);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background 0.2s, border-color 0.2s;
-          cursor: pointer;
-        }
-        .social-icon:hover {
-          background: rgba(220,20,60,0.2);
-          border-color: #dc143c;
+          transform: scale(1.04) translateY(-5px);
+          box-shadow: 0 16px 40px rgba(196,149,106,0.2);
         }
       `}</style>
 
-      {/* ── Navbar wrapper ── */}
-      <div
-        ref={navbarRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 50,
-          transition: "background 0.3s, box-shadow 0.3s",
-        }}
-      >
-        <Navbar activePage="khoi-kien" />
-      </div>
+      {/* ── Navbar ── */}
+      <Navbar activePage="khoi-kien" />
 
       {/* ════════════════════════════════════════
           1. HERO SECTION
@@ -373,14 +285,25 @@ export default function LandingPage() {
           justifyContent: "center",
           position: "relative",
           overflow: "hidden",
-          background:
-            "radial-gradient(ellipse at 50% 40%, rgba(139,0,0,0.25) 0%, rgba(10,4,2,1) 70%)",
+          background: "linear-gradient(180deg, #FDF5EE 0%, #FAE8DA 55%, #F5D5C0 100%)",
         }}
       >
-        {/* Dong Son grid overlay */}
+        {/* Đông Sơn grid overlay */}
+        <div className="dong-son-bg" style={{ position: "absolute", inset: 0, zIndex: 0 }} />
+
+        {/* Warm glow */}
         <div
-          className="dong-son-bg"
-          style={{ position: "absolute", inset: 0, zIndex: 0 }}
+          style={{
+            position: "absolute",
+            top: "25%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "700px",
+            height: "400px",
+            background: "radial-gradient(ellipse, rgba(139,26,26,0.06) 0%, transparent 70%)",
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
         />
 
         {/* Content */}
@@ -389,41 +312,31 @@ export default function LandingPage() {
             position: "relative",
             zIndex: 1,
             textAlign: "center",
-            maxWidth: "800px",
+            maxWidth: "820px",
             padding: "0 1.5rem",
+            paddingTop: "90px",
           }}
         >
           {/* Floating castle icon */}
-          <div
-            className="float-anim"
-            style={{ marginBottom: "2rem", display: "inline-block" }}
-          >
-            <div
-              style={{
-                position: "relative",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {/* Pulse ring */}
+          <div className="float-anim" style={{ marginBottom: "2.5rem", display: "inline-block" }}>
+            <div style={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
               <span
                 className="animate-pulse"
                 style={{
                   position: "absolute",
-                  inset: "-12px",
+                  inset: "-14px",
                   borderRadius: "50%",
-                  border: "2px solid rgba(220,20,60,0.4)",
+                  border: "1.5px solid #C4956A",
                   display: "block",
                 }}
               />
               <span
                 className="material-symbols-outlined"
                 style={{
-                  fontSize: "80px",
-                  color: "#dc143c",
+                  fontSize: "72px",
+                  color: "#8B1A1A",
                   fontVariationSettings: '"FILL" 1',
-                  filter: "drop-shadow(0 0 20px rgba(220,20,60,0.6))",
+                  filter: "drop-shadow(0 4px 16px rgba(139,26,26,0.25))",
                 }}
               >
                 castle
@@ -431,106 +344,131 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* H1 */}
-          <h1
-            className="font-cinzel"
-            style={{ marginBottom: "1rem", lineHeight: 1.2 }}
+          {/* Label */}
+          <p
+            style={{
+              fontSize: "0.72rem",
+              letterSpacing: "0.25em",
+              textTransform: "uppercase",
+              color: "#8B1A1A",
+              marginBottom: "1rem",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              fontWeight: 600,
+            }}
           >
+            Dự án bảo tồn lịch sử cộng đồng
+          </p>
+
+          {/* H1 — Playfair Display #8B1A1A */}
+          <h1 style={{ marginBottom: "1.25rem", lineHeight: 1.15, fontFamily: "'Playfair Display', serif" }}>
             <span
               style={{
                 display: "block",
-                fontSize: "clamp(2.5rem, 8vw, 5rem)",
-                fontWeight: 900,
-                color: "#dc143c",
-                textShadow: "0 0 30px rgba(220,20,60,0.5)",
+                fontSize: "clamp(2.4rem, 7vw, 4.5rem)",
+                fontWeight: 700,
+                color: "#8B1A1A",
+                letterSpacing: "-0.01em",
               }}
             >
               Giữ Lấy Sử Việt
             </span>
+            {/* H2 — Lora italic #7B4A00 */}
             <span
               style={{
                 display: "block",
-                fontSize: "clamp(1rem, 3vw, 1.5rem)",
-                fontWeight: 400,
-                color: "#f6be3b",
-                marginTop: "0.5rem",
-                letterSpacing: "0.15em",
+                fontSize: "clamp(0.95rem, 2.5vw, 1.35rem)",
+                fontWeight: 600,
+                color: "#7B4A00",
+                marginTop: "0.6rem",
+                letterSpacing: "0.06em",
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
               }}
             >
               Giữ truyền thống yêu nước, giữ hồn dân tộc ngàn đời
             </span>
           </h1>
 
-          {/* Italic quote */}
-          <p
-            className="font-baskerville"
+          {/* Decorative divider */}
+          <div
             style={{
+              height: "1px",
+              background: "linear-gradient(90deg, transparent, rgba(196,149,106,0.45), transparent)",
+              maxWidth: "320px",
+              margin: "0 auto 1.5rem",
+            }}
+          />
+
+          {/* Quote — Merriweather italic */}
+          <blockquote
+            style={{
+              fontFamily: "'Merriweather', serif",
               fontStyle: "italic",
-              color: "rgba(232,220,200,0.7)",
-              fontSize: "1.05rem",
-              maxWidth: "560px",
+              fontWeight: 300,
+              color: "#5C3A1E",
+              fontSize: "0.97rem",
+              maxWidth: "520px",
               margin: "0 auto 2.5rem",
-              lineHeight: 1.8,
+              lineHeight: 1.9,
+              borderLeft: "2px solid #C4956A",
+              paddingLeft: "1rem",
+              textAlign: "left",
             }}
           >
             "Dân ta phải biết sử ta, cho tường gốc tích nước nhà Việt Nam."
-            <br />
-            <span style={{ color: "#f6be3b", fontSize: "0.9rem" }}>
+            <footer style={{ color: "#A0794E", fontSize: "0.82rem", fontStyle: "normal", fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, marginTop: "0.5rem" }}>
               — Hồ Chí Minh
-            </span>
-          </p>
+            </footer>
+          </blockquote>
 
           {/* CTA buttons */}
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
             <button
-              className="font-cinzel"
               style={{
-                background: "rgba(220,20,60,0.85)",
-                color: "#fff",
+                background: "#8B1A1A",
+                color: "#FDF5EE",
                 border: "none",
-                borderRadius: "0.5rem",
-                padding: "0.85rem 2rem",
+                borderRadius: "8px",
+                padding: "0.9rem 2.25rem",
                 fontWeight: 700,
-                fontSize: "0.9rem",
-                letterSpacing: "0.12em",
+                fontSize: "0.85rem",
+                letterSpacing: "0.1em",
                 cursor: "pointer",
-                transition: "background 0.2s, transform 0.2s",
-                boxShadow: "0 4px 20px rgba(220,20,60,0.4)",
+                transition: "background 0.2s, transform 0.2s, box-shadow 0.2s",
+                boxShadow: "0 4px 18px rgba(139,26,26,0.32)",
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                textTransform: "uppercase",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#dc143c";
+                e.currentTarget.style.background = "#6B1414";
                 e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 28px rgba(139,26,26,0.38)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(220,20,60,0.85)";
+                e.currentTarget.style.background = "#8B1A1A";
                 e.currentTarget.style.transform = "";
+                e.currentTarget.style.boxShadow = "0 4px 18px rgba(139,26,26,0.32)";
               }}
             >
               KHÁM PHÁ NGAY
             </button>
             <button
-              className="font-cinzel"
               style={{
                 background: "transparent",
-                color: "#f6be3b",
-                border: "2px solid #f6be3b",
-                borderRadius: "0.5rem",
-                padding: "0.85rem 2rem",
-                fontWeight: 700,
-                fontSize: "0.9rem",
-                letterSpacing: "0.12em",
+                color: "#7B4A00",
+                border: "1px solid #C4956A",
+                borderRadius: "8px",
+                padding: "0.9rem 2.25rem",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                letterSpacing: "0.08em",
                 cursor: "pointer",
                 transition: "background 0.2s, transform 0.2s",
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                textTransform: "uppercase",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(246,190,59,0.1)";
+                e.currentTarget.style.background = "rgba(196,149,106,0.10)";
                 e.currentTarget.style.transform = "translateY(-2px)";
               }}
               onMouseLeave={(e) => {
@@ -551,10 +489,10 @@ export default function LandingPage() {
             bottom: "2rem",
             left: "50%",
             transform: "translateX(-50%)",
-            color: "rgba(246,190,59,0.6)",
+            color: "rgba(196,149,106,0.55)",
           }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "36px" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
             keyboard_double_arrow_down
           </span>
         </div>
@@ -565,7 +503,7 @@ export default function LandingPage() {
       ════════════════════════════════════════ */}
       <section
         className="reveal"
-        style={{ padding: "5rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
+        style={{ padding: "6rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
       >
         <div
           style={{
@@ -577,34 +515,28 @@ export default function LandingPage() {
           {/* Left card: progress + countdown */}
           <div
             style={{
-              background: "rgba(20,8,5,0.8)",
-              border: "1px solid rgba(220,20,60,0.3)",
-              borderRadius: "1rem",
+              background: "#FDF5EE",
+              border: "0.5px solid #D4B896",
+              borderRadius: "12px",
               padding: "2rem",
+              boxShadow: "0 2px 12px rgba(61,43,26,0.07)",
             }}
           >
+            {/* H3 — Playfair Display */}
             <h2
-              className="font-cinzel"
-              style={{ color: "#f6be3b", fontSize: "1.3rem", marginBottom: "0.5rem" }}
+              style={{ color: "#C4956A", fontSize: "1.1rem", marginBottom: "0.5rem", fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
             >
               Tiến Độ Gây Quỹ
             </h2>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.75rem",
-                fontSize: "0.9rem",
-              }}
-            >
-              <span style={{ color: "#dc143c", fontWeight: 700 }}>623 triệu đồng</span>
-              <span style={{ color: "rgba(232,220,200,0.6)" }}>Mục tiêu: 830 triệu</span>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem", fontSize: "0.88rem" }}>
+              <span style={{ color: "#8B1A1A", fontWeight: 700, fontFamily: "'Be Vietnam Pro', sans-serif" }}>623 triệu đồng</span>
+              <span style={{ color: "#A0794E", fontFamily: "'Be Vietnam Pro', sans-serif" }}>Mục tiêu: 830 triệu</span>
             </div>
             {/* Progress bar */}
             <div
               style={{
-                height: "12px",
-                background: "rgba(255,255,255,0.08)",
+                height: "10px",
+                background: "rgba(61,43,26,0.08)",
                 borderRadius: "9999px",
                 overflow: "hidden",
                 marginBottom: "0.5rem",
@@ -612,14 +544,13 @@ export default function LandingPage() {
             >
               <div className="progress-fill" style={{ width: "75%" }} />
             </div>
-            <p style={{ color: "rgba(232,220,200,0.5)", fontSize: "0.8rem", marginBottom: "2rem" }}>
+            <p style={{ color: "#A0794E", fontSize: "0.78rem", marginBottom: "2rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
               75% mục tiêu đạt được • 1,247 người đóng góp
             </p>
 
             {/* Countdown */}
             <h3
-              className="font-cinzel"
-              style={{ color: "#f6be3b", fontSize: "1rem", marginBottom: "1rem" }}
+              style={{ color: "#C4956A", fontSize: "0.9rem", marginBottom: "1rem", fontFamily: "'Playfair Display', serif" }}
             >
               Thời Gian Còn Lại
             </h3>
@@ -630,31 +561,22 @@ export default function LandingPage() {
                 { val: timeLeft.minutes, label: "Phút" },
                 { val: timeLeft.seconds, label: "Giây" },
               ].map(({ val, label }) => (
-                <div
-                  key={label}
-                  style={{ textAlign: "center", flex: 1 }}
-                >
+                <div key={label} style={{ textAlign: "center", flex: 1 }}>
                   <div
                     style={{
-                      background: "rgba(220,20,60,0.15)",
-                      border: "1px solid rgba(220,20,60,0.4)",
-                      borderRadius: "0.5rem",
+                      background: "#FAE8DA",
+                      border: "0.5px solid rgba(139,26,26,0.18)",
+                      borderRadius: "8px",
                       padding: "0.75rem 0.25rem",
-                      fontSize: "1.8rem",
+                      fontSize: "1.7rem",
                       fontWeight: 700,
-                      color: "#dc143c",
-                      fontFamily: "monospace",
+                      color: "#8B1A1A",
+                      fontFamily: "'Be Vietnam Pro', monospace",
                     }}
                   >
                     {pad(val)}
                   </div>
-                  <div
-                    style={{
-                      fontSize: "0.7rem",
-                      color: "rgba(232,220,200,0.5)",
-                      marginTop: "0.3rem",
-                    }}
-                  >
+                  <div style={{ fontSize: "0.68rem", color: "#A0794E", marginTop: "0.35rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                     {label}
                   </div>
                 </div>
@@ -665,14 +587,15 @@ export default function LandingPage() {
           {/* Right card: content items */}
           <div
             style={{
-              background: "rgba(20,8,5,0.8)",
-              border: "1px solid rgba(220,20,60,0.3)",
-              borderRadius: "1rem",
+              background: "#FDF5EE",
+              border: "0.5px solid #D4B896",
+              borderRadius: "12px",
               padding: "2rem",
               display: "flex",
               flexDirection: "column",
-              gap: "1.5rem",
+              gap: "1.75rem",
               justifyContent: "center",
+              boxShadow: "0 2px 12px rgba(61,43,26,0.07)",
             }}
           >
             {[
@@ -687,34 +610,27 @@ export default function LandingPage() {
                 desc: "Series phim ngắn kể lại những trận chiến huyền thoại, những anh hùng bất khuất của dân tộc.",
               },
             ].map(({ icon, title, desc }) => (
-              <div
-                key={icon}
-                style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}
-              >
+              <div key={icon} style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
                 <div
                   style={{
-                    background: "rgba(220,20,60,0.15)",
-                    border: "1px solid rgba(220,20,60,0.3)",
-                    borderRadius: "0.75rem",
+                    background: "#FAE8DA",
+                    border: "0.5px solid rgba(139,26,26,0.15)",
+                    borderRadius: "12px",
                     padding: "0.75rem",
                     flexShrink: 0,
                   }}
                 >
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ color: "#dc143c", fontSize: "28px" }}
-                  >
+                  <span className="material-symbols-outlined" style={{ color: "#8B1A1A", fontSize: "26px" }}>
                     {icon}
                   </span>
                 </div>
                 <div>
                   <h4
-                    className="font-cinzel"
-                    style={{ color: "#f6be3b", marginBottom: "0.3rem", fontSize: "1rem" }}
+                    style={{ color: "#3D2B1A", marginBottom: "0.35rem", fontSize: "0.95rem", fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
                   >
                     {title}
                   </h4>
-                  <p style={{ color: "rgba(232,220,200,0.65)", fontSize: "0.88rem", lineHeight: 1.6 }}>
+                  <p style={{ color: "#5C3A1E", fontSize: "0.87rem", lineHeight: 1.65, fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                     {desc}
                   </p>
                 </div>
@@ -730,10 +646,10 @@ export default function LandingPage() {
       <section
         className="reveal"
         style={{
-          background: "rgba(15,5,3,0.6)",
-          borderTop: "1px solid rgba(220,20,60,0.15)",
-          borderBottom: "1px solid rgba(220,20,60,0.15)",
-          padding: "5rem 1.5rem",
+          background: "#FAE8DA",
+          borderTop: "0.5px solid #D4B896",
+          borderBottom: "0.5px solid #D4B896",
+          padding: "6rem 1.5rem",
         }}
       >
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
@@ -742,9 +658,9 @@ export default function LandingPage() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "3rem",
+              gap: "3.5rem",
               alignItems: "center",
-              marginBottom: "4rem",
+              marginBottom: "5rem",
             }}
           >
             {/* Left: image */}
@@ -758,31 +674,38 @@ export default function LandingPage() {
             <div>
               <p
                 style={{
-                  color: "#dc143c",
-                  fontSize: "0.8rem",
-                  letterSpacing: "0.2em",
+                  color: "#8B1A1A",
+                  fontSize: "0.72rem",
+                  letterSpacing: "0.22em",
                   textTransform: "uppercase",
-                  marginBottom: "0.5rem",
+                  marginBottom: "0.6rem",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  fontWeight: 600,
                 }}
               >
                 Về Chúng Tôi
               </p>
+              {/* H2 — Playfair Display */}
               <h2
-                className="font-cinzel"
                 style={{
-                  color: "#f6be3b",
+                  color: "#3D2B1A",
                   fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                  marginBottom: "1rem",
+                  marginBottom: "1.25rem",
+                  lineHeight: 1.3,
+                  fontFamily: "'Playfair Display', serif",
+                  fontWeight: 700,
                 }}
               >
                 Sứ Mệnh Của Chúng Tôi
               </h2>
+              <div style={{ height: "1px", background: "linear-gradient(90deg, #C4956A, transparent)", marginBottom: "1.25rem", maxWidth: "60px" }} />
               <p
                 style={{
-                  color: "rgba(232,220,200,0.7)",
-                  lineHeight: 1.8,
+                  color: "#5C3A1E",
+                  lineHeight: 1.85,
                   marginBottom: "2rem",
                   fontSize: "0.95rem",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
                 }}
               >
                 Chúng tôi tin rằng lịch sử không chỉ là những trang sách khô khan.
@@ -799,13 +722,10 @@ export default function LandingPage() {
                   { val: "1000+", label: "Bài viết" },
                 ].map(({ val, label }) => (
                   <div key={label}>
-                    <div
-                      className="font-cinzel"
-                      style={{ fontSize: "1.6rem", color: "#dc143c", fontWeight: 700 }}
-                    >
+                    <div style={{ fontSize: "1.5rem", color: "#8B1A1A", fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
                       {val}
                     </div>
-                    <div style={{ color: "rgba(232,220,200,0.5)", fontSize: "0.8rem" }}>
+                    <div style={{ color: "#A0794E", fontSize: "0.78rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                       {label}
                     </div>
                   </div>
@@ -815,13 +735,28 @@ export default function LandingPage() {
           </div>
 
           {/* Video grid */}
-          <h3
-            className="font-cinzel"
+          <p
             style={{
-              color: "#f6be3b",
+              color: "#8B1A1A",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
               textAlign: "center",
-              marginBottom: "2rem",
+              marginBottom: "0.5rem",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              fontWeight: 600,
+            }}
+          >
+            Kho Tư Liệu
+          </p>
+          <h3
+            style={{
+              color: "#3D2B1A",
+              textAlign: "center",
+              marginBottom: "2.5rem",
               fontSize: "1.4rem",
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 600,
             }}
           >
             Kho Phim Lịch Sử
@@ -830,7 +765,7 @@ export default function LandingPage() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: "1rem",
+              gap: "1.25rem",
             }}
           >
             {[
@@ -845,9 +780,9 @@ export default function LandingPage() {
                   <span
                     className="material-symbols-outlined"
                     style={{
-                      fontSize: "56px",
+                      fontSize: "52px",
                       color: "#fff",
-                      filter: "drop-shadow(0 0 10px rgba(0,0,0,0.8))",
+                      filter: "drop-shadow(0 0 8px rgba(0,0,0,0.5))",
                     }}
                   >
                     play_circle
@@ -860,13 +795,10 @@ export default function LandingPage() {
                     left: 0,
                     right: 0,
                     padding: "0.75rem",
-                    background: "linear-gradient(transparent, rgba(0,0,0,0.9))",
+                    background: "linear-gradient(transparent, rgba(26,10,0,0.85))",
                   }}
                 >
-                  <p
-                    className="font-cinzel"
-                    style={{ color: "#f6be3b", fontSize: "0.8rem", margin: 0 }}
-                  >
+                  <p style={{ color: "#C4956A", fontSize: "0.78rem", margin: 0, fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
                     {title}
                   </p>
                 </div>
@@ -881,26 +813,30 @@ export default function LandingPage() {
       ════════════════════════════════════════ */}
       <section
         className="reveal"
-        style={{ padding: "5rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
+        style={{ padding: "6rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
       >
         <p
           style={{
-            color: "#dc143c",
-            fontSize: "0.8rem",
-            letterSpacing: "0.2em",
+            color: "#8B1A1A",
+            fontSize: "0.72rem",
+            letterSpacing: "0.22em",
             textAlign: "center",
             marginBottom: "0.5rem",
+            textTransform: "uppercase",
+            fontFamily: "'Be Vietnam Pro', sans-serif",
+            fontWeight: 600,
           }}
         >
           DÒNG CHẢY LỊCH SỬ
         </p>
         <h2
-          className="font-cinzel"
           style={{
-            color: "#f6be3b",
+            color: "#3D2B1A",
             textAlign: "center",
             fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
-            marginBottom: "4rem",
+            marginBottom: "5rem",
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: 700,
           }}
         >
           4000 Năm Dựng Nước &amp; Giữ Nước
@@ -915,14 +851,15 @@ export default function LandingPage() {
               left: "50%",
               top: 0,
               bottom: 0,
-              width: "2px",
-              background: "linear-gradient(to bottom, #8B4513, #B8860B, #f6be3b, #dc143c)",
+              width: "1px",
+              background: "linear-gradient(to bottom, #7B4A00, #C4956A, #8B1A1A)",
               transform: "translateX(-50%)",
+              opacity: 0.45,
             }}
           />
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
-            {TIMELINE.map((item, i) => (
+          <div style={{ display: "flex", flexDirection: "column", gap: "3.5rem" }}>
+            {TIMELINE.map((item) => (
               <div
                 key={item.period}
                 style={{
@@ -932,26 +869,27 @@ export default function LandingPage() {
                   gap: "1rem",
                 }}
               >
-                {/* Left content */}
+                {/* Card */}
                 <div style={{ textAlign: item.align === "right" ? "right" : "left", gridColumn: item.align === "right" ? "1" : "3" }}>
                   <div
                     style={{
-                      background: "rgba(20,8,5,0.85)",
-                      border: `1px solid ${item.color}44`,
-                      borderRadius: "0.75rem",
-                      padding: "1.25rem 1.5rem",
+                      background: "#FDF5EE",
+                      border: `0.5px solid ${item.color}40`,
+                      borderRadius: "12px",
+                      padding: "1.5rem",
+                      boxShadow: "0 2px 12px rgba(61,43,26,0.06)",
+                      transition: "box-shadow 0.2s",
                     }}
                   >
                     <h4
-                      className="font-cinzel"
-                      style={{ color: item.color, fontSize: "1rem", marginBottom: "0.25rem" }}
+                      style={{ color: item.color, fontSize: "0.95rem", marginBottom: "0.3rem", fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
                     >
                       {item.period}
                     </h4>
-                    <p style={{ color: item.color, fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.5rem" }}>
+                    <p style={{ color: item.color, fontSize: "0.72rem", opacity: 0.75, marginBottom: "0.6rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                       {item.years}
                     </p>
-                    <p style={{ color: "rgba(232,220,200,0.7)", fontSize: "0.85rem", lineHeight: 1.6 }}>
+                    <p style={{ color: "#5C3A1E", fontSize: "0.87rem", lineHeight: 1.7, fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                       {item.desc}
                     </p>
                   </div>
@@ -961,12 +899,12 @@ export default function LandingPage() {
                 <div style={{ position: "relative", display: "flex", justifyContent: "center", gridColumn: "2" }}>
                   <div
                     style={{
-                      width: "16px",
-                      height: "16px",
+                      width: "14px",
+                      height: "14px",
                       borderRadius: "50%",
                       background: item.color,
-                      border: "3px solid #0a0402",
-                      boxShadow: `0 0 12px ${item.color}`,
+                      border: `3px solid ${item.dotBorder}`,
+                      boxShadow: `0 0 0 2px ${item.color}40`,
                       zIndex: 1,
                     }}
                   />
@@ -986,31 +924,35 @@ export default function LandingPage() {
       <section
         className="reveal"
         style={{
-          background: "rgba(8,3,1,0.8)",
-          borderTop: "1px solid rgba(220,20,60,0.15)",
-          borderBottom: "1px solid rgba(220,20,60,0.15)",
-          padding: "5rem 1.5rem",
+          background: "#FAE8DA",
+          borderTop: "0.5px solid #D4B896",
+          borderBottom: "0.5px solid #D4B896",
+          padding: "6rem 1.5rem",
         }}
       >
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <p
             style={{
-              color: "#dc143c",
-              fontSize: "0.8rem",
-              letterSpacing: "0.2em",
+              color: "#8B1A1A",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
               textAlign: "center",
               marginBottom: "0.5rem",
+              textTransform: "uppercase",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              fontWeight: 600,
             }}
           >
             ĐÓNG GÓP &amp; ỦNG HỘ
           </p>
           <h2
-            className="font-cinzel"
             style={{
-              color: "#f6be3b",
+              color: "#3D2B1A",
               textAlign: "center",
               fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
-              marginBottom: "3rem",
+              marginBottom: "3.5rem",
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 700,
             }}
           >
             Chọn Cấp Bậc Của Bạn
@@ -1032,21 +974,17 @@ export default function LandingPage() {
                 className={`tier-card${tier.highlighted ? " highlighted" : ""}`}
               >
                 {tier.highlighted && (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "1rem",
-                    }}
-                  >
+                  <div style={{ textAlign: "center", marginBottom: "1rem" }}>
                     <span
                       style={{
-                        background: "#f6be3b",
-                        color: "#0a0402",
-                        fontSize: "0.7rem",
+                        background: "#C4956A",
+                        color: "#FDF5EE",
+                        fontSize: "0.68rem",
                         fontWeight: 700,
                         letterSpacing: "0.1em",
-                        padding: "0.2rem 0.8rem",
+                        padding: "0.25rem 0.9rem",
                         borderRadius: "9999px",
+                        fontFamily: "'Be Vietnam Pro', sans-serif",
                       }}
                     >
                       PHỔ BIẾN NHẤT
@@ -1057,8 +995,8 @@ export default function LandingPage() {
                   <span
                     className="material-symbols-outlined"
                     style={{
-                      fontSize: "40px",
-                      color: tier.highlighted ? "#f6be3b" : "#dc143c",
+                      fontSize: "38px",
+                      color: tier.highlighted ? "#C4956A" : "#8B1A1A",
                       fontVariationSettings: '"FILL" 1',
                     }}
                   >
@@ -1066,23 +1004,25 @@ export default function LandingPage() {
                   </span>
                 </div>
                 <h3
-                  className="font-cinzel"
                   style={{
-                    color: tier.highlighted ? "#f6be3b" : "#e8dcc8",
+                    color: tier.highlighted ? "#7B4A00" : "#3D2B1A",
                     textAlign: "center",
-                    fontSize: "1.2rem",
-                    marginBottom: "0.25rem",
+                    fontSize: "1.1rem",
+                    marginBottom: "0.3rem",
+                    fontFamily: "'Playfair Display', serif",
+                    fontWeight: 600,
                   }}
                 >
                   {tier.name}
                 </h3>
                 <p
                   style={{
-                    color: "#dc143c",
+                    color: "#8B1A1A",
                     textAlign: "center",
                     fontSize: "1.5rem",
                     fontWeight: 700,
-                    marginBottom: "1.25rem",
+                    marginBottom: "1.5rem",
+                    fontFamily: "'Be Vietnam Pro', sans-serif",
                   }}
                 >
                   {tier.price}
@@ -1095,15 +1035,13 @@ export default function LandingPage() {
                         display: "flex",
                         alignItems: "center",
                         gap: "0.5rem",
-                        color: "rgba(232,220,200,0.75)",
+                        color: "#5C3A1E",
                         fontSize: "0.85rem",
                         marginBottom: "0.5rem",
+                        fontFamily: "'Be Vietnam Pro', sans-serif",
                       }}
                     >
-                      <span
-                        className="material-symbols-outlined"
-                        style={{ color: "#f6be3b", fontSize: "16px" }}
-                      >
+                      <span className="material-symbols-outlined" style={{ color: "#C4956A", fontSize: "16px" }}>
                         check_circle
                       </span>
                       {perk}
@@ -1113,21 +1051,28 @@ export default function LandingPage() {
                 <button
                   style={{
                     width: "100%",
-                    background: tier.highlighted
-                      ? "linear-gradient(135deg, #dc143c, #8b0000)"
-                      : "transparent",
-                    border: tier.highlighted ? "none" : "1px solid rgba(220,20,60,0.5)",
-                    color: "#fff",
-                    borderRadius: "0.5rem",
-                    padding: "0.75rem",
+                    background: tier.highlighted ? "#8B1A1A" : "transparent",
+                    border: tier.highlighted ? "none" : "1px solid #C4956A",
+                    color: tier.highlighted ? "#FDF5EE" : "#7B4A00",
+                    borderRadius: "8px",
+                    padding: "0.8rem",
                     fontWeight: 700,
                     cursor: "pointer",
                     letterSpacing: "0.08em",
-                    fontSize: "0.85rem",
-                    transition: "opacity 0.2s, transform 0.2s",
+                    fontSize: "0.82rem",
+                    fontFamily: "'Be Vietnam Pro', sans-serif",
+                    transition: "opacity 0.2s, transform 0.2s, background 0.2s",
+                    boxShadow: tier.highlighted ? "0 4px 16px rgba(139,26,26,0.25)" : "none",
+                    textTransform: "uppercase",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.opacity = "0.88";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = "1";
+                    e.currentTarget.style.transform = "";
+                  }}
                 >
                   ĐÓNG GÓP NGAY
                 </button>
@@ -1138,27 +1083,25 @@ export default function LandingPage() {
           {/* Payment info */}
           <div
             style={{
-              background: "rgba(20,8,5,0.8)",
-              border: "1px solid rgba(246,190,59,0.2)",
-              borderRadius: "1rem",
+              background: "#FDF5EE",
+              border: "0.5px solid #D4B896",
+              borderRadius: "12px",
               padding: "2rem",
               display: "flex",
               gap: "2rem",
               alignItems: "center",
               flexWrap: "wrap",
               justifyContent: "center",
+              boxShadow: "0 2px 12px rgba(61,43,26,0.06)",
             }}
           >
             <img
               src={QR_IMG}
               alt="QR Code thanh toán"
-              style={{ width: "120px", height: "120px", borderRadius: "0.5rem" }}
+              style={{ width: "110px", height: "110px", borderRadius: "8px", border: "0.5px solid #D4B896" }}
             />
             <div>
-              <h4
-                className="font-cinzel"
-                style={{ color: "#f6be3b", marginBottom: "0.75rem" }}
-              >
+              <h4 style={{ color: "#3D2B1A", marginBottom: "0.75rem", fontSize: "0.95rem", fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
                 Thông Tin Chuyển Khoản
               </h4>
               {[
@@ -1167,9 +1110,9 @@ export default function LandingPage() {
                 ["Chủ tài khoản", "DỰ ÁN SỬ VIỆT ANH HÙNG"],
                 ["Nội dung", "Ho ten - Cap bac dong gop"],
               ].map(([k, v]) => (
-                <p key={k} style={{ color: "rgba(232,220,200,0.7)", fontSize: "0.85rem", margin: "0.2rem 0" }}>
-                  <span style={{ color: "rgba(232,220,200,0.45)" }}>{k}: </span>
-                  <span style={{ color: "#e8dcc8" }}>{v}</span>
+                <p key={k} style={{ color: "#5C3A1E", fontSize: "0.85rem", margin: "0.25rem 0", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+                  <span style={{ color: "#A0794E" }}>{k}: </span>
+                  <span style={{ color: "#3D2B1A", fontWeight: 500 }}>{v}</span>
                 </p>
               ))}
             </div>
@@ -1183,54 +1126,61 @@ export default function LandingPage() {
       <section
         className="reveal"
         style={{
-          background: "rgba(15,5,3,0.6)",
-          borderTop: "1px solid rgba(220,20,60,0.15)",
-          padding: "5rem 1.5rem",
+          background: "#FDF5EE",
+          borderTop: "0.5px solid #D4B896",
+          padding: "6rem 1.5rem",
         }}
       >
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <p
             style={{
-              color: "#dc143c",
-              fontSize: "0.8rem",
-              letterSpacing: "0.2em",
+              color: "#8B1A1A",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
               textAlign: "center",
               marginBottom: "0.5rem",
+              textTransform: "uppercase",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              fontWeight: 600,
             }}
           >
             VINH DANH
           </p>
           <h2
-            className="font-cinzel"
             style={{
-              color: "#f6be3b",
+              color: "#3D2B1A",
               textAlign: "center",
               fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
               marginBottom: "3rem",
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 700,
             }}
           >
             Bảng Danh Dự
           </h2>
 
+          {/* Separator */}
+          <div style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(196,149,106,0.4), transparent)", marginBottom: "2.5rem" }} />
+
           {/* Marquee left */}
-          <div style={{ overflow: "hidden", marginBottom: "1rem" }}>
+          <div style={{ overflow: "hidden", marginBottom: "0.75rem" }}>
             <div className="marquee-left">
-              <span style={{ color: "rgba(232,220,200,0.6)", fontSize: "0.9rem", paddingRight: "2rem" }}>
+              <span style={{ color: "#5C3A1E", fontSize: "0.88rem", paddingRight: "2rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                 {MARQUEE_NAMES_LEFT}
               </span>
-              <span style={{ color: "rgba(232,220,200,0.6)", fontSize: "0.9rem", paddingRight: "2rem" }}>
+              <span style={{ color: "#5C3A1E", fontSize: "0.88rem", paddingRight: "2rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                 {MARQUEE_NAMES_LEFT}
               </span>
             </div>
           </div>
 
           {/* Marquee right */}
-          <div style={{ overflow: "hidden", marginBottom: "3rem" }}>
+          <div style={{ overflow: "hidden", marginBottom: "3.5rem" }}>
             <div className="marquee-right">
-              <span style={{ color: "rgba(246,190,59,0.5)", fontSize: "0.9rem", paddingRight: "2rem" }}>
+              <span style={{ color: "#7B4A00", fontSize: "0.88rem", paddingRight: "2rem", fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>
                 {MARQUEE_NAMES_RIGHT}
               </span>
-              <span style={{ color: "rgba(246,190,59,0.5)", fontSize: "0.9rem", paddingRight: "2rem" }}>
+              <span style={{ color: "#7B4A00", fontSize: "0.88rem", paddingRight: "2rem", fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>
                 {MARQUEE_NAMES_RIGHT}
               </span>
             </div>
@@ -1248,20 +1198,28 @@ export default function LandingPage() {
               <div
                 key={label}
                 style={{
-                  background: "rgba(20,8,5,0.8)",
-                  border: "1px solid rgba(220,20,60,0.25)",
-                  borderRadius: "0.75rem",
-                  padding: "1.5rem",
+                  background: "#FDF5EE",
+                  border: "0.5px solid #D4B896",
+                  borderRadius: "12px",
+                  padding: "1.75rem 1.5rem",
                   textAlign: "center",
+                  boxShadow: "0 2px 8px rgba(61,43,26,0.05)",
+                  transition: "box-shadow 0.2s, transform 0.2s",
+                  cursor: "default",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(139,26,26,0.10)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(61,43,26,0.05)";
+                  e.currentTarget.style.transform = "";
                 }}
               >
-                <div
-                  className="font-cinzel"
-                  style={{ fontSize: "2rem", color: "#dc143c", fontWeight: 700 }}
-                >
+                <div style={{ fontSize: "2rem", color: "#8B1A1A", fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
                   {value}
                 </div>
-                <div style={{ color: "rgba(232,220,200,0.5)", fontSize: "0.8rem", marginTop: "0.3rem" }}>
+                <div style={{ color: "#A0794E", fontSize: "0.78rem", marginTop: "0.35rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                   {label}
                 </div>
               </div>
@@ -1275,9 +1233,9 @@ export default function LandingPage() {
       ════════════════════════════════════════ */}
       <footer
         style={{
-          background: "#060201",
-          borderTop: "1px solid rgba(220,20,60,0.2)",
-          padding: "4rem 1.5rem 2rem",
+          background: "#FAE8DA",
+          borderTop: "1px solid rgba(196,149,106,0.35)",
+          padding: "5rem 1.5rem 2.5rem",
         }}
       >
         <div
@@ -1293,18 +1251,17 @@ export default function LandingPage() {
           {/* Brand + social */}
           <div>
             <h3
-              className="font-cinzel"
-              style={{ color: "#f6be3b", fontSize: "1.2rem", marginBottom: "0.75rem" }}
+              style={{ color: "#8B1A1A", fontSize: "1.1rem", marginBottom: "0.75rem", fontFamily: "'Playfair Display', serif", fontWeight: 700 }}
             >
               Sử Việt Anh Hùng
             </h3>
-            <p style={{ color: "rgba(232,220,200,0.5)", fontSize: "0.85rem", lineHeight: 1.7, marginBottom: "1.25rem" }}>
+            <p style={{ color: "#5C3A1E", fontSize: "0.85rem", lineHeight: 1.75, marginBottom: "1.5rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
               Dự án gây quỹ cộng đồng nhằm bảo tồn và phát huy lịch sử dân tộc Việt Nam cho thế hệ mai sau.
             </p>
             <div style={{ display: "flex", gap: "0.5rem" }}>
               {["facebook", "youtube", "groups"].map((icon) => (
                 <div className="social-icon" key={icon}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#dc143c" }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#8B1A1A" }}>
                     {icon}
                   </span>
                 </div>
@@ -1315,24 +1272,24 @@ export default function LandingPage() {
           {/* Links */}
           <div>
             <h4
-              className="font-cinzel"
-              style={{ color: "#f6be3b", fontSize: "0.95rem", marginBottom: "1rem" }}
+              style={{ color: "#3D2B1A", fontSize: "0.9rem", marginBottom: "1.25rem", fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
             >
               Liên Kết
             </h4>
             <ul style={{ listStyle: "none", padding: 0 }}>
               {["Về Dự Án", "Khởi Kiện", "Bộ Sách", "Phim Tài Liệu", "Bảng Danh Dự", "Liên Hệ"].map((link) => (
-                <li key={link} style={{ marginBottom: "0.5rem" }}>
+                <li key={link} style={{ marginBottom: "0.6rem" }}>
                   <a
                     href="#"
                     style={{
-                      color: "rgba(232,220,200,0.55)",
+                      color: "#5C3A1E",
                       fontSize: "0.85rem",
                       textDecoration: "none",
                       transition: "color 0.2s",
+                      fontFamily: "'Be Vietnam Pro', sans-serif",
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "#f6be3b")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(232,220,200,0.55)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "#8B1A1A")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "#5C3A1E")}
                   >
                     {link}
                   </a>
@@ -1343,13 +1300,10 @@ export default function LandingPage() {
 
           {/* Newsletter */}
           <div>
-            <h4
-              className="font-cinzel"
-              style={{ color: "#f6be3b", fontSize: "0.95rem", marginBottom: "0.5rem" }}
-            >
+            <h4 style={{ color: "#3D2B1A", fontSize: "0.9rem", marginBottom: "0.6rem", fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
               Bản Tin
             </h4>
-            <p style={{ color: "rgba(232,220,200,0.5)", fontSize: "0.8rem", marginBottom: "1rem" }}>
+            <p style={{ color: "#5C3A1E", fontSize: "0.82rem", marginBottom: "1rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
               Nhận cập nhật mới nhất về dự án qua email.
             </p>
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -1358,29 +1312,31 @@ export default function LandingPage() {
                 placeholder="Email của bạn"
                 style={{
                   flex: 1,
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(220,20,60,0.3)",
-                  borderRadius: "0.375rem",
+                  background: "rgba(253,245,238,0.70)",
+                  border: "0.5px solid rgba(196,149,106,0.45)",
+                  borderRadius: "6px",
                   padding: "0.6rem 0.75rem",
-                  color: "#e8dcc8",
+                  color: "#3D2B1A",
                   fontSize: "0.85rem",
                   outline: "none",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
                 }}
               />
               <button
                 style={{
-                  background: "#dc143c",
+                  background: "#8B1A1A",
                   border: "none",
-                  borderRadius: "0.375rem",
+                  borderRadius: "6px",
                   padding: "0.6rem 1rem",
-                  color: "#fff",
+                  color: "#FDF5EE",
                   fontWeight: 700,
                   cursor: "pointer",
                   fontSize: "0.8rem",
                   transition: "background 0.2s",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#b01030")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#dc143c")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#6B1414")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#8B1A1A")}
               >
                 Đăng Ký
               </button>
@@ -1388,14 +1344,16 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Decorative line */}
+        <div style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(196,149,106,0.45), transparent)", marginBottom: "1.5rem" }} />
+
         {/* Bottom bar */}
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.06)",
-            paddingTop: "1.5rem",
             textAlign: "center",
-            color: "rgba(232,220,200,0.3)",
+            color: "#A0794E",
             fontSize: "0.78rem",
+            fontFamily: "'Be Vietnam Pro', sans-serif",
           }}
         >
           © 2025 Sử Việt Anh Hùng. Tất cả quyền được bảo lưu. Dự án phi lợi nhuận vì cộng đồng.
@@ -1420,13 +1378,15 @@ export default function LandingPage() {
         {showTooltip && (
           <div
             style={{
-              background: "rgba(10,4,2,0.95)",
-              border: "1px solid rgba(220,20,60,0.4)",
-              borderRadius: "0.5rem",
+              background: "#FDF5EE",
+              border: "0.5px solid #D4B896",
+              borderRadius: "8px",
               padding: "0.5rem 0.75rem",
-              color: "#f6be3b",
+              color: "#3D2B1A",
               fontSize: "0.8rem",
               whiteSpace: "nowrap",
+              boxShadow: "0 4px 16px rgba(61,43,26,0.12)",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
             }}
           >
             Ủng hộ dự án ngay!
@@ -1436,28 +1396,28 @@ export default function LandingPage() {
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           style={{
-            background: "linear-gradient(135deg, #dc143c, #8b0000)",
+            background: "#8B1A1A",
             border: "none",
             borderRadius: "50px",
-            padding: "0.75rem 1.25rem",
-            color: "#fff",
+            padding: "0.75rem 1.4rem",
+            color: "#FDF5EE",
             fontWeight: 700,
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
             gap: "0.5rem",
-            boxShadow: "0 4px 20px rgba(220,20,60,0.5)",
-            fontSize: "0.85rem",
-            letterSpacing: "0.05em",
-            transition: "transform 0.2s, box-shadow 0.2s",
+            boxShadow: "0 4px 20px rgba(139,26,26,0.42)",
+            fontSize: "0.82rem",
+            letterSpacing: "0.06em",
+            transition: "transform 0.2s, box-shadow 0.2s, background 0.2s",
+            fontFamily: "'Be Vietnam Pro', sans-serif",
           }}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
           onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.96)")}
           onMouseUp={(e) => (e.currentTarget.style.transform = "")}
         >
-          <span
-            className="material-symbols-outlined"
-            style={{ fontSize: "18px", fontVariationSettings: '"FILL" 1' }}
-          >
+          <span className="material-symbols-outlined" style={{ fontSize: "18px", fontVariationSettings: '"FILL" 1' }}>
             favorite
           </span>
           ĐÓNG GÓP
@@ -1478,31 +1438,33 @@ export default function LandingPage() {
         <button
           onClick={() => setMusicPlaying((p) => !p)}
           style={{
-            background: "rgba(10,4,2,0.9)",
-            border: "1px solid rgba(246,190,59,0.4)",
+            background: "rgba(253,245,238,0.95)",
+            border: "0.5px solid #D4B896",
             borderRadius: "50px",
             padding: "0.6rem 1rem",
-            color: "#f6be3b",
+            color: "#C4956A",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
             gap: "0.5rem",
             fontSize: "0.78rem",
             backdropFilter: "blur(8px)",
-            transition: "border-color 0.2s",
+            boxShadow: "0 2px 12px rgba(61,43,26,0.10)",
+            transition: "border-color 0.2s, box-shadow 0.2s",
+            fontFamily: "'Be Vietnam Pro', sans-serif",
           }}
         >
           <span
             className={`material-symbols-outlined ${musicPlaying ? "animate-spin-slow" : ""}`}
             style={{
               fontSize: "18px",
-              color: musicPlaying ? "#f6be3b" : "rgba(246,190,59,0.5)",
+              color: musicPlaying ? "#C4956A" : "rgba(196,149,106,0.5)",
               fontVariationSettings: '"FILL" 1',
             }}
           >
             music_note
           </span>
-          <span style={{ color: "rgba(232,220,200,0.6)" }}>
+          <span style={{ color: "#5C3A1E" }}>
             {musicPlaying ? "Đang phát..." : "Nhạc nền"}
           </span>
         </button>
