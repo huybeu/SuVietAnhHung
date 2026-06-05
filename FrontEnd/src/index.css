@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0a0402;
+    color: #f2dfd6;
+    font-family: 'Noto Serif', serif;
+    overflow-x: hidden;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #150c08; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #8B4513; border-radius: 10px; }
+
+.dong-son-bg {
+  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAxHo3hDw7io6ABQb2I35JvjUH-Hbbj2WaAYYo9mm6l_C4AGyBvxpRr-p-E0KkKABK4SpVkqT6wrdVXN6rIypqn0nDrMB1A67tsr3BwJKAKW00JET9J80E7kEocvoIi9CMpF0HD0Hz2yLXPslcdmqS0oKWKOegWqFGRrQvAEWCTA3TGMXaHvccMQs0KocBmzI7DPah-2wkWS676GlyxrvDuwfsSx1HzQTwT87k3CrLzG9GpPwq6HnUovmN868hmk-BdUPIDSoPb8fA);
+  background-size: cover;
+  opacity: 0.05;
+}
+
+.dong-son-pattern {
+  background-image: radial-gradient(circle at 2px 2px, rgba(218,165,32,0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.corner-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  pointer-events: none;
+}
+.glow-red { background: radial-gradient(circle, rgba(220,20,60,0.15) 0%, transparent 70%); }
+.glow-gold { background: radial-gradient(circle, rgba(246,190,59,0.1) 0%, transparent 70%); }
+
+.auth-card {
+  background: linear-gradient(145deg, #160B08 0%, #0D0604 100%);
+  border: 1px solid rgba(246,190,59,0.3);
+  box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(246,190,59,0.05);
+}
+
+.input-gold {
+  background: rgba(27,17,13,0.6);
+  border-bottom: 1px solid rgba(246,190,59,0.4);
+  transition: all 0.3s ease;
+}
+.input-gold:focus {
+  border-bottom: 1px solid #f6be3b;
+  box-shadow: 0 4px 12px -4px rgba(246,190,59,0.2);
+  outline: none;
+}
+
+.btn-epic {
+  background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+  box-shadow: 0 4px 15px rgba(220,20,60,0.3);
+  transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.btn-epic:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 25px rgba(220,20,60,0.6);
+  filter: brightness(1.1);
+}
+
+.decorative-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(246,190,59,0.5), transparent);
+}
+
+.glass-panel {
+  background: rgba(27,17,13,0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(218,165,32,0.2);
+}
+
+.gold-glow { box-shadow: 0 0 15px rgba(218,165,32,0.15); }
+
+.lacquer-texture {
+  background-image: radial-gradient(circle at 50% 50%, rgba(26,3,7,0.8) 0%, rgba(10,4,2,1) 100%);
+  position: relative;
+}
+
+.may-tan-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #DAA520 50%, transparent 100%);
+  position: relative;
+  margin: 2rem 0;
+}
+.may-tan-divider::after {
+  content: "✦";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0A0402;
+  padding: 0 10px;
+  color: #DAA520;
+  font-size: 1.2rem;
+}
+
+.crimson-gradient { background: linear-gradient(90deg, #dc143c 0%, #8b0000 100%); }
+.timeline-line { background: linear-gradient(to bottom, #f6be3b, #dc143c); }
+
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+.marquee-container { overflow: hidden; white-space: nowrap; }
+.marquee-left { display: inline-block; animation: marqueeLeft 30s linear infinite; }
+.marquee-right { display: inline-block; animation: marqueeRight 30s linear infinite; }
+@keyframes marqueeLeft { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes marqueeRight { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+.float-anim { animation: float 6s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+.animate-spin-slow { animation: spin 8s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
