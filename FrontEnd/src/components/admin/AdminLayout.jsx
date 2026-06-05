@@ -15,8 +15,8 @@ export default function AdminLayout({ children, topbarTitle = 'Admin', topbarBre
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1A0A00' }}>
-        <div style={{ width: 40, height: 40, border: '3px solid rgba(196,149,106,0.2)', borderTopColor: '#8B1A1A', borderRadius: '50%' }} className="animate-spin" />
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FDF5EE' }}>
+        <div style={{ width: 40, height: 40, border: '3px solid rgba(196,149,106,0.25)', borderTopColor: '#8B1A1A', borderRadius: '50%' }} className="animate-spin" />
       </div>
     )
   }
@@ -29,7 +29,7 @@ export default function AdminLayout({ children, topbarTitle = 'Admin', topbarBre
 
   return (
     <AdminCtx.Provider value={{ setSidebarOpen }}>
-      <div style={{ display: 'flex', minHeight: '100vh', background: '#1A0A00' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: '#FDF5EE' }}>
         <AdminSidebar
           currentPath={location.pathname}
           isOpen={sidebarOpen}

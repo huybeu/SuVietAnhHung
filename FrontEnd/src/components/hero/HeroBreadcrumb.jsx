@@ -4,16 +4,16 @@ export default function HeroBreadcrumb({ era, heroName }) {
   return (
     <nav style={{
       position: 'sticky', top: 64, zIndex: 40,
-      backdropFilter: 'blur(12px)', backgroundColor: 'rgba(10,4,2,0.85)',
-      borderBottom: '1px solid rgba(246,190,59,0.18)', height: 48,
+      backdropFilter: 'blur(12px)', backgroundColor: 'rgba(253,245,238,0.92)',
+      borderBottom: '0.5px solid #D4B896', height: 48,
       display: 'flex', alignItems: 'center',
+      boxShadow: '0 1px 8px rgba(61,43,26,0.06)',
     }}>
-      {/* Mobile: just back link */}
+      {/* Mobile: back link */}
       <div className="sm:hidden" style={{ padding: '0 1.5rem' }}>
         <Link
           to={era ? `/anh-hung?era=${era.id}` : '/anh-hung'}
-          className="font-cinzel"
-          style={{ color: '#f6be3b', fontSize: '0.8rem', textDecoration: 'none' }}
+          style={{ color: '#8B1A1A', fontSize: '0.8rem', textDecoration: 'none', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
         >
           ‹ {era?.name || 'Anh Hùng'}
         </Link>
@@ -29,14 +29,14 @@ export default function HeroBreadcrumb({ era, heroName }) {
           { label: 'Anh Hùng',  href: '/anh-hung' },
           era ? { label: era.name, href: `/anh-hung?era=${era.id}` } : null,
           { label: heroName, href: null },
-        ].filter(Boolean).map((item, i, arr) => (
+        ].filter(Boolean).map((item, i) => (
           <span key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            {i > 0 && <span className="font-cinzel" style={{ color: 'rgba(246,190,59,0.3)', fontSize: '0.75rem' }}>›</span>}
+            {i > 0 && <span style={{ color: 'rgba(196,149,106,0.5)', fontSize: '0.75rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>›</span>}
             {item.href
-              ? <Link to={item.href} className="font-cinzel" style={{ color: 'rgba(232,220,200,0.5)', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => e.target.style.color='#f6be3b'}
-                  onMouseLeave={e => e.target.style.color='rgba(232,220,200,0.5)'}>{item.label}</Link>
-              : <span className="font-cinzel" style={{ color: '#f2dfd6', fontSize: '0.8rem' }}>{item.label}</span>
+              ? <Link to={item.href} style={{ color: '#A0794E', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Be Vietnam Pro', sans-serif" }}
+                  onMouseEnter={e => e.target.style.color='#8B1A1A'}
+                  onMouseLeave={e => e.target.style.color='#A0794E'}>{item.label}</Link>
+              : <span style={{ color: '#3D2B1A', fontSize: '0.8rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>{item.label}</span>
             }
           </span>
         ))}

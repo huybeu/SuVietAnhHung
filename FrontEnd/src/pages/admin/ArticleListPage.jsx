@@ -48,7 +48,7 @@ function ArticleFilterBar({ searchParams, setSearchParams }) {
     <div className="flex flex-col gap-3 mb-4">
       <div className="flex flex-wrap gap-3 items-center">
         <div className="relative flex-1 min-w-[200px]">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#e8dcc8]/40" style={{ fontSize: '18px' }}>search</span>
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2" style={{ fontSize: '18px', color: 'rgba(61,43,26,0.35)' }}>search</span>
           <input className="input-gold pl-9 pr-3 py-2 text-sm w-full" placeholder="Tìm kiếm bài viết..." value={localQ} onChange={e => handleSearch(e.target.value)} />
         </div>
         <select className="input-gold py-2 px-3 text-sm min-w-[160px] cursor-pointer" value={activeStatus} onChange={e => setParam('status', e.target.value)}>
@@ -58,7 +58,8 @@ function ArticleFilterBar({ searchParams, setSearchParams }) {
           <option value="archived">Lưu kho</option>
         </select>
         {hasFilters && (
-          <button onClick={clearAll} className="text-sm text-[#dc143c] hover:text-[#f6be3b] transition-colors flex items-center gap-1">
+          <button onClick={clearAll} className="text-sm flex items-center gap-1 transition-colors" style={{ color: '#8B1A1A', background: 'none', border: 'none', cursor: 'pointer' }}
+            onMouseEnter={e => e.currentTarget.style.color='#C4956A'} onMouseLeave={e => e.currentTarget.style.color='#8B1A1A'}>
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>filter_alt_off</span>
             Xoá bộ lọc
           </button>
@@ -67,15 +68,15 @@ function ArticleFilterBar({ searchParams, setSearchParams }) {
       {hasFilters && (
         <div className="flex flex-wrap gap-2">
           {searchParams.get('q') && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-[#dc143c]/20 text-[#dc143c] border border-[#dc143c]/30">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(139,26,26,0.08)', color: '#8B1A1A', border: '0.5px solid rgba(139,26,26,0.25)' }}>
               Tìm: {searchParams.get('q')}
-              <button onClick={() => { setLocalQ(''); setParam('q', '') }} className="hover:text-white ml-1">✕</button>
+              <button onClick={() => { setLocalQ(''); setParam('q', '') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', marginLeft: '0.25rem' }}>✕</button>
             </span>
           )}
           {activeStatus !== 'all' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-[#f6be3b]/20 text-[#f6be3b] border border-[#f6be3b]/30">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(196,149,106,0.12)', color: '#C4956A', border: '0.5px solid rgba(196,149,106,0.35)' }}>
               {activeStatus === 'published' ? 'Đã xuất bản' : activeStatus === 'draft' ? 'Nháp' : 'Lưu kho'}
-              <button onClick={() => setParam('status', 'all')} className="hover:text-white ml-1">✕</button>
+              <button onClick={() => setParam('status', 'all')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C4956A', marginLeft: '0.25rem' }}>✕</button>
             </span>
           )}
         </div>
@@ -144,20 +145,20 @@ export default function ArticleListPage() {
       sortable: true,
       render: (row) => (
         <div className="max-w-xs">
-          <div className="font-cinzel text-[#f2dfd6] text-sm leading-snug line-clamp-1">{row.title}</div>
-          {row.excerpt && <div className="text-[#e8dcc8]/45 text-xs mt-0.5 line-clamp-1">{row.excerpt}</div>}
+          <div style={{ color: '#3D2B1A', fontSize: '0.88rem', lineHeight: 1.3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>{row.title}</div>
+          {row.excerpt && <div style={{ color: '#A0794E', fontSize: '0.75rem', marginTop: '0.15rem', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{row.excerpt}</div>}
         </div>
       ),
     },
     { key: 'status', header: 'Trạng Thái', render: (row) => <StatusBadge status={row.status} /> },
-    { key: 'author', header: 'Tác Giả', render: (row) => <span className="text-[#e8dcc8]/70 text-sm">{row.author?.username || row.author?.name || '—'}</span> },
+    { key: 'author', header: 'Tác Giả', render: (row) => <span style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{row.author?.username || row.author?.name || '—'}</span> },
     {
       key: 'published_at',
       header: 'Ngày Đăng',
       sortable: true,
       render: (row) => (
-        <span className="text-[#e8dcc8]/60 text-xs font-mono">
-          {row.published_at ? formatDateShort(row.published_at) : <span className="text-[#e8dcc8]/30">Chưa đăng</span>}
+        <span style={{ color: row.published_at ? '#5C3A1E' : '#A0794E', fontSize: '0.8rem', fontFamily: 'monospace' }}>
+          {row.published_at ? formatDateShort(row.published_at) : 'Chưa đăng'}
         </span>
       ),
     },
@@ -166,8 +167,8 @@ export default function ArticleListPage() {
       header: 'Lượt Xem',
       sortable: true,
       render: (row) => (
-        <span className="flex items-center gap-1 text-[#e8dcc8]/60 text-sm">
-          <span className="material-symbols-outlined text-[#e8dcc8]/30" style={{ fontSize: '14px' }}>visibility</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#A0794E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '14px', color: 'rgba(61,43,26,0.3)' }}>visibility</span>
           {(row.view_count || 0).toLocaleString('vi-VN')}
         </span>
       ),
@@ -218,7 +219,7 @@ export default function ArticleListPage() {
         onSelectionChange={setSelectedIds}
         filterBar={<ArticleFilterBar searchParams={searchParams} setSearchParams={setSearchParams} />}
         rowActions={rowActions}
-        emptyState={<div className="text-center py-16 text-[#e8dcc8]/40 font-cinzel">Lịch sử chưa được kể — hãy là người đầu tiên.</div>}
+        emptyState={<div style={{ textAlign: 'center', padding: '4rem 0', color: '#A0794E', fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.9rem' }}>Lịch sử chưa được kể — hãy là người đầu tiên.</div>}
       />
       <ConfirmModal
         isOpen={!!confirmDelete}

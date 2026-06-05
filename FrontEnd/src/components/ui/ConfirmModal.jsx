@@ -19,27 +19,45 @@ export default function ConfirmModal({
 
   if (!isOpen) return null
 
-  const confirmCls = variant === 'danger'
-    ? 'bg-[#dc143c] hover:bg-[#8b0000] text-white'
-    : 'bg-[#f6be3b] hover:bg-[#e0aa2a] text-[#0a0402]'
+  const confirmStyle = variant === 'danger'
+    ? { background: '#8B1A1A', color: '#FDF5EE' }
+    : { background: '#C4956A', color: '#3D2B1A' }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/70" onClick={onCancel} />
-      <div className="glass-panel relative w-full max-w-md rounded-xl p-6 shadow-2xl">
-        <h3 className="font-cinzel text-[#f2dfd6] text-lg mb-3">{title}</h3>
-        <p className="text-[#e8dcc8]/80 text-sm leading-relaxed mb-6">{message}</p>
+      <div className="absolute inset-0 bg-black/50" onClick={onCancel} />
+      <div style={{
+        position: 'relative', width: '100%', maxWidth: 480, borderRadius: '0.85rem', padding: '1.5rem',
+        background: '#FDF5EE', border: '0.5px solid #D4B896',
+        boxShadow: '0 8px 32px rgba(61,43,26,0.18), 0 2px 8px rgba(61,43,26,0.08)',
+      }}>
+        <h3 style={{ color: '#3D2B1A', fontSize: '1.1rem', marginBottom: '0.75rem', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>{title}</h3>
+        <p style={{ color: '#5C3A1E', fontSize: '0.88rem', lineHeight: 1.7, marginBottom: '1.5rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{message}</p>
         <div className="flex gap-3 justify-end">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded-lg border border-[#f6be3b]/30 text-[#e8dcc8]/70 hover:border-[#f6be3b]/60 hover:text-[#e8dcc8] font-cinzel text-sm transition"
+            style={{
+              padding: '0.5rem 1rem', borderRadius: '0.5rem',
+              border: '0.5px solid #D4B896', background: 'transparent',
+              color: '#A0794E', cursor: 'pointer', transition: 'all 0.15s',
+              fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.85rem', fontWeight: 600,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor='#8B1A1A'; e.currentTarget.style.color='#3D2B1A' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor='#D4B896'; e.currentTarget.style.color='#A0794E' }}
           >
             {cancelLabel}
           </button>
           <button
             ref={confirmRef}
             onClick={onConfirm}
-            className={`px-4 py-2 rounded-lg font-cinzel text-sm transition ${confirmCls}`}
+            style={{
+              padding: '0.5rem 1.25rem', borderRadius: '0.5rem',
+              border: 'none', cursor: 'pointer', transition: 'opacity 0.15s',
+              fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.85rem', fontWeight: 700,
+              ...confirmStyle,
+            }}
+            onMouseEnter={e => e.currentTarget.style.opacity='0.85'}
+            onMouseLeave={e => e.currentTarget.style.opacity='1'}
           >
             {confirmLabel}
           </button>
