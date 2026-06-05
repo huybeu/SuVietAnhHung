@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
 const { sequelize } = require('../config/database');
 
 const User = sequelize.define(
@@ -15,6 +16,7 @@ const User = sequelize.define(
       unique: { msg: 'Username đã tồn tại' },
       validate: {
         notEmpty: { msg: 'Username không được để trống' },
+        len: { args: [3, 50], msg: 'Username phải từ 3 đến 50 ký tự' },
       },
     },
     email: {
@@ -28,6 +30,9 @@ const User = sequelize.define(
     password: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Mật khẩu không được để trống' },
+      },
     },
     role: {
       type: DataTypes.ENUM('superadmin', 'editor', 'viewer'),
@@ -46,7 +51,28 @@ const User = sequelize.define(
   },
   {
     tableName: 'users',
+    hooks: {
+      beforeCreate: async (user) => {
+        if (user.password) {
+          user.password = await bcrypt.hash(user.password, 12);
+        }
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed('password')) {
+          user.password = await bcrypt.hash(user.password, 12);
+        }
+      },
+    },
   }
 );
+
+User.prototype.comparePassword = async function (plainPassword) {
+  return bcrypt.compare(plainPassword, this.password);
+};
+
+User.prototype.toSafeObject = function () {
+  const { password, ...safe } = this.toJSON();
+  return safe;
+};
 
 module.exports = User;

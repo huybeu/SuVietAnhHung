@@ -1,6 +1,7 @@
 const { sequelize } = require('../config/database');
 
 const User         = require('./user');
+const RefreshToken = require('./refreshToken');
 const SiteConfig   = require('./siteConfig');
 const Era          = require('./era');
 const Hero         = require('./hero');
@@ -15,6 +16,10 @@ const SponsorTier  = require('./sponsorTier');
 const Sponsor      = require('./sponsor');
 const Media        = require('./media');
 const PageView     = require('./pageView');
+
+// ─── refresh_tokens ─────────────────────────────────────────
+User.hasMany(RefreshToken, { foreignKey: 'user_id', as: 'refreshTokens', onDelete: 'CASCADE' });
+RefreshToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 // ─── site_config ────────────────────────────────────────────
 SiteConfig.belongsTo(User, { foreignKey: 'updated_by', as: 'updater' });
@@ -97,6 +102,7 @@ Media.belongsTo(User, { foreignKey: 'updated_by',  as: 'updater'  });
 module.exports = {
   sequelize,
   User,
+  RefreshToken,
   SiteConfig,
   Era,
   Hero,

@@ -8,9 +8,11 @@
 
 const express = require('express');
 const router = express.Router();
+const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');
 const AppError = require('../utils/AppError');
 
+router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 
 // Catch-all cho route không tồn tại
