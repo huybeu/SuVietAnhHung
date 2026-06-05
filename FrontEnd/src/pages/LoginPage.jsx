@@ -1,405 +1,399 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function LoginPage() {
+  const location = useLocation()
+  const isRegister = location.pathname === '/dang-ky'
+
   const [username, setUsername] = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const { login, register } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const x = e.clientX / window.innerWidth
-      const y = e.clientY / window.innerHeight
-      document.querySelectorAll('.corner-glow').forEach((glow, index) => {
-        const multiplier = (index + 1) * 20
-        glow.style.transform = `translate(${x * multiplier}px, ${y * multiplier}px)`
-      })
-    }
-    document.addEventListener('mousemove', handleMouseMove)
-    return () => document.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+    setUsername('')
+    setDisplayName('')
+    setPassword('')
+    setConfirmPassword('')
+    setError('')
+  }, [isRegister])
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-    if (!username.trim()) return
-    if (username.trim().toLowerCase() === 'admin') {
-      localStorage.setItem('loggedInUser', JSON.stringify({ name: 'Admin' }))
-      navigate('/admin')
-    } else {
-      localStorage.setItem('loggedInUser', JSON.stringify({ name: username.trim() }))
-      navigate('/ho-so')
+    setError('')
+    if (!username.trim()) { setError('Vui lòng nhập tên đăng nhập.'); return }
+    if (!password)         { setError('Vui lòng nhập mật khẩu.'); return }
+
+    setSubmitting(true)
+    try {
+      const user = await login(username.trim(), password)
+      navigate(user.isAdmin ? '/admin' : '/ho-so')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSubmitting(false)
     }
   }
 
+  const handleRegister = async (e) => {
+    e.preventDefault()
+    setError('')
+    if (!displayName.trim())         { setError('Vui lòng nhập tên hiển thị.'); return }
+    if (!username.trim())             { setError('Vui lòng nhập tên đăng nhập.'); return }
+    if (password.length < 6)          { setError('Mật khẩu phải có ít nhất 6 ký tự.'); return }
+    if (password !== confirmPassword)  { setError('Mật khẩu xác nhận không khớp.'); return }
+
+    setSubmitting(true)
+    try {
+      await register(displayName.trim(), username.trim(), password)
+      navigate('/ho-so')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const pageBg = 'linear-gradient(135deg, #FAE8DA 0%, #F5D5C0 100%)'
+
   return (
-    <div className="relative min-h-screen bg-[#0a0402] overflow-hidden">
-      {/* Background layers */}
-      <div className="dong-son-bg" style={{ position: 'fixed', inset: 0, zIndex: 0 }} />
-      <div
-        className="corner-glow glow-red"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '400px',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(220,20,60,0.25) 0%, transparent 70%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-          transition: 'transform 0.1s ease-out',
-        }}
-      />
-      <div
-        className="corner-glow glow-gold"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          width: '400px',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(246,190,59,0.2) 0%, transparent 70%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-          transition: 'transform 0.1s ease-out',
-        }}
-      />
-      <div
-        className="corner-glow glow-red"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          width: '350px',
-          height: '350px',
-          background: 'radial-gradient(circle, rgba(220,20,60,0.12) 0%, transparent 70%)',
-          opacity: 0.2,
-          zIndex: 0,
-          pointerEvents: 'none',
-          transition: 'transform 0.1s ease-out',
-        }}
-      />
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+      style={{ background: pageBg }}
+    >
+      {/* Đông Sơn subtle pattern */}
+      <div className="dong-son-bg" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />
 
-      {/* Navbar */}
-      <Navbar />
+      <div className="w-full max-w-[400px]" style={{ position: 'relative', zIndex: 1 }}>
 
-      {/* Main content */}
-      <div
-        className="relative z-10 flex items-center justify-center pt-20"
-        style={{ minHeight: '100vh' }}
-      >
-        {/* Auth card */}
+        {/* Top bar */}
+        <div className="flex items-center justify-between mb-8">
+          <Link to="/" style={{ textDecoration: 'none', fontFamily: "'Playfair Display', serif", fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
+            <span style={{ color: '#8B1A1A' }}>SỬ VIỆT</span>
+            <span style={{ color: '#C4956A', marginLeft: '0.25rem' }}>ANH HÙNG</span>
+          </Link>
+          <Link
+            to="/"
+            className="flex items-center gap-1 font-vietnam text-xs transition-colors"
+            style={{ color: '#5C3A1E', textDecoration: 'none' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#8B1A1A'}
+            onMouseLeave={e => e.currentTarget.style.color = '#5C3A1E'}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_back</span>
+            Trang chủ
+          </Link>
+        </div>
+
+        {/* Title */}
+        <div className="mb-6">
+          <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#3D2B1A', fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+            {isRegister ? 'Tạo tài khoản' : 'Đăng nhập'}
+          </h1>
+          <p className="font-vietnam text-sm" style={{ color: '#5C3A1E' }}>
+            {isRegister
+              ? 'Tham gia cộng đồng gìn giữ lịch sử Việt Nam'
+              : 'Chào mừng bạn trở lại'}
+          </p>
+        </div>
+
+        {/* Card */}
         <div
-          className="auth-card p-10 rounded-lg relative overflow-hidden"
-          style={{ maxWidth: '450px', width: '100%' }}
+          style={{
+            background: '#FEFAF6',
+            border: '0.5px solid #D4B896',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 24px rgba(61,43,26,0.10), 0 1px 4px rgba(61,43,26,0.06)',
+          }}
         >
-          {/* Decorative corner borders */}
+          {/* Tab switcher */}
           <div
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '32px',
-              height: '32px',
-              borderTop: '2px solid rgba(246,190,59,0.4)',
-              borderLeft: '2px solid rgba(246,190,59,0.4)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '32px',
-              height: '32px',
-              borderTop: '2px solid rgba(246,190,59,0.4)',
-              borderRight: '2px solid rgba(246,190,59,0.4)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '32px',
-              height: '32px',
-              borderBottom: '2px solid rgba(246,190,59,0.4)',
-              borderLeft: '2px solid rgba(246,190,59,0.4)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: '32px',
-              height: '32px',
-              borderBottom: '2px solid rgba(246,190,59,0.4)',
-              borderRight: '2px solid rgba(246,190,59,0.4)',
-            }}
-          />
-
-          {/* Header */}
-          <div className="flex flex-col items-center mb-8">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '56px',
-                height: '56px',
-                borderRadius: '50%',
-                background: 'rgba(246,190,59,0.1)',
-                marginBottom: '16px',
-              }}
-            >
-              <span
-                className="material-icons"
-                style={{ color: '#f6be3b', fontSize: '28px' }}
-              >
-                history_edu
-              </span>
-            </div>
-
-            <p
-              style={{
-                color: '#f6be3b',
-                letterSpacing: '0.3em',
-                fontSize: '0.7rem',
-                textTransform: 'uppercase',
-                marginBottom: '8px',
-                fontWeight: 600,
-              }}
-            >
-              Sử Việt Anh Hùng
-            </p>
-
-            <h1
-              className="text-headline-lg text-secondary"
-              style={{
-                color: '#f6be3b',
-                fontSize: '2rem',
-                fontWeight: 700,
-                marginBottom: '12px',
-                textAlign: 'center',
-              }}
-            >
-              Đăng Nhập
-            </h1>
-
-            <div
-              className="decorative-line"
-              style={{
-                width: '96px',
-                height: '2px',
-                background: 'linear-gradient(90deg, transparent, #dc143c, transparent)',
-              }}
-            />
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            {/* Username field */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="username"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  color: '#f6be3b',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.05em',
-                  marginBottom: '4px',
-                }}
-              >
-                <span className="material-icons" style={{ fontSize: '16px' }}>
-                  person
-                </span>
-                Danh tính
-              </label>
-              <input
-                id="username"
-                type="text"
-                className="input-gold"
-                placeholder="Nhập danh tính của bạn..."
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
-              />
-            </div>
-
-            {/* Password field */}
-            <div className="flex flex-col gap-1">
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '4px',
-                }}
-              >
-                <label
-                  htmlFor="password"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    color: '#f6be3b',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  <span className="material-icons" style={{ fontSize: '16px' }}>
-                    lock
-                  </span>
-                  Mật khẩu
-                </label>
-                <a
-                  href="#"
-                  style={{
-                    color: '#dc143c',
-                    fontSize: '0.75rem',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.target.style.color = '#f6be3b')}
-                  onMouseLeave={(e) => (e.target.style.color = '#dc143c')}
-                >
-                  Quên mật khẩu?
-                </a>
-              </div>
-              <div style={{ position: 'relative' }}>
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  className="input-gold"
-                  placeholder="Nhập mật khẩu..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  style={{ width: '100%', paddingRight: '44px' }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: '12px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'rgba(246,190,59,0.6)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: 0,
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = '#f6be3b')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = 'rgba(246,190,59,0.6)')
-                  }
-                  aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                >
-                  <span className="material-icons" style={{ fontSize: '20px' }}>
-                    {showPassword ? 'visibility_off' : 'visibility'}
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* Submit button */}
-            <button
-              type="submit"
-              className="btn-epic group"
-              style={{ marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-              Đăng Nhập
-              <span
-                className="material-icons group-hover:translate-x-1"
-                style={{
-                  fontSize: '20px',
-                  transition: 'transform 0.2s',
-                }}
-              >
-                fort
-              </span>
-            </button>
-          </form>
-
-          {/* Footer */}
-          <div
-            style={{
-              marginTop: '24px',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '12px',
+              background: '#FAE8DA',
+              borderRadius: '8px',
+              padding: '4px',
+              marginBottom: '1.5rem',
             }}
           >
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-              Chưa có tài khoản?{' '}
-              <Link
-                to="/dang-ky"
-                style={{
-                  color: '#f6be3b',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={(e) => (e.target.style.color = '#dc143c')}
-                onMouseLeave={(e) => (e.target.style.color = '#f6be3b')}
-              >
-                Gia nhập sử sách
-              </Link>
-            </p>
-
             <Link
-              to="/"
+              to="/dang-nhap"
+              className="font-vietnam"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                color: 'rgba(255,255,255,0.4)',
-                fontSize: '0.8rem',
+                flex: 1,
+                textAlign: 'center',
+                padding: '0.5rem',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                borderRadius: '6px',
                 textDecoration: 'none',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'rgba(246,190,59,0.8)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(255,255,255,0.4)'
+                transition: 'all 0.2s',
+                background: !isRegister ? '#FDF5EE' : 'transparent',
+                color: !isRegister ? '#3D2B1A' : '#A0794E',
+                boxShadow: !isRegister ? '0 1px 4px rgba(61,43,26,0.10)' : 'none',
               }}
             >
-              <span className="material-icons" style={{ fontSize: '16px' }}>
-                arrow_back
-              </span>
-              Trở về trang chủ
+              Đăng nhập
+            </Link>
+            <Link
+              to="/dang-ky"
+              className="font-vietnam"
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '0.5rem',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                borderRadius: '6px',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+                background: isRegister ? '#FDF5EE' : 'transparent',
+                color: isRegister ? '#3D2B1A' : '#A0794E',
+                boxShadow: isRegister ? '0 1px 4px rgba(61,43,26,0.10)' : 'none',
+              }}
+            >
+              Đăng ký
             </Link>
           </div>
 
-          {/* Bottom text */}
-          <p
-            style={{
-              marginTop: '24px',
-              textAlign: 'center',
-              color: 'rgba(246,190,59,0.25)',
-              fontSize: '0.6rem',
-              letterSpacing: '0.4em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Hào khí ngàn năm • Vang vọng núi sông
-          </p>
+          {/* Error */}
+          {error && (
+            <div
+              style={{
+                marginBottom: '1.25rem',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '0.625rem',
+                padding: '0.75rem 0.875rem',
+                borderRadius: '8px',
+                background: '#FAE8DA',
+                borderLeft: '3px solid #8B1A1A',
+                color: '#8B1A1A',
+                fontSize: '0.875rem',
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+              }}
+            >
+              <span className="material-symbols-outlined text-base flex-shrink-0 mt-0.5">error</span>
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Login form */}
+          {!isRegister && (
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
+              <FormField
+                id="username" label="Tên đăng nhập" type="text"
+                placeholder="Nhập tên đăng nhập..." value={username}
+                onChange={setUsername} autoComplete="username"
+              />
+              <FormPasswordField
+                id="password" label="Mật khẩu" placeholder="Nhập mật khẩu..."
+                value={password} onChange={setPassword}
+                show={showPassword} onToggle={() => setShowPassword(!showPassword)}
+                extra={
+                  <a href="#"
+                    className="font-vietnam text-xs transition-colors"
+                    style={{ color: '#8B1A1A', textDecoration: 'none' }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#6B1414'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#8B1A1A'}
+                  >
+                    Quên mật khẩu?
+                  </a>
+                }
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{
+                  marginTop: '0.5rem',
+                  width: '100%',
+                  padding: '0.7rem',
+                  background: '#8B1A1A',
+                  color: '#FDF5EE',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: submitting ? 'not-allowed' : 'pointer',
+                  opacity: submitting ? 0.65 : 1,
+                  transition: 'all 0.15s',
+                  boxShadow: '0 4px 14px rgba(139,26,26,0.30)',
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  letterSpacing: '0.03em',
+                }}
+                onMouseEnter={(e) => { if (!submitting) e.currentTarget.style.background = '#6B1414'; }}
+                onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.background = '#8B1A1A'; }}
+              >
+                {submitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
+              </button>
+            </form>
+          )}
+
+          {/* Register form */}
+          {isRegister && (
+            <form onSubmit={handleRegister} className="flex flex-col gap-4">
+              <FormField
+                id="displayName" label="Tên hiển thị" type="text"
+                placeholder="Tên của bạn..." value={displayName}
+                onChange={setDisplayName} autoComplete="name"
+              />
+              <FormField
+                id="reg-username" label="Tên đăng nhập" type="text"
+                placeholder="Tên đăng nhập..." value={username}
+                onChange={setUsername} autoComplete="username"
+              />
+              <FormPasswordField
+                id="reg-password" label="Mật khẩu" placeholder="Ít nhất 6 ký tự..."
+                value={password} onChange={setPassword}
+                show={showPassword} onToggle={() => setShowPassword(!showPassword)}
+              />
+              <FormPasswordField
+                id="confirm-password" label="Xác nhận mật khẩu" placeholder="Nhập lại mật khẩu..."
+                value={confirmPassword} onChange={setConfirmPassword}
+                show={showConfirm} onToggle={() => setShowConfirm(!showConfirm)}
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{
+                  marginTop: '0.5rem',
+                  width: '100%',
+                  padding: '0.7rem',
+                  background: '#8B1A1A',
+                  color: '#FDF5EE',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: submitting ? 'not-allowed' : 'pointer',
+                  opacity: submitting ? 0.65 : 1,
+                  transition: 'all 0.15s',
+                  boxShadow: '0 4px 14px rgba(139,26,26,0.30)',
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  letterSpacing: '0.03em',
+                }}
+                onMouseEnter={(e) => { if (!submitting) e.currentTarget.style.background = '#6B1414'; }}
+                onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.background = '#8B1A1A'; }}
+              >
+                {submitting ? 'Đang tạo tài khoản...' : 'Tạo tài khoản'}
+              </button>
+            </form>
+          )}
         </div>
+
+        {/* Footer link */}
+        <p className="text-center font-vietnam text-sm mt-5" style={{ color: '#5C3A1E' }}>
+          {isRegister ? 'Đã có tài khoản? ' : 'Chưa có tài khoản? '}
+          <Link
+            to={isRegister ? '/dang-nhap' : '/dang-ky'}
+            className="font-semibold transition-colors"
+            style={{ color: '#8B1A1A', textDecoration: 'none' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#6B1414'}
+            onMouseLeave={e => e.currentTarget.style.color = '#8B1A1A'}
+          >
+            {isRegister ? 'Đăng nhập' : 'Đăng ký'}
+          </Link>
+        </p>
+
+      </div>
+    </div>
+  )
+}
+
+/* ── Shared sub-components ── */
+
+function FormField({ id, label, type, placeholder, value, onChange, autoComplete }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="font-vietnam text-sm font-medium" style={{ color: '#3D2B1A' }}>
+        {label}
+      </label>
+      <input
+        id={id} type={type} placeholder={placeholder} value={value}
+        onChange={e => onChange(e.target.value)} autoComplete={autoComplete}
+        style={{
+          width: '100%',
+          padding: '0.625rem 0.875rem',
+          background: '#FDF5EE',
+          border: '0.5px solid #C4956A',
+          borderRadius: '8px',
+          color: '#3D2B1A',
+          fontSize: '0.875rem',
+          fontFamily: "'Be Vietnam Pro', sans-serif",
+          outline: 'none',
+          transition: 'border-color 0.2s, box-shadow 0.2s',
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.border = '1px solid #C4956A';
+          e.currentTarget.style.boxShadow = '0 0 0 2px rgba(196,149,106,0.18)';
+          e.currentTarget.style.outline = '2px solid #C4956A';
+          e.currentTarget.style.outlineOffset = '2px';
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.border = '0.5px solid #C4956A';
+          e.currentTarget.style.boxShadow = 'none';
+          e.currentTarget.style.outline = 'none';
+        }}
+      />
+    </div>
+  )
+}
+
+function FormPasswordField({ id, label, placeholder, value, onChange, show, onToggle, extra }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between">
+        <label htmlFor={id} className="font-vietnam text-sm font-medium" style={{ color: '#3D2B1A' }}>{label}</label>
+        {extra}
+      </div>
+      <div className="relative">
+        <input
+          id={id} type={show ? 'text' : 'password'} placeholder={placeholder}
+          value={value} onChange={e => onChange(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.625rem 2.75rem 0.625rem 0.875rem',
+            background: '#FDF5EE',
+            border: '0.5px solid #C4956A',
+            borderRadius: '8px',
+            color: '#3D2B1A',
+            fontSize: '0.875rem',
+            fontFamily: "'Be Vietnam Pro', sans-serif",
+            outline: 'none',
+            transition: 'border-color 0.2s, box-shadow 0.2s',
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.border = '1px solid #C4956A';
+            e.currentTarget.style.boxShadow = '0 0 0 2px rgba(196,149,106,0.18)';
+            e.currentTarget.style.outline = '2px solid #C4956A';
+            e.currentTarget.style.outlineOffset = '2px';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.border = '0.5px solid #C4956A';
+            e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.outline = 'none';
+          }}
+        />
+        <button
+          type="button" onClick={onToggle}
+          className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+          style={{ color: '#A0794E', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#8B1A1A'}
+          onMouseLeave={e => e.currentTarget.style.color = '#A0794E'}
+          aria-label={show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+        >
+          <span className="material-symbols-outlined text-lg">
+            {show ? 'visibility_off' : 'visibility'}
+          </span>
+        </button>
       </div>
     </div>
   )
