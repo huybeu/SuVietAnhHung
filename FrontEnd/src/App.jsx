@@ -25,9 +25,9 @@ const DonationsAdminPage = lazy(() => import('./pages/admin/DonationsAdminPage')
 
 function PageLoader() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0402' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FDF5EE' }}>
       <div
-        style={{ width: 40, height: 40, border: '3px solid rgba(246,190,59,0.2)', borderTopColor: '#dc143c', borderRadius: '50%' }}
+        style={{ width: 40, height: 40, border: '3px solid rgba(196,149,106,0.25)', borderTopColor: '#8B1A1A', borderRadius: '50%' }}
         className="animate-spin"
       />
     </div>

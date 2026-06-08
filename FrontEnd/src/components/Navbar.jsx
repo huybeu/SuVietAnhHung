@@ -10,7 +10,8 @@ export default function Navbar({ activePage }) {
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
 
-  const isAdmin = user?.isAdmin
+  const isAdmin    = user?.isAdmin
+  const userName   = user?.displayName ?? user?.name ?? ''
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -27,6 +28,11 @@ export default function Navbar({ activePage }) {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
 
   const handleLogout = async () => {
     await logout()
@@ -50,18 +56,16 @@ export default function Navbar({ activePage }) {
         style={{
           background: scrolled ? 'rgba(253,245,238,0.99)' : 'rgba(253,245,238,0.96)',
           borderBottom: '1px solid rgba(196,149,106,0.30)',
-          paddingLeft: '2rem',
-          paddingRight: '2rem',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           boxShadow: scrolled ? '0 2px 16px rgba(61,43,26,0.12)' : '0 1px 4px rgba(61,43,26,0.06)',
           transition: 'all 0.3s ease',
         }}
-        className="fixed w-full top-0 z-50 h-18 flex items-center justify-between"
+        className="fixed w-full top-0 z-50 h-[64px] flex items-center justify-between px-4 md:px-8"
       >
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 flex-shrink-0" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.35rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1rem, 3.5vw, 1.35rem)', fontWeight: 700, letterSpacing: '-0.01em' }}>
             <span style={{ color: '#8B1A1A' }}>SỬ VIỆT</span>
             <span style={{ color: '#C4956A', marginLeft: '0.3rem' }}>ANH HÙNG</span>
           </span>
@@ -92,7 +96,7 @@ export default function Navbar({ activePage }) {
         </div>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 md:gap-3">
           <button
             className="hidden md:flex material-symbols-outlined"
             style={{ color: 'rgba(61,43,26,0.45)', fontSize: '22px', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
@@ -106,7 +110,7 @@ export default function Navbar({ activePage }) {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 transition-all focus:outline-none"
+              className="flex items-center gap-2 transition-all focus:outline-none min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 justify-center md:justify-start"
             >
               {user ? (
                 <>
@@ -115,12 +119,12 @@ export default function Navbar({ activePage }) {
                     style={{ background: 'rgba(139,26,26,0.28)', border: '1.5px solid rgba(196,149,106,0.45)' }}
                   >
                     <span style={{ color: '#C4956A', fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '0.85rem', lineHeight: 1 }}>
-                      {user.name[0].toUpperCase()}
+                      {userName[0]?.toUpperCase() ?? '?'}
                     </span>
                   </div>
                   <span className="hidden md:block font-vietnam text-sm font-semibold max-w-[120px] truncate"
                     style={{ color: '#3D2B1A' }}>
-                    {user.name}
+                    {userName}
                   </span>
                   <span
                     className="hidden md:block material-symbols-outlined text-base"
@@ -151,11 +155,11 @@ export default function Navbar({ activePage }) {
                     <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                       style={{ background: 'rgba(139,26,26,0.12)', border: '0.5px solid rgba(196,149,106,0.5)' }}>
                       <span style={{ color: '#8B1A1A', fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1rem' }}>
-                        {user.name[0].toUpperCase()}
+                        {userName[0]?.toUpperCase() ?? '?'}
                       </span>
                     </div>
                     <div className="min-w-0">
-                      <p className="font-vietnam text-sm font-semibold truncate" style={{ color: '#3D2B1A' }}>{user.name}</p>
+                      <p className="font-vietnam text-sm font-semibold truncate" style={{ color: '#3D2B1A' }}>{userName}</p>
                       <p className="font-vietnam text-xs" style={{ color: '#5C3A1E' }}>
                         {isAdmin ? 'Quản trị viên' : 'Thành viên'}
                       </p>
@@ -216,16 +220,17 @@ export default function Navbar({ activePage }) {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-1 focus:outline-none"
+            className="md:hidden flex items-center justify-center focus:outline-none"
+            style={{ minWidth: 44, minHeight: 44, background: 'none', border: 'none', cursor: 'pointer', padding: '0 6px' }}
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Menu"
+            aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
           >
-            <span className={`block h-0.5 transition-all duration-300 ${mobileOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'}`}
-              style={{ background: 'rgba(61,43,26,0.75)' }} />
-            <span className={`block h-0.5 transition-all duration-300 ${mobileOpen ? 'opacity-0 w-0' : 'w-4'}`}
-              style={{ background: 'rgba(61,43,26,0.75)' }} />
-            <span className={`block h-0.5 transition-all duration-300 ${mobileOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-6'}`}
-              style={{ background: 'rgba(61,43,26,0.75)' }} />
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: '26px', color: 'rgba(61,43,26,0.75)', transition: 'color 0.2s' }}
+            >
+              {mobileOpen ? 'close' : 'menu'}
+            </span>
           </button>
         </div>
       </nav>
@@ -239,7 +244,7 @@ export default function Navbar({ activePage }) {
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
 
         <div
-          className={`absolute top-[72px] right-0 w-72 transition-transform duration-300 ${
+          className={`absolute top-[64px] right-0 w-72 transition-transform duration-300 ${
             mobileOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{ background: '#FDF5EE', borderLeft: '0.5px solid #D4B896', borderBottom: '0.5px solid #D4B896', boxShadow: '-4px 0 24px rgba(61,43,26,0.14)' }}
@@ -275,11 +280,11 @@ export default function Navbar({ activePage }) {
                   <div className="w-9 h-9 rounded-full flex items-center justify-center"
                     style={{ background: 'rgba(139,26,26,0.12)', border: '0.5px solid rgba(196,149,106,0.5)' }}>
                     <span style={{ color: '#8B1A1A', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
-                      {user.name[0].toUpperCase()}
+                      {userName[0]?.toUpperCase() ?? '?'}
                     </span>
                   </div>
                   <div>
-                    <p className="font-vietnam text-sm font-semibold" style={{ color: '#3D2B1A' }}>{user.name}</p>
+                    <p className="font-vietnam text-sm font-semibold" style={{ color: '#3D2B1A' }}>{userName}</p>
                     <p className="font-vietnam text-xs" style={{ color: '#5C3A1E' }}>{isAdmin ? 'Quản trị viên' : 'Thành viên'}</p>
                   </div>
                 </div>

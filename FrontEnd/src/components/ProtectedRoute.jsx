@@ -16,9 +16,13 @@ function PageLoader() {
  * - Nếu chưa đăng nhập → redirect /dang-nhap?redirect=...
  * - Nếu thiếu quyền (requiredAction) → redirect /403
  */
+const DEV_BYPASS = import.meta.env.VITE_DEV_BYPASS === 'true'
+
 export default function ProtectedRoute({ children, requiredAction }) {
   const { user, isInitializing } = useAuth()
   const location = useLocation()
+
+  if (DEV_BYPASS) return children
 
   if (isInitializing) return <PageLoader />
 

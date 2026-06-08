@@ -12,27 +12,31 @@ export default function HeroLifespanBar({ birthYear, deathYear, era }) {
   const age   = birthYear != null && deathYear != null ? deathYear - birthYear : null
 
   return (
-    <div className="glass-panel" style={{ borderRadius: '0.75rem', padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
-      <div className="font-cinzel" style={{ color: '#f6be3b', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1rem' }}>
+    <div style={{
+      background: '#FDF5EE', border: '0.5px solid #D4B896', borderRadius: '0.75rem',
+      padding: '1.25rem 1.5rem', marginBottom: '1.5rem',
+      boxShadow: '0 2px 12px rgba(61,43,26,0.07)',
+    }}>
+      <div style={{ color: '#C4956A', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1rem', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
         Cuộc Đời Anh Hùng
       </div>
 
       {/* Era label */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
-        <span className="font-cinzel" style={{ color: 'rgba(246,190,59,0.6)', fontSize: '0.65rem' }}>{formatYear(era.year_start)}</span>
-        <span className="font-cinzel" style={{ color: 'rgba(246,190,59,0.7)', fontSize: '0.65rem' }}>{era.name}</span>
-        <span className="font-cinzel" style={{ color: 'rgba(246,190,59,0.6)', fontSize: '0.65rem' }}>{formatYear(era.year_end)}</span>
+        <span style={{ color: '#A0794E', fontSize: '0.65rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{formatYear(era.year_start)}</span>
+        <span style={{ color: '#7B4A00', fontSize: '0.65rem', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>{era.name}</span>
+        <span style={{ color: '#A0794E', fontSize: '0.65rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{formatYear(era.year_end)}</span>
       </div>
 
       {/* Track */}
-      <div style={{ position: 'relative', height: 12, backgroundColor: 'rgba(246,190,59,0.1)', borderRadius: 9999, border: '1px solid rgba(246,190,59,0.2)' }}>
+      <div style={{ position: 'relative', height: 12, backgroundColor: 'rgba(61,43,26,0.08)', borderRadius: 9999, border: '0.5px solid #D4B896' }}>
         <div
           title={age ? `${era.name} · ${age} năm` : era.name}
           style={{
             position: 'absolute', top: 0, height: '100%', borderRadius: 9999,
             left: `${left}%`, width: `${width}%`,
-            background: 'linear-gradient(to right, #dc143c, #f6be3b)',
-            boxShadow: '0 0 8px rgba(220,20,60,0.4)',
+            background: 'linear-gradient(to right, #8B1A1A, #C4956A)',
+            boxShadow: '0 0 6px rgba(139,26,26,0.3)',
           }}
         />
       </div>
@@ -40,17 +44,17 @@ export default function HeroLifespanBar({ birthYear, deathYear, era }) {
       {/* Labels */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
         {birthYear != null && (
-          <span style={{ color: 'rgba(232,220,200,0.5)', fontSize: '0.7rem', fontFamily: 'Noto Serif, serif' }}>
+          <span style={{ color: '#5C3A1E', fontSize: '0.7rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
             ↑ {formatYear(birthYear)}
           </span>
         )}
         {age != null && (
-          <span className="font-cinzel" style={{ color: 'rgba(246,190,59,0.6)', fontSize: '0.7rem' }}>
+          <span style={{ color: '#A0794E', fontSize: '0.7rem', fontFamily: "'Playfair Display', serif" }}>
             {age} năm
           </span>
         )}
         {deathYear != null && (
-          <span style={{ color: 'rgba(232,220,200,0.5)', fontSize: '0.7rem', fontFamily: 'Noto Serif, serif' }}>
+          <span style={{ color: '#5C3A1E', fontSize: '0.7rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
             {formatYear(deathYear)} ↑
           </span>
         )}

@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
 import DonationWizard from '../components/donation/DonationWizard'
 import { fetchDonations } from '../lib/api'
 import { formatVND, formatDateShort } from '../lib/format'
@@ -14,8 +13,14 @@ function getTierEmoji(amount) {
   return '🥉'
 }
 
+const MARQUEE_DONORS =
+  'Nguyễn Văn An • Trần Thị Bích • Lê Minh Đức • Phạm Thu Hà • Hoàng Quốc Bảo • Vũ Thị Lan • Đặng Hữu Phước • Bùi Thị Ngọc • Ngô Văn Thành • Lý Thị Mai • '.repeat(3)
+
 export default function DonationPage() {
-  useEffect(() => { document.title = 'Ủng Hộ Dự Án | Sử Việt Anh Hùng'; return () => { document.title = 'Sử Việt Anh Hùng' } }, [])
+  useEffect(() => {
+    document.title = 'Ủng Hộ Dự Án | Sử Việt Anh Hùng'
+    return () => { document.title = 'Sử Việt Anh Hùng' }
+  }, [])
 
   const pct = Math.round(RAISED / GOAL * 100)
 
@@ -27,52 +32,72 @@ export default function DonationPage() {
   const donations = Array.isArray(donationsData) ? donationsData : (donationsData?.data || [])
 
   return (
-    <div style={{ backgroundColor: '#0a0402', minHeight: '100vh' }}>
-      {/* Page header */}
-      <div style={{ padding: '5rem 1.5rem 3rem', textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
-        <div style={{ height: 1, background: 'linear-gradient(to right, transparent, rgba(246,190,59,0.4), transparent)', marginBottom: '1.5rem' }} />
-        <h1 className="font-cinzel" style={{ color: '#f2dfd6', fontSize: 'clamp(1.8rem,4vw,2.5rem)', margin: '0 0 1rem' }}>
-          <span style={{ color: '#dc143c' }}>✦</span> ĐỒNG HÀNH BẢO TỒN DI SẢN <span style={{ color: '#dc143c' }}>✦</span>
-        </h1>
-        <p style={{ color: 'rgba(232,220,200,0.65)', lineHeight: 1.8, fontSize: '1rem', margin: 0, fontFamily: 'Noto Serif, serif' }}>
-          Mỗi đồng đóng góp của bạn giúp dự án "Sử Việt Anh Hùng" xây dựng kho tư liệu lịch sử cho thế hệ mai sau.
-        </p>
-      </div>
+    <div style={{ backgroundColor: '#FDF5EE', minHeight: '100vh', color: '#3D2B1A' }}>
 
-      {/* Campaign progress */}
-      <div style={{ maxWidth: 700, margin: '0 auto 4rem', padding: '0 1.5rem' }}>
-        <div className="glass-panel" style={{ borderRadius: '1rem', padding: '1.75rem 2rem' }}>
+      {/* ── Hero section ── */}
+      <section style={{
+        background: 'linear-gradient(180deg, #FDF5EE 0%, #FAE8DA 55%, #F5D5C0 100%)',
+        padding: '5rem 1.5rem 4rem', textAlign: 'center', position: 'relative', overflow: 'hidden',
+      }}>
+        <div className="dong-son-bg" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto' }}>
+          <div style={{ height: 1, background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)', marginBottom: '1.5rem' }} />
+          <p style={{ color: '#8B1A1A', fontSize: '0.72rem', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>
+            Đóng Góp & Ủng Hộ
+          </p>
+          <h1 style={{ color: '#3D2B1A', fontSize: 'clamp(1.8rem,4vw,2.5rem)', margin: '0 0 1rem', fontFamily: "'Playfair Display', serif", fontWeight: 700, lineHeight: 1.2 }}>
+            Đồng Hành Bảo Tồn Di Sản
+          </h1>
+          <p style={{ color: '#5C3A1E', lineHeight: 1.8, fontSize: '1rem', margin: '0', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+            Mỗi đồng đóng góp của bạn giúp dự án "Sử Việt Anh Hùng" xây dựng kho tư liệu lịch sử cho thế hệ mai sau.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Campaign progress ── */}
+      <section style={{ maxWidth: 700, margin: '0 auto', padding: '3rem 1.5rem 0' }}>
+        <div style={{
+          background: '#FDF5EE', border: '0.5px solid #D4B896', borderRadius: '1rem',
+          padding: '1.75rem 2rem', boxShadow: '0 2px 12px rgba(61,43,26,0.07)',
+        }}>
+          <h2 style={{ color: '#C4956A', fontSize: '1.1rem', marginBottom: '0.5rem', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
+            Tiến Độ Gây Quỹ
+          </h2>
           <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <div>
-              <div className="font-cinzel" style={{ color: '#f6be3b', fontSize: '1.8rem' }}>{formatVND(RAISED)}</div>
-              <div style={{ color: 'rgba(232,220,200,0.5)', fontSize: '0.8rem', fontFamily: 'Cinzel, serif', letterSpacing: '0.05em' }}>đã quyên góp</div>
+              <div style={{ color: '#8B1A1A', fontSize: '1.8rem', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>{formatVND(RAISED)}</div>
+              <div style={{ color: '#A0794E', fontSize: '0.8rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>đã quyên góp</div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div className="font-cinzel" style={{ color: '#dc143c', fontSize: '1.8rem' }}>{pct}%</div>
-              <div style={{ color: 'rgba(232,220,200,0.5)', fontSize: '0.8rem', fontFamily: 'Cinzel, serif' }}>mục tiêu</div>
+              <div style={{ color: '#C4956A', fontSize: '1.8rem', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>{pct}%</div>
+              <div style={{ color: '#A0794E', fontSize: '0.8rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>mục tiêu</div>
             </div>
           </div>
           {/* Progress bar */}
-          <div style={{ height: 12, background: 'rgba(26,17,13,0.8)', borderRadius: 9999, overflow: 'hidden', border: '1px solid rgba(246,190,59,0.15)' }}>
-            <div style={{ height: '100%', width: `${pct}%`, background: 'linear-gradient(to right, #dc143c, #f6be3b)', borderRadius: 9999, transition: 'width 1s ease', boxShadow: '0 0 8px rgba(220,20,60,0.4)' }} />
+          <div style={{ height: 10, background: 'rgba(61,43,26,0.08)', borderRadius: 9999, overflow: 'hidden', marginBottom: '0.5rem' }}>
+            <div className="progress-fill" style={{ width: `${pct}%` }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-            <span style={{ color: 'rgba(232,220,200,0.4)', fontSize: '0.75rem', fontFamily: 'Cinzel, serif' }}>Mục tiêu: {formatVND(GOAL)}</span>
-            <span style={{ color: 'rgba(232,220,200,0.4)', fontSize: '0.75rem', fontFamily: 'Cinzel, serif' }}>Còn lại: {formatVND(GOAL - RAISED)}</span>
+            <span style={{ color: '#A0794E', fontSize: '0.75rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Mục tiêu: {formatVND(GOAL)}</span>
+            <span style={{ color: '#A0794E', fontSize: '0.75rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Còn lại: {formatVND(GOAL - RAISED)}</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Wizard */}
+      {/* ── Donation wizard ── */}
       <DonationWizard />
 
-      {/* Honor Board */}
+      {/* ── Honor Board ── */}
       {donations.length > 0 && (
-        <section id="board" style={{ padding: '4rem 1.5rem', backgroundColor: '#0d0705' }}>
+        <section id="board" style={{ padding: '4rem 1.5rem', background: '#FAE8DA', borderTop: '0.5px solid #D4B896' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h2 className="font-cinzel" style={{ color: '#f2dfd6', fontSize: '1.4rem', margin: 0 }}>
-                <span style={{ color: '#dc143c' }}>✦</span> BẢNG DANH DỰ ANH HÙNG <span style={{ color: '#dc143c' }}>✦</span>
+              <div style={{ height: 1, background: 'linear-gradient(to right, transparent, rgba(196,149,106,0.4), transparent)', marginBottom: '1.25rem' }} />
+              <p style={{ color: '#8B1A1A', fontSize: '0.72rem', letterSpacing: '0.22em', textTransform: 'uppercase', marginBottom: '0.5rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>
+                VINH DANH
+              </p>
+              <h2 style={{ color: '#3D2B1A', fontSize: '1.4rem', margin: 0, fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
+                Bảng Danh Dự Anh Hùng
               </h2>
             </div>
 
@@ -80,7 +105,7 @@ export default function DonationPage() {
             <div style={{ overflow: 'hidden', marginBottom: '1.5rem' }}>
               <div className="marquee-left" style={{ display: 'flex', gap: '2rem', whiteSpace: 'nowrap' }}>
                 {[...donations, ...donations].map((d, i) => (
-                  <span key={i} className="font-cinzel" style={{ color: '#e8dcc8', fontSize: '0.82rem', flexShrink: 0 }}>
+                  <span key={i} style={{ color: '#5C3A1E', fontSize: '0.82rem', flexShrink: 0, fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                     {getTierEmoji(d.amount)} {d.is_anonymous ? 'Ẩn danh' : (d.donor_name || 'Ẩn danh')} · {formatVND(d.amount)}
                   </span>
                 ))}
@@ -88,26 +113,32 @@ export default function DonationPage() {
             </div>
 
             {/* Table */}
-            <div style={{ overflow: 'hidden', borderRadius: '0.75rem', border: '1px solid rgba(246,190,59,0.12)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: '0.75rem', border: '0.5px solid #D4B896', background: '#FDF5EE', boxShadow: '0 2px 12px rgba(61,43,26,0.07)' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ background: '#1b110d' }}>
+                  <tr style={{ background: '#FAE8DA' }}>
                     {['Hạng', 'Người Đóng Góp', 'Số Tiền', 'Ngày'].map(h => (
-                      <th key={h} className="font-cinzel" style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'rgba(246,190,59,0.6)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid rgba(246,190,59,0.12)' }}>{h}</th>
+                      <th key={h} style={{
+                        padding: '0.75rem 1rem', textAlign: 'left',
+                        color: '#A0794E', fontSize: '0.65rem', textTransform: 'uppercase',
+                        letterSpacing: '0.1em', borderBottom: '0.5px solid #D4B896',
+                        fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600,
+                      }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {donations.slice(0, 20).map((d, i) => (
-                    <tr key={d.id || i} style={{ borderBottom: '1px solid rgba(246,190,59,0.06)', transition: 'background 0.15s' }}
-                      onMouseEnter={e => e.currentTarget.style.background='rgba(220,20,60,0.05)'}
+                    <tr key={d.id || i}
+                      style={{ borderBottom: '0.5px solid rgba(212,184,150,0.4)', transition: 'background 0.15s' }}
+                      onMouseEnter={e => e.currentTarget.style.background='rgba(196,149,106,0.06)'}
                       onMouseLeave={e => e.currentTarget.style.background='transparent'}>
                       <td style={{ padding: '0.65rem 1rem', fontSize: '1.1rem' }}>{getTierEmoji(d.amount)}</td>
-                      <td className="font-cinzel" style={{ padding: '0.65rem 1rem', color: d.is_anonymous ? 'rgba(232,220,200,0.4)' : '#e8dcc8', fontSize: '0.85rem', fontStyle: d.is_anonymous ? 'italic' : 'normal' }}>
+                      <td style={{ padding: '0.65rem 1rem', color: d.is_anonymous ? '#A0794E' : '#3D2B1A', fontSize: '0.85rem', fontStyle: d.is_anonymous ? 'italic' : 'normal', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                         {d.is_anonymous ? '(Ẩn danh)' : (d.donor_name || '—')}
                       </td>
-                      <td className="font-cinzel" style={{ padding: '0.65rem 1rem', color: '#f6be3b', fontSize: '0.85rem' }}>{formatVND(d.amount)}</td>
-                      <td style={{ padding: '0.65rem 1rem', color: 'rgba(232,220,200,0.45)', fontSize: '0.8rem', fontFamily: 'Noto Serif, serif' }}>{formatDateShort(d.created_at)}</td>
+                      <td style={{ padding: '0.65rem 1rem', color: '#8B1A1A', fontSize: '0.85rem', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>{formatVND(d.amount)}</td>
+                      <td style={{ padding: '0.65rem 1rem', color: '#A0794E', fontSize: '0.8rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{formatDateShort(d.created_at)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -116,6 +147,16 @@ export default function DonationPage() {
           </div>
         </section>
       )}
+
+      {/* ── Footer ── */}
+      <footer style={{ background: '#FAE8DA', borderTop: '1px solid rgba(196,149,106,0.35)', padding: '3rem 1.5rem 2rem' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(196,149,106,0.45), transparent)', marginBottom: '1.5rem' }} />
+          <div style={{ textAlign: 'center', color: '#A0794E', fontSize: '0.78rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+            © 2025 Sử Việt Anh Hùng. Tất cả quyền được bảo lưu. Dự án phi lợi nhuận vì cộng đồng.
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
