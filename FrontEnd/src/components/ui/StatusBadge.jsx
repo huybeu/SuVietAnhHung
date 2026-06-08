@@ -2,6 +2,7 @@ const CONTENT_CONFIG = {
   draft:     { label: 'Nháp',         cls: 'border-[#D4B896]',        style: { background: 'rgba(61,43,26,0.06)', color: '#A0794E' } },
   published: { label: 'Đã Xuất Bản', cls: 'border-[#8B1A1A]/30',     style: { background: 'rgba(139,26,26,0.07)', color: '#8B1A1A' } },
   archived:  { label: 'Lưu Trữ',     cls: 'border-[#D4B896]/50',     style: { background: '#FAE8DA', color: '#A0794E' } },
+  hidden:    { label: 'Ẩn',           cls: 'border-[#D4B896]/40',     style: { background: 'rgba(61,43,26,0.04)', color: 'rgba(61,43,26,0.40)' } },
 }
 
 const DONATION_CONFIG = {

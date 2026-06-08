@@ -45,23 +45,23 @@ function ArticleFilterBar({ searchParams, setSearchParams }) {
   const hasFilters = !!(searchParams.get('q') || activeStatus !== 'all')
 
   return (
-    <div className="flex flex-col gap-3 mb-4">
-      <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px]">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2" style={{ fontSize: '18px', color: 'rgba(61,43,26,0.35)' }}>search</span>
-          <input className="input-gold pl-9 pr-3 py-2 text-sm w-full" placeholder="Tìm kiếm bài viết..." value={localQ} onChange={e => handleSearch(e.target.value)} />
+    <div style={{ marginBottom: '1rem' }}>
+      <div className="flex flex-wrap gap-2 items-center">
+        <div style={{ position: 'relative', flex: '1 1 160px', minWidth: 140 }}>
+          <span className="material-symbols-outlined" style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'rgba(61,43,26,0.35)', pointerEvents: 'none' }}>search</span>
+          <input className="input-gold w-full" style={{ height: 36, paddingLeft: 30, paddingRight: 8, fontSize: '0.83rem' }} placeholder="Tìm kiếm bài viết..." value={localQ} onChange={e => handleSearch(e.target.value)} />
         </div>
-        <select className="input-gold py-2 px-3 text-sm min-w-[160px] cursor-pointer" value={activeStatus} onChange={e => setParam('status', e.target.value)}>
+        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 150px' }} value={activeStatus} onChange={e => setParam('status', e.target.value)}>
           <option value="all">Trạng thái: Tất cả</option>
           <option value="published">Đã xuất bản</option>
           <option value="draft">Nháp</option>
           <option value="archived">Lưu kho</option>
         </select>
         {hasFilters && (
-          <button onClick={clearAll} className="text-sm flex items-center gap-1 transition-colors" style={{ color: '#8B1A1A', background: 'none', border: 'none', cursor: 'pointer' }}
+          <button onClick={clearAll} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', height: 36, padding: '0 0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', fontSize: '0.82rem', fontFamily: "'Be Vietnam Pro', sans-serif", transition: 'color 0.15s', flexShrink: 0 }}
             onMouseEnter={e => e.currentTarget.style.color='#C4956A'} onMouseLeave={e => e.currentTarget.style.color='#8B1A1A'}>
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>filter_alt_off</span>
-            Xoá bộ lọc
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>filter_alt_off</span>
+            Xoá lọc
           </button>
         )}
       </div>

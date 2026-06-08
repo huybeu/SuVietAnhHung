@@ -192,10 +192,54 @@ export default function DashboardPage() {
         <StatCard icon="draft"       label="Bài Nháp"      value={draftCount.toLocaleString('vi-VN')}   sub="Chưa xuất bản" color="blue" />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
         <PendingTasksPanel pendingDonations={pendingDonations} draftCount={draftCount} />
         <CampaignProgress goal={campaignGoal} raised={campaignRaised} />
       </div>
+
+      {/* Quick-access: Quản Lý Người Dùng */}
+      <Link
+        to="/admin/nguoi-dung"
+        style={{ textDecoration: 'none', display: 'block' }}
+      >
+        <div
+          style={{
+            ...cardStyle,
+            display: 'flex', alignItems: 'center', gap: '1rem',
+            padding: '1.25rem 1.5rem',
+            border: '0.5px solid rgba(196,149,106,0.5)',
+            transition: 'box-shadow 0.2s, border-color 0.2s, transform 0.2s',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.boxShadow = '0 6px 24px rgba(139,26,26,0.10)'
+            e.currentTarget.style.borderColor = '#C4956A'
+            e.currentTarget.style.transform = 'translateY(-2px)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.boxShadow = '0 2px 12px rgba(61,43,26,0.06)'
+            e.currentTarget.style.borderColor = 'rgba(196,149,106,0.5)'
+            e.currentTarget.style.transform = ''
+          }}
+        >
+          <div style={{
+            width: 48, height: 48, borderRadius: '50%', flexShrink: 0,
+            background: 'rgba(196,149,106,0.12)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '22px', color: '#C4956A', fontVariationSettings: "'FILL' 1" }}>group</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ color: '#3D2B1A', fontSize: '0.95rem', fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
+              Quản Lý Người Dùng
+            </div>
+            <div style={{ color: '#A0794E', fontSize: '0.78rem', fontFamily: "'Be Vietnam Pro', sans-serif", marginTop: '0.15rem' }}>
+              Xem danh sách thành viên, thay đổi vai trò (role)
+            </div>
+          </div>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'rgba(61,43,26,0.30)', flexShrink: 0 }}>arrow_forward</span>
+        </div>
+      </Link>
     </AdminLayout>
   )
 }
