@@ -1,8 +1,8 @@
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const { User } = require('../models');
-const authRepository = require('../repositories/authRepository');
-const AppError = require('../utils/AppError');
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { User } from '../models/index.js';
+import authRepository from '../repositories/authRepository.js';
+import AppError from '../utils/AppError.js';
 
 const generateAccessToken = (user) => {
   return jwt.sign(
@@ -163,4 +163,4 @@ const authService = {
   REFRESH_COOKIE_OPTIONS,
 };
 
-module.exports = authService;
+export default authService;

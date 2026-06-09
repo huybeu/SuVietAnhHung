@@ -6,11 +6,12 @@
  * trừ DELETE chỉ Super Admin mới được thực hiện.
  */
 
-const express = require('express');
+import express from 'express';
+import * as eraController from '../controllers/eraController.js';
+import authenticate from '../middlewares/authenticate.js';
+import { authorize } from '../middlewares/authorize.js';
+
 const router = express.Router();
-const eraController = require('../controllers/eraController');
-const authenticate = require('../middlewares/authenticate');
-const { authorize } = require('../middlewares/authorize');
 
 /**
  * @swagger
@@ -561,4 +562,4 @@ router.put('/:id', authenticate, authorize('editor', 'superadmin'), eraControlle
 router.patch('/:id', authenticate, authorize('editor', 'superadmin'), eraController.patchEra);
 router.delete('/:id', authenticate, authorize('superadmin'), eraController.deleteEra);
 
-module.exports = router;
+export default router;

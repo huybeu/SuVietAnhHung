@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.js';
 
 const Video = sequelize.define(
   'Video',
@@ -60,4 +60,4 @@ const Video = sequelize.define(
   }
 );
 
-module.exports = Video;
+export default Video;

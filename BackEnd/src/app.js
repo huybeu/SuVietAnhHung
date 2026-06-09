@@ -6,14 +6,14 @@
  * File này không khởi động server — việc đó thuộc về server.js để tiện test.
  */
 
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
-const routes = require('./routes');
-const errorHandler = require('./middlewares/errorHandler');
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.js';
+import routes from './routes/index.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -65,4 +65,4 @@ app.use('/api/v1', routes);
 
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

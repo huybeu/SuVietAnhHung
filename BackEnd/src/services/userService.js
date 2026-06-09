@@ -6,8 +6,8 @@
  * Giao tiếp với database thông qua UserRepository, throw AppError khi nghiệp vụ thất bại.
  */
 
-const userRepository = require('../repositories/userRepository');
-const AppError = require('../utils/AppError');
+import userRepository from '../repositories/userRepository.js';
+import AppError from '../utils/AppError.js';
 
 class UserService {
   async getAllUsers({ page = 1, limit = 10 } = {}) {
@@ -72,4 +72,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService();
+export default new UserService();

@@ -51,7 +51,7 @@ const sendForbidden = (res, message = 'Không có quyền truy cập') => {
   return sendError(res, message, 403);
 };
 
-module.exports = {
+export {
   sendSuccess,
   sendCreated,
   sendError,

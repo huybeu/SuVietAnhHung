@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.js';
 
 const Era = sequelize.define(
   'Era',
@@ -52,4 +52,4 @@ const Era = sequelize.define(
   }
 );
 
-module.exports = Era;
+export default Era;

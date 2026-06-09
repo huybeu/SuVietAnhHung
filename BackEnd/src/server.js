@@ -6,12 +6,11 @@
  * Xử lý graceful shutdown và các unhandled error ở cấp process.
  */
 
-require('dotenv').config();
+import 'dotenv/config';
 
-const app = require('./app');
-const { connectDatabase, sequelize } = require('./config/database');
-// Load tất cả models và associations
-require('./models');
+import app from './app.js';
+import { connectDatabase, sequelize } from './config/database.js';
+import './models/index.js';
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import authController from '../controllers/authController.js';
+import authenticate from '../middlewares/authenticate.js';
+import { authLimiter, registerLimiter, refreshLimiter } from '../middlewares/rateLimiter.js';
+
 const router = express.Router();
-const authController = require('../controllers/authController');
-const authenticate = require('../middlewares/authenticate');
-const { authLimiter, registerLimiter, refreshLimiter } = require('../middlewares/rateLimiter');
 
 /**
  * @swagger
@@ -372,4 +373,4 @@ router.patch('/change-password', authController.changePassword);
  */
 router.post('/logout-all', authController.logoutAll);
 
-module.exports = router;
+export default router;

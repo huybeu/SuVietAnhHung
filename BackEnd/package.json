@@ -2,6 +2,7 @@
   "name": "nodejs-repository-pattern",
   "version": "1.0.0",
   "description": "Node.js base với Repository Pattern - MySQL + Sequelize",
+  "type": "module",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

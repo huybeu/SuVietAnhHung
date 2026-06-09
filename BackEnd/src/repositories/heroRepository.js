@@ -1,6 +1,6 @@
-const BaseRepository = require('./baseRepository');
-const { Hero, Era, Article, Video, User } = require('../models');
-const { Op } = require('sequelize');
+import BaseRepository from './baseRepository.js';
+import { Hero, Era, Article, Video, User } from '../models/index.js';
+import { Op } from 'sequelize';
 
 class HeroRepository extends BaseRepository {
   constructor() {
@@ -168,4 +168,4 @@ class HeroRepository extends BaseRepository {
   }
 }
 
-module.exports = new HeroRepository();
+export default new HeroRepository();

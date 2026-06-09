@@ -1,7 +1,7 @@
-const eraRepository = require('../repositories/eraRepository');
-const { Era } = require('../models');
-const { sequelize } = require('../config/database');
-const AppError = require('../utils/AppError');
+import eraRepository from '../repositories/eraRepository.js';
+import { Era, Hero } from '../models/index.js';
+import { sequelize } from '../config/database.js';
+import AppError from '../utils/AppError.js';
 
 class EraService {
   // ─── Public ─────────────────────────────────────────────────────────────────
@@ -225,7 +225,7 @@ class EraService {
   async deleteEra(id) {
     await this._assertEraExists(id);
 
-    const heroesCount = await require('../models').Hero.count({ where: { era_id: id } });
+    const heroesCount = await Hero.count({ where: { era_id: id } });
     const articlesCount = await eraRepository._countArticlesByEra(id);
 
     if (heroesCount > 0 || articlesCount > 0) {
@@ -291,4 +291,4 @@ class EraService {
   }
 }
 
-module.exports = new EraService();
+export default new EraService();

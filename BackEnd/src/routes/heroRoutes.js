@@ -5,9 +5,10 @@
  * Chỉ trả về các anh hùng có is_active = true (published).
  */
 
-const express = require('express');
+import express from 'express';
+import * as heroController from '../controllers/heroController.js';
+
 const router = express.Router();
-const heroController = require('../controllers/heroController');
 
 /**
  * @swagger
@@ -310,4 +311,4 @@ router.get('/:id/articles', heroController.getHeroArticles);
  */
 router.get('/:id/videos', heroController.getHeroVideos);
 
-module.exports = router;
+export default router;
