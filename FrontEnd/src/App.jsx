@@ -22,12 +22,14 @@ const DashboardPage      = lazy(() => import('./pages/admin/DashboardPage'))
 const HeroListPage       = lazy(() => import('./pages/admin/HeroListPage'))
 const ArticleListPage    = lazy(() => import('./pages/admin/ArticleListPage'))
 const DonationsAdminPage = lazy(() => import('./pages/admin/DonationsAdminPage'))
+const VideoListPage      = lazy(() => import('./pages/admin/VideoListPage'))
+const UserListPage       = lazy(() => import('./pages/admin/UserListPage'))
 
 function PageLoader() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0402' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FDF5EE' }}>
       <div
-        style={{ width: 40, height: 40, border: '3px solid rgba(246,190,59,0.2)', borderTopColor: '#dc143c', borderRadius: '50%' }}
+        style={{ width: 40, height: 40, border: '3px solid rgba(196,149,106,0.25)', borderTopColor: '#8B1A1A', borderRadius: '50%' }}
         className="animate-spin"
       />
     </div>
@@ -69,6 +71,12 @@ export default function App() {
                 } />
                 <Route path="/admin/quyen-gop" element={
                   <ProtectedRoute><DonationsAdminPage /></ProtectedRoute>
+                } />
+                <Route path="/admin/video" element={
+                  <ProtectedRoute><VideoListPage /></ProtectedRoute>
+                } />
+                <Route path="/admin/nguoi-dung" element={
+                  <ProtectedRoute><UserListPage /></ProtectedRoute>
                 } />
 
                 {/* ── Error pages ──────────────────────────────────────────── */}

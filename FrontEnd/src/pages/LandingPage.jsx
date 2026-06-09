@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 const LEADER_IMG =
@@ -114,6 +115,7 @@ const STATS_HONOR = [
 ];
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -246,6 +248,38 @@ export default function LandingPage() {
         }
         .float-anim { animation: float 5s ease-in-out infinite; }
 
+        /* Tier card: no scale on single-column mobile */
+        @media (max-width: 639px) {
+          .tier-card.highlighted {
+            transform: none !important;
+          }
+          .tier-card.highlighted:hover {
+            transform: translateY(-5px) !important;
+          }
+        }
+
+        /* Timeline responsive */
+        @media (max-width: 639px) {
+          .timeline-item {
+            grid-template-columns: 24px 1fr !important;
+            gap: 0.75rem !important;
+          }
+          .timeline-center-line {
+            left: 12px !important;
+          }
+          .timeline-card {
+            grid-column: 2 !important;
+            text-align: left !important;
+          }
+          .timeline-dot-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          .timeline-empty {
+            display: none !important;
+          }
+        }
+
         .tier-card {
           border: 0.5px solid #D4B896;
           border-radius: 12px;
@@ -277,6 +311,7 @@ export default function LandingPage() {
           1. HERO SECTION
       ════════════════════════════════════════ */}
       <section
+        id="hero"
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -423,7 +458,9 @@ export default function LandingPage() {
 
           {/* CTA buttons */}
           <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+            {/* Scroll xuống section Dự Án */}
             <button
+              onClick={() => document.getElementById("du-an")?.scrollIntoView({ behavior: "smooth" })}
               style={{
                 background: "#8B1A1A",
                 color: "#FDF5EE",
@@ -452,7 +489,9 @@ export default function LandingPage() {
             >
               KHÁM PHÁ NGAY
             </button>
+            {/* Scroll xuống section Kho Phim */}
             <button
+              onClick={() => document.getElementById("phim")?.scrollIntoView({ behavior: "smooth" })}
               style={{
                 background: "transparent",
                 color: "#7B4A00",
@@ -502,13 +541,14 @@ export default function LandingPage() {
           2. PROGRESS & COUNTDOWN
       ════════════════════════════════════════ */}
       <section
+        id="du-an"
         className="reveal"
         style={{ padding: "6rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
       >
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
             gap: "2rem",
           }}
         >
@@ -644,6 +684,7 @@ export default function LandingPage() {
           3. MISSION & VIDEOS
       ════════════════════════════════════════ */}
       <section
+        id="phim"
         className="reveal"
         style={{
           background: "#FAE8DA",
@@ -657,14 +698,14 @@ export default function LandingPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
               gap: "3.5rem",
               alignItems: "center",
               marginBottom: "5rem",
             }}
           >
             {/* Left: image */}
-            <div className="mission-img-wrap" style={{ height: "360px" }}>
+            <div className="mission-img-wrap" style={{ height: "clamp(220px, 40vw, 360px)" }}>
               <img src={LEADER_IMG} alt="Lãnh đạo dự án" />
               <div className="deco-ring" />
               <div className="deco-ring-2" />
@@ -764,7 +805,7 @@ export default function LandingPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
               gap: "1.25rem",
             }}
           >
@@ -812,6 +853,7 @@ export default function LandingPage() {
           4. TIMELINE
       ════════════════════════════════════════ */}
       <section
+        id="thoi-dai"
         className="reveal"
         style={{ padding: "6rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
       >
@@ -846,6 +888,7 @@ export default function LandingPage() {
         <div style={{ position: "relative" }}>
           {/* Center line */}
           <div
+            className="timeline-center-line"
             style={{
               position: "absolute",
               left: "50%",
@@ -862,6 +905,7 @@ export default function LandingPage() {
             {TIMELINE.map((item) => (
               <div
                 key={item.period}
+                className="timeline-item"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 40px 1fr",
@@ -870,7 +914,7 @@ export default function LandingPage() {
                 }}
               >
                 {/* Card */}
-                <div style={{ textAlign: item.align === "right" ? "right" : "left", gridColumn: item.align === "right" ? "1" : "3" }}>
+                <div className="timeline-card" style={{ textAlign: item.align === "right" ? "right" : "left", gridColumn: item.align === "right" ? "1" : "3" }}>
                   <div
                     style={{
                       background: "#FDF5EE",
@@ -896,7 +940,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Center dot */}
-                <div style={{ position: "relative", display: "flex", justifyContent: "center", gridColumn: "2" }}>
+                <div className="timeline-dot-col" style={{ position: "relative", display: "flex", justifyContent: "center", gridColumn: "2" }}>
                   <div
                     style={{
                       width: "14px",
@@ -911,7 +955,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Empty side */}
-                <div style={{ gridColumn: item.align === "right" ? "3" : "1" }} />
+                <div className="timeline-empty" style={{ gridColumn: item.align === "right" ? "3" : "1" }} />
               </div>
             ))}
           </div>
@@ -922,6 +966,7 @@ export default function LandingPage() {
           5. TIER CARDS
       ════════════════════════════════════════ */}
       <section
+        id="dong-gop"
         className="reveal"
         style={{
           background: "#FAE8DA",
@@ -962,7 +1007,7 @@ export default function LandingPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))",
               gap: "1.5rem",
               alignItems: "center",
               marginBottom: "3rem",
@@ -1048,7 +1093,9 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
+                {/* Chuyển đến trang quyên góp */}
                 <button
+                  onClick={() => navigate("/quyen-gop")}
                   style={{
                     width: "100%",
                     background: tier.highlighted ? "#8B1A1A" : "transparent",
@@ -1124,6 +1171,7 @@ export default function LandingPage() {
           6. HONOR BOARD
       ════════════════════════════════════════ */}
       <section
+        id="vinh-danh"
         className="reveal"
         style={{
           background: "#FDF5EE",
@@ -1190,7 +1238,7 @@ export default function LandingPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))",
               gap: "1rem",
             }}
           >
@@ -1243,7 +1291,7 @@ export default function LandingPage() {
             maxWidth: "1100px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
             gap: "2.5rem",
             marginBottom: "3rem",
           }}
@@ -1259,11 +1307,21 @@ export default function LandingPage() {
               Dự án gây quỹ cộng đồng nhằm bảo tồn và phát huy lịch sử dân tộc Việt Nam cho thế hệ mai sau.
             </p>
             <div style={{ display: "flex", gap: "0.5rem" }}>
-              {["facebook", "youtube", "groups"].map((icon) => (
-                <div className="social-icon" key={icon}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#8B1A1A" }}>
-                    {icon}
-                  </span>
+              {[
+                { key: "facebook",  letter: "f",  icon: null           },
+                { key: "youtube",   letter: null, icon: "smart_display" },
+                { key: "community", letter: null, icon: "groups"        },
+              ].map(({ key, letter, icon }) => (
+                <div className="social-icon" key={key} title={key}>
+                  {icon ? (
+                    <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#8B1A1A" }}>
+                      {icon}
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: "15px", fontWeight: 700, color: "#8B1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1, textTransform: "uppercase" }}>
+                      {letter}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
@@ -1306,18 +1364,19 @@ export default function LandingPage() {
             <p style={{ color: "#5C3A1E", fontSize: "0.82rem", marginBottom: "1rem", fontFamily: "'Be Vietnam Pro', sans-serif" }}>
               Nhận cập nhật mới nhất về dự án qua email.
             </p>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
               <input
                 type="email"
                 placeholder="Email của bạn"
                 style={{
-                  flex: 1,
+                  flex: "1 1 160px",
+                  minWidth: 0,
                   background: "rgba(253,245,238,0.70)",
                   border: "0.5px solid rgba(196,149,106,0.45)",
                   borderRadius: "6px",
-                  padding: "0.6rem 0.75rem",
+                  padding: "0.75rem 0.75rem",
                   color: "#3D2B1A",
-                  fontSize: "0.85rem",
+                  fontSize: "1rem",
                   outline: "none",
                   fontFamily: "'Be Vietnam Pro', sans-serif",
                 }}
@@ -1327,13 +1386,15 @@ export default function LandingPage() {
                   background: "#8B1A1A",
                   border: "none",
                   borderRadius: "6px",
-                  padding: "0.6rem 1rem",
+                  padding: "0.75rem 1rem",
+                  minHeight: "44px",
                   color: "#FDF5EE",
                   fontWeight: 700,
                   cursor: "pointer",
-                  fontSize: "0.8rem",
+                  fontSize: "0.85rem",
                   transition: "background 0.2s",
                   fontFamily: "'Be Vietnam Pro', sans-serif",
+                  whiteSpace: "nowrap",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = "#6B1414")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "#8B1A1A")}
@@ -1392,7 +1453,9 @@ export default function LandingPage() {
             Ủng hộ dự án ngay!
           </div>
         )}
+        {/* Nút donate cố định — trỏ đến trang quyên góp */}
         <button
+          onClick={() => navigate("/quyen-gop")}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           style={{
@@ -1412,8 +1475,6 @@ export default function LandingPage() {
             transition: "transform 0.2s, box-shadow 0.2s, background 0.2s",
             fontFamily: "'Be Vietnam Pro', sans-serif",
           }}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
           onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.96)")}
           onMouseUp={(e) => (e.currentTarget.style.transform = "")}
         >

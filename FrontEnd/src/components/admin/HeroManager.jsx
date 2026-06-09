@@ -73,57 +73,58 @@ function HeroFilterBar({ searchParams, setSearchParams, eras }) {
   const eraName        = activeEra && eras ? eras.find(e => String(e.id) === String(activeEra))?.name : null
 
   return (
-    <div className="flex flex-col gap-3 mb-4">
-      <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px]">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#e8dcc8]/40" style={{ fontSize: '18px' }}>search</span>
-          <input className="input-gold pl-9 pr-3 py-2 text-sm w-full" placeholder="Tìm kiếm anh hùng..." value={localQ} onChange={e => handleSearch(e.target.value)} />
+    <div style={{ marginBottom: '1rem' }}>
+      <div className="flex flex-wrap gap-2 items-center">
+        <div style={{ position: 'relative', flex: '1 1 160px', minWidth: 140 }}>
+          <span className="material-symbols-outlined" style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'rgba(61,43,26,0.35)', pointerEvents: 'none' }}>search</span>
+          <input className="input-gold w-full" style={{ height: 36, paddingLeft: 30, paddingRight: 8, fontSize: '0.83rem' }} placeholder="Tìm kiếm anh hùng..." value={localQ} onChange={e => handleSearch(e.target.value)} />
         </div>
-        <select className="input-gold py-2 px-3 text-sm min-w-[160px] cursor-pointer" value={activeEra} onChange={e => setParam('era', e.target.value)}>
+        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 130px' }} value={activeEra} onChange={e => setParam('era', e.target.value)}>
           <option value="">Tất cả thời kỳ</option>
           {eras?.map(era => <option key={era.id} value={era.id}>{era.name}</option>)}
         </select>
-        <select className="input-gold py-2 px-3 text-sm min-w-[140px] cursor-pointer" value={activeFeatured} onChange={e => setParam('featured', e.target.value)}>
+        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 120px' }} value={activeFeatured} onChange={e => setParam('featured', e.target.value)}>
           <option value="all">Nổi bật: Tất cả</option>
           <option value="yes">Có</option>
           <option value="no">Không</option>
         </select>
-        <select className="input-gold py-2 px-3 text-sm min-w-[160px] cursor-pointer" value={activeActive} onChange={e => setParam('active', e.target.value)}>
+        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 140px' }} value={activeActive} onChange={e => setParam('active', e.target.value)}>
           <option value="all">Trạng thái: Tất cả</option>
           <option value="yes">Đang hoạt động</option>
           <option value="no">Ẩn</option>
         </select>
         {hasFilters && (
-          <button onClick={clearAll} className="text-sm text-[#dc143c] hover:text-[#f6be3b] transition-colors flex items-center gap-1">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>filter_alt_off</span>
-            Xoá bộ lọc
+          <button onClick={clearAll} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', height: 36, padding: '0 0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', fontSize: '0.82rem', fontFamily: "'Be Vietnam Pro', sans-serif", transition: 'color 0.15s', flexShrink: 0 }}
+            onMouseEnter={e => e.currentTarget.style.color='#C4956A'} onMouseLeave={e => e.currentTarget.style.color='#8B1A1A'}>
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>filter_alt_off</span>
+            Xoá lọc
           </button>
         )}
       </div>
       {hasFilters && (
         <div className="flex flex-wrap gap-2">
           {searchParams.get('q') && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-[#dc143c]/20 text-[#dc143c] border border-[#dc143c]/30">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(139,26,26,0.08)', color: '#8B1A1A', border: '0.5px solid rgba(139,26,26,0.25)' }}>
               Tìm: {searchParams.get('q')}
-              <button onClick={() => { setLocalQ(''); setParam('q', '') }} className="hover:text-white ml-1">✕</button>
+              <button onClick={() => { setLocalQ(''); setParam('q', '') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', marginLeft: '0.25rem' }}>✕</button>
             </span>
           )}
           {eraName && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-[#f6be3b]/20 text-[#f6be3b] border border-[#f6be3b]/30">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(196,149,106,0.12)', color: '#C4956A', border: '0.5px solid rgba(196,149,106,0.35)' }}>
               Thời kỳ: {eraName}
-              <button onClick={() => setParam('era', '')} className="hover:text-white ml-1">✕</button>
+              <button onClick={() => setParam('era', '')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C4956A', marginLeft: '0.25rem' }}>✕</button>
             </span>
           )}
           {activeFeatured !== 'all' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-[#f6be3b]/20 text-[#f6be3b] border border-[#f6be3b]/30">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(196,149,106,0.12)', color: '#C4956A', border: '0.5px solid rgba(196,149,106,0.35)' }}>
               Nổi bật: {activeFeatured === 'yes' ? 'Có' : 'Không'}
-              <button onClick={() => setParam('featured', 'all')} className="hover:text-white ml-1">✕</button>
+              <button onClick={() => setParam('featured', 'all')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C4956A', marginLeft: '0.25rem' }}>✕</button>
             </span>
           )}
           {activeActive !== 'all' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-[#e8dcc8]/20 text-[#e8dcc8] border border-[#e8dcc8]/30">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style={{ background: 'rgba(61,43,26,0.07)', color: '#5C3A1E', border: '0.5px solid rgba(61,43,26,0.18)' }}>
               {activeActive === 'yes' ? 'Đang hoạt động' : 'Ẩn'}
-              <button onClick={() => setParam('active', 'all')} className="hover:text-white ml-1">✕</button>
+              <button onClick={() => setParam('active', 'all')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#5C3A1E', marginLeft: '0.25rem' }}>✕</button>
             </span>
           )}
         </div>
@@ -136,13 +137,13 @@ function HeroFilterBar({ searchParams, setSearchParams, eras }) {
 function BatchActionsBar({ selectedIds, onActivateAll, onHideAll, onDeleteAll, role }) {
   const n = selectedIds.size
   return (
-    <div className="flex items-center gap-3 px-4 py-2 glass-panel rounded-lg border border-[#f6be3b]/20">
-      <span className="text-[#e8dcc8]/60 text-sm">Đã chọn <span className="text-[#f6be3b] font-semibold">{n}</span></span>
-      <div className="h-4 w-px bg-[#e8dcc8]/20" />
-      <button onClick={onActivateAll} className="text-sm px-3 py-1 rounded border border-[#f6be3b]/40 text-[#f6be3b] hover:bg-[#f6be3b]/10 transition-colors">Kích hoạt tất cả</button>
-      <button onClick={onHideAll}     className="text-sm px-3 py-1 rounded border border-[#e8dcc8]/20 text-[#e8dcc8]/60 hover:bg-[#e8dcc8]/5 transition-colors">Ẩn tất cả</button>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 1rem', background: '#FAE8DA', border: '0.5px solid #D4B896', borderRadius: '0.5rem' }}>
+      <span style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Đã chọn <span style={{ color: '#8B1A1A', fontWeight: 700 }}>{n}</span></span>
+      <div style={{ width: 1, height: 16, background: 'rgba(212,184,150,0.5)' }} />
+      <button onClick={onActivateAll} style={{ fontSize: '0.82rem', padding: '0.25rem 0.75rem', borderRadius: '0.375rem', border: '0.5px solid rgba(196,149,106,0.5)', color: '#C4956A', background: 'transparent', cursor: 'pointer', fontFamily: "'Be Vietnam Pro', sans-serif' " }}>Kích hoạt tất cả</button>
+      <button onClick={onHideAll}     style={{ fontSize: '0.82rem', padding: '0.25rem 0.75rem', borderRadius: '0.375rem', border: '0.5px solid rgba(61,43,26,0.2)', color: '#A0794E', background: 'transparent', cursor: 'pointer', fontFamily: "'Be Vietnam Pro', sans-serif' " }}>Ẩn tất cả</button>
       {can(role, 'heroes:delete') && (
-        <button onClick={onDeleteAll} className="text-sm px-3 py-1 rounded border border-[#dc143c]/40 text-[#dc143c] hover:bg-[#dc143c]/10 transition-colors">Xoá {n} anh hùng</button>
+        <button onClick={onDeleteAll} style={{ fontSize: '0.82rem', padding: '0.25rem 0.75rem', borderRadius: '0.375rem', border: '0.5px solid rgba(139,26,26,0.35)', color: '#8B1A1A', background: 'transparent', cursor: 'pointer', fontFamily: "'Be Vietnam Pro', sans-serif' " }}>Xoá {n} anh hùng</button>
       )}
     </div>
   )
@@ -270,22 +271,22 @@ export default function HeroManager() {
               <input className="input-gold text-sm py-1 px-2 w-full" value={editValues.name} onChange={e => setEditValues(p => ({ ...p, name: e.target.value }))} onKeyDown={handleEditKeyDown} placeholder="Tên anh hùng" autoFocus />
               <input className="input-gold text-xs py-1 px-2 w-full" value={editValues.title} onChange={e => setEditValues(p => ({ ...p, title: e.target.value }))} onKeyDown={handleEditKeyDown} placeholder="Chức danh" />
               <div className="flex gap-2 mt-1">
-                <button onClick={() => saveEdit(row.id)} className="text-xs text-[#f6be3b] hover:text-[#f2dfd6] transition-colors">Lưu</button>
-                <button onClick={cancelEdit} className="text-xs text-[#e8dcc8]/50 hover:text-[#e8dcc8] transition-colors">Huỷ</button>
+                <button onClick={() => saveEdit(row.id)} style={{ fontSize: '0.75rem', background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 700 }}>Lưu</button>
+                <button onClick={cancelEdit} style={{ fontSize: '0.75rem', background: 'none', border: 'none', cursor: 'pointer', color: '#A0794E', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Huỷ</button>
               </div>
             </div>
           )
         }
         return (
           <div>
-            <div className="font-cinzel text-[#f2dfd6] text-sm">{row.name}</div>
-            {row.title && <div className="text-[#e8dcc8]/50 text-xs mt-0.5">{row.title}</div>}
+            <div style={{ color: '#3D2B1A', fontSize: '0.88rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}>{row.name}</div>
+            {row.title && <div style={{ color: '#A0794E', fontSize: '0.75rem', marginTop: '0.15rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{row.title}</div>}
           </div>
         )
       },
     },
-    { key: 'era',   header: 'Thời Kỳ',        render: (row) => <span className="text-[#e8dcc8]/70 text-sm">{row.era?.name || '—'}</span> },
-    { key: 'years', header: 'Năm Sinh – Mất', render: (row) => <span className="text-[#e8dcc8]/60 text-xs font-mono">{formatYear(row.birth_year)} – {formatYear(row.death_year)}</span> },
+    { key: 'era',   header: 'Thời Kỳ',        render: (row) => <span style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{row.era?.name || '—'}</span> },
+    { key: 'years', header: 'Năm Sinh – Mất', render: (row) => <span style={{ color: '#A0794E', fontSize: '0.78rem', fontFamily: 'monospace' }}>{formatYear(row.birth_year)} – {formatYear(row.death_year)}</span> },
     {
       key: 'is_featured', header: 'Nổi Bật',
       render: (row) => <OptimisticToggle value={row.is_featured} onChange={(v) => featuredMutation.mutateAsync({ id: row.id, value: v })} disabled={!can(role, 'heroes:write')} />,
@@ -315,7 +316,7 @@ export default function HeroManager() {
   return (
     <div>
       {hasSortActive && (
-        <div className="mb-3 px-3 py-2 rounded bg-[#f6be3b]/10 border border-[#f6be3b]/20 text-[#f6be3b] text-xs flex items-center gap-2">
+        <div style={{ marginBottom: '0.75rem', padding: '0.5rem 0.75rem', borderRadius: '0.375rem', background: 'rgba(196,149,106,0.10)', border: '0.5px solid rgba(196,149,106,0.30)', color: '#C4956A', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
           <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>info</span>
           Tắt sắp xếp cột để dùng tính năng kéo thả
         </div>
@@ -345,7 +346,7 @@ export default function HeroManager() {
           ) : null
         }
         rowActions={rowActions}
-        emptyState={<div className="text-center py-16 text-[#e8dcc8]/40 font-cinzel">Những trang sử còn chờ được ghi lại...</div>}
+        emptyState={<div style={{ textAlign: 'center', padding: '4rem 0', color: '#A0794E', fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.9rem' }}>Những trang sử còn chờ được ghi lại...</div>}
       />
 
       <ConfirmModal isOpen={!!confirmDelete} title="Xoá Anh Hùng" message={`Bạn có chắc muốn xoá "${confirmDelete?.name}"? Hành động này không thể hoàn tác.`} onConfirm={handleDelete} onCancel={() => setConfirmDelete(null)} />

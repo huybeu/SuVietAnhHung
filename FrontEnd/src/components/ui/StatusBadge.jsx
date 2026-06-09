@@ -1,20 +1,24 @@
 const CONTENT_CONFIG = {
-  draft:     { label: 'Nháp',           cls: 'bg-[#333]/60 text-[#e8dcc8]/60 border-[#e8dcc8]/20' },
-  published: { label: 'Đã Xuất Bản',   cls: 'bg-[#f6be3b]/15 text-[#f6be3b] border-[#f6be3b]/40' },
-  archived:  { label: 'Lưu Trữ',       cls: 'bg-[#1b110d] text-[#e8dcc8]/40 border-[#e8dcc8]/10' },
+  draft:     { label: 'Nháp',         cls: 'border-[#D4B896]',        style: { background: 'rgba(61,43,26,0.06)', color: '#A0794E' } },
+  published: { label: 'Đã Xuất Bản', cls: 'border-[#8B1A1A]/30',     style: { background: 'rgba(139,26,26,0.07)', color: '#8B1A1A' } },
+  archived:  { label: 'Lưu Trữ',     cls: 'border-[#D4B896]/50',     style: { background: '#FAE8DA', color: '#A0794E' } },
+  hidden:    { label: 'Ẩn',           cls: 'border-[#D4B896]/40',     style: { background: 'rgba(61,43,26,0.04)', color: 'rgba(61,43,26,0.40)' } },
 }
 
 const DONATION_CONFIG = {
-  pending:   { label: 'Chờ Xác Nhận',  cls: 'bg-yellow-900/30 text-yellow-400 border-yellow-600/40' },
-  confirmed: { label: 'Đã Xác Nhận',   cls: 'bg-green-900/30 text-green-400 border-green-600/40' },
-  rejected:  { label: 'Từ Chối',       cls: 'bg-red-900/30 text-red-400 border-red-600/40' },
+  pending:   { label: 'Chờ Xác Nhận', cls: 'border-[#C4956A]/40',    style: { background: 'rgba(196,149,106,0.12)', color: '#8B5E2A' } },
+  confirmed: { label: 'Đã Xác Nhận', cls: 'border-green-600/30',     style: { background: 'rgba(34,139,34,0.07)', color: '#2D7A2D' } },
+  rejected:  { label: 'Từ Chối',     cls: 'border-[#8B1A1A]/30',     style: { background: 'rgba(139,26,26,0.07)', color: '#8B1A1A' } },
 }
 
 export default function StatusBadge({ status, type = 'content' }) {
   const map  = type === 'donation' ? DONATION_CONFIG : CONTENT_CONFIG
-  const conf = map[status] || { label: status, cls: 'bg-[#333] text-[#e8dcc8]/50 border-[#e8dcc8]/10' }
+  const conf = map[status] || { label: status, cls: 'border-[#D4B896]', style: { background: 'rgba(61,43,26,0.05)', color: '#A0794E' } }
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-cinzel uppercase tracking-wide border ${conf.cls}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] uppercase tracking-wide border ${conf.cls}`}
+      style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, ...conf.style }}
+    >
       {conf.label}
     </span>
   )

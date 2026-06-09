@@ -6,12 +6,16 @@ import { setLogoutCallback, setRefreshCallback } from '../api/httpClient'
 const AuthStateContext   = createContext(null)
 const AuthActionsContext = createContext(null)
 
+const DEV_BYPASS = import.meta.env.VITE_DEV_BYPASS === 'true'
+const DEV_USER   = { id: 0, name: 'Dev Admin', displayName: 'Dev Admin', role: 'admin', isAdmin: true }
+
 export function AuthProvider({ children }) {
-  const [user, setUser]                   = useState(null)
-  const [isInitializing, setIsInitializing] = useState(true) // FE-020
+  const [user, setUser]                   = useState(DEV_BYPASS ? DEV_USER : null)
+  const [isInitializing, setIsInitializing] = useState(!DEV_BYPASS) // FE-020
 
   // Khởi tạo: đọc user từ storage (có kiểm tra expiry) ────────────────────────
   useEffect(() => {
+    if (DEV_BYPASS) return
     setUser(authService.getStoredUser())
     setIsInitializing(false)
   }, [])

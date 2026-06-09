@@ -5,7 +5,7 @@ const PLATFORM = {
   youtube:  { label: 'YouTube',  bg: '#FF0000' },
   tiktok:   { label: 'TikTok',   bg: '#010101' },
   facebook: { label: 'Facebook', bg: '#1877F2' },
-  other:    { label: 'Video',    bg: '#333333' },
+  other:    { label: 'Video',    bg: '#5C3A1E' },
 }
 
 function getEmbedUrl(video) {
@@ -26,27 +26,28 @@ export default function VideoEmbed({ video }) {
   const cfg = PLATFORM[video.platform] || PLATFORM.other
 
   return (
-    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', background: '#1b110d', border: '1px solid rgba(246,190,59,0.15)' }}>
+    <div className="video-thumb" style={{ borderRadius: '0.75rem', overflow: 'hidden', background: '#FAE8DA', border: '0.5px solid #D4B896', boxShadow: '0 2px 12px rgba(61,43,26,0.07)' }}>
       {/* 16:9 container */}
-      <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', background: '#000' }}>
+      <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', background: '#F5D5C0' }}>
         {!playing ? (
           <>
             {video.thumbnail_url
               ? <img src={video.thumbnail_url} alt={video.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1b110d, #0a0402)' }} />
+              : <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #FAE8DA, #F5D5C0)' }} />
             }
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4), transparent)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(61,43,26,0.3), transparent)' }} />
             {/* Platform badge */}
             <div style={{
               position: 'absolute', top: 8, left: 8,
               background: cfg.bg, color: '#fff',
               padding: '2px 8px', borderRadius: 4, fontSize: '0.65rem',
-            }} className="font-cinzel">{cfg.label}</div>
+              fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600,
+            }}>{cfg.label}</div>
             {/* Duration */}
             {video.duration_sec != null && (
               <div style={{
                 position: 'absolute', bottom: 8, right: 8,
-                background: 'rgba(0,0,0,0.75)', color: '#fff',
+                background: 'rgba(61,43,26,0.75)', color: '#FDF5EE',
                 padding: '2px 6px', borderRadius: 4, fontSize: '0.7rem', fontFamily: 'monospace',
               }}>{formatDuration(video.duration_sec)}</div>
             )}
@@ -60,14 +61,15 @@ export default function VideoEmbed({ video }) {
             >
               <div style={{
                 width: 64, height: 64, borderRadius: '50%',
-                background: 'rgba(220,20,60,0.9)',
+                background: 'rgba(139,26,26,0.88)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'transform 0.2s, background 0.2s',
+                boxShadow: '0 4px 20px rgba(139,26,26,0.35)',
               }}
-                onMouseEnter={e => { e.currentTarget.style.transform='scale(1.1)'; e.currentTarget.style.background='#dc143c' }}
-                onMouseLeave={e => { e.currentTarget.style.transform='scale(1)';   e.currentTarget.style.background='rgba(220,20,60,0.9)' }}
+                onMouseEnter={e => { e.currentTarget.style.transform='scale(1.1)'; e.currentTarget.style.background='#8B1A1A' }}
+                onMouseLeave={e => { e.currentTarget.style.transform='scale(1)';   e.currentTarget.style.background='rgba(139,26,26,0.88)' }}
               >
-                <div style={{ width: 0, height: 0, borderTop: '12px solid transparent', borderBottom: '12px solid transparent', borderLeft: '20px solid white', marginLeft: 4 }} />
+                <div style={{ width: 0, height: 0, borderTop: '12px solid transparent', borderBottom: '12px solid transparent', borderLeft: '20px solid #FDF5EE', marginLeft: 4 }} />
               </div>
             </button>
           </>
@@ -81,11 +83,11 @@ export default function VideoEmbed({ video }) {
         )}
       </div>
       {/* Title */}
-      <div style={{ padding: '0.6rem 0.85rem 0.75rem' }}>
-        <div className="font-cinzel" style={{ color: '#e8dcc8', fontSize: '0.85rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+      <div style={{ padding: '0.6rem 0.85rem 0.75rem', background: '#FDF5EE' }}>
+        <div style={{ color: '#3D2B1A', fontSize: '0.85rem', fontFamily: "'Playfair Display', serif", fontWeight: 600, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {video.title}
         </div>
-        <div className="font-cinzel" style={{ color: 'rgba(232,220,200,0.35)', fontSize: '0.65rem', marginTop: 3 }}>{cfg.label}</div>
+        <div style={{ color: '#A0794E', fontSize: '0.65rem', marginTop: 3, fontFamily: "'Be Vietnam Pro', sans-serif" }}>{cfg.label}</div>
       </div>
     </div>
   )

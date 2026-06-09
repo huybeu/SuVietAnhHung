@@ -9,25 +9,32 @@ import { fetchSiteConfig } from '../../lib/api'
 import { formatVND, formatDateShort } from '../../lib/format'
 import StatusBadge from '../../components/ui/StatusBadge'
 
+const cardStyle = {
+  background: '#FDF5EE', border: '0.5px solid #D4B896', borderRadius: '0.75rem',
+  padding: '1.25rem', boxShadow: '0 2px 12px rgba(61,43,26,0.06)',
+}
+
 // ── Stat Card ─────────────────────────────────────────────────────────────────
 const colorMap = {
-  crimson: { ring: 'bg-[#dc143c]/20 text-[#dc143c]', value: 'text-[#dc143c]' },
-  gold:    { ring: 'bg-[#f6be3b]/20 text-[#f6be3b]', value: 'text-[#f6be3b]' },
-  green:   { ring: 'bg-emerald-500/20 text-emerald-400', value: 'text-emerald-400' },
-  blue:    { ring: 'bg-sky-500/20 text-sky-400', value: 'text-sky-400' },
+  crimson: { ring: { background: 'rgba(139,26,26,0.10)', color: '#8B1A1A' }, value: '#8B1A1A' },
+  gold:    { ring: { background: 'rgba(196,149,106,0.14)', color: '#C4956A' }, value: '#C4956A' },
+  green:   { ring: { background: 'rgba(34,139,34,0.10)', color: '#2D7A2D' }, value: '#2D7A2D' },
+  blue:    { ring: { background: 'rgba(14,110,180,0.10)', color: '#0E6EB4' }, value: '#0E6EB4' },
 }
 
 function StatCard({ icon, label, value, sub, color = 'gold' }) {
   const c = colorMap[color] || colorMap.gold
   return (
-    <div className="glass-panel rounded-xl p-5 flex items-start gap-4">
-      <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${c.ring}`}>
-        <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>{icon}</span>
-      </div>
-      <div className="min-w-0">
-        <div className={`font-cinzel text-2xl font-bold ${c.value}`}>{value}</div>
-        <div className="text-[#e8dcc8]/70 text-sm mt-0.5">{label}</div>
-        {sub && <div className="text-[#e8dcc8]/40 text-xs mt-1">{sub}</div>}
+    <div style={cardStyle}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+        <div style={{ width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, ...c.ring }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '22px', color: c.ring.color }}>{icon}</span>
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: c.value, fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>{value}</div>
+          <div style={{ color: '#5C3A1E', fontSize: '0.82rem', marginTop: '0.2rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{label}</div>
+          {sub && <div style={{ color: '#A0794E', fontSize: '0.72rem', marginTop: '0.2rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{sub}</div>}
+        </div>
       </div>
     </div>
   )
@@ -41,19 +48,19 @@ function CampaignProgress({ goal, raised }) {
   const daysLeft = Math.max(0, Math.ceil((deadline - now) / (1000 * 60 * 60 * 24)))
 
   return (
-    <div className="glass-panel rounded-xl p-5">
-      <div className="font-cinzel text-[#f6be3b] text-xs tracking-widest mb-4 uppercase">Tiến Độ Chiến Dịch</div>
-      <div className="flex items-baseline justify-between mb-2">
-        <span className="font-cinzel text-2xl text-[#f2dfd6]">{formatVND(raised)}</span>
-        <span className="text-[#e8dcc8]/50 text-sm">/ {formatVND(goal)}</span>
+    <div style={cardStyle}>
+      <div style={{ color: '#C4956A', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 700 }}>Tiến Độ Chiến Dịch</div>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+        <span style={{ color: '#3D2B1A', fontSize: '1.4rem', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>{formatVND(raised)}</span>
+        <span style={{ color: '#A0794E', fontSize: '0.82rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>/ {formatVND(goal)}</span>
       </div>
-      <div className="h-3 bg-[#1b110d] rounded-full overflow-hidden mb-3">
-        <div className="h-full rounded-full crimson-to-gold transition-all duration-700" style={{ width: `${pct}%` }} />
+      <div style={{ height: 10, background: 'rgba(61,43,26,0.08)', borderRadius: 9999, overflow: 'hidden', marginBottom: '0.75rem' }}>
+        <div className="progress-fill" style={{ width: `${pct}%` }} />
       </div>
-      <div className="flex items-center justify-between text-xs">
-        <span className="font-cinzel text-[#f6be3b]">{pct}%</span>
-        <span className="text-[#e8dcc8]/50">{daysLeft > 0 ? `Còn ${daysLeft} ngày` : 'Đã kết thúc'}</span>
-        <span className="text-[#e8dcc8]/40">Hạn: {formatDateShort(deadline.toISOString())}</span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', fontFamily: "'Be Vietnam Pro', sans-serif' " }}>
+        <span style={{ color: '#8B1A1A', fontWeight: 700 }}>{pct}%</span>
+        <span style={{ color: '#A0794E' }}>{daysLeft > 0 ? `Còn ${daysLeft} ngày` : 'Đã kết thúc'}</span>
+        <span style={{ color: '#A0794E' }}>Hạn: {formatDateShort(deadline.toISOString())}</span>
       </div>
     </div>
   )
@@ -65,61 +72,65 @@ function PendingTasksPanel({ pendingDonations, draftCount }) {
   const donationCount = pendingDonations?.total || donations.length
 
   return (
-    <div className="glass-panel p-5 rounded-xl">
-      <div className="font-cinzel text-[#f6be3b] text-xs tracking-widest uppercase mb-5">Cần Xử Lý</div>
+    <div style={cardStyle}>
+      <div style={{ color: '#8B1A1A', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1.25rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 700 }}>Cần Xử Lý</div>
 
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[#e8dcc8]/70 text-sm">Đóng góp chờ xác nhận</span>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <span style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Đóng góp chờ xác nhận</span>
           {donationCount > 0 && (
-            <span className="w-5 h-5 rounded-full bg-[#dc143c] flex items-center justify-center text-white text-xs font-bold">
+            <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#8B1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FDF5EE', fontSize: '0.72rem', fontWeight: 700, fontFamily: "'Be Vietnam Pro', sans-serif", flexShrink: 0 }}>
               {donationCount > 9 ? '9+' : donationCount}
             </span>
           )}
         </div>
         {donations.length === 0 ? (
-          <p className="text-[#e8dcc8]/30 text-xs italic py-2">Không có đóng góp nào đang chờ.</p>
+          <p style={{ color: '#A0794E', fontSize: '0.78rem', fontStyle: 'italic', padding: '0.5rem 0', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Không có đóng góp nào đang chờ.</p>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {donations.slice(0, 5).map((d) => (
-              <div key={d.id} className="flex items-center justify-between py-2 border-b border-[#f6be3b]/10 last:border-0">
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[#e8dcc8]/80 text-sm truncate">
+              <div key={d.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '0.5px solid rgba(212,184,150,0.4)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                  <span style={{ color: '#5C3A1E', fontSize: '0.85rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
                     {d.is_anonymous ? 'Ẩn danh' : (d.donor_name || d.user?.name || 'Ẩn danh')}
                   </span>
-                  <span className="text-[#e8dcc8]/40 text-xs">{formatDateShort(d.created_at)}</span>
+                  <span style={{ color: '#A0794E', fontSize: '0.72rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{formatDateShort(d.created_at)}</span>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                  <span className="font-cinzel text-[#f6be3b] text-sm">{formatVND(d.amount)}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, marginLeft: '0.75rem' }}>
+                  <span style={{ color: '#C4956A', fontSize: '0.85rem', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>{formatVND(d.amount)}</span>
                   <StatusBadge status={d.status} />
                 </div>
               </div>
             ))}
           </div>
         )}
-        <Link to="/admin/quyen-gop" className="mt-3 inline-flex items-center gap-1 text-xs text-[#dc143c] hover:text-[#f6be3b] transition-colors">
+        <Link to="/admin/quyen-gop" style={{ marginTop: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.78rem', color: '#8B1A1A', textDecoration: 'none', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}
+          onMouseEnter={e => e.currentTarget.style.color='#C4956A'}
+          onMouseLeave={e => e.currentTarget.style.color='#8B1A1A'}>
           Xem tất cả
           <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>arrow_forward</span>
         </Link>
       </div>
 
       <div>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[#e8dcc8]/70 text-sm">Bài nháp chưa đăng</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <span style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Bài nháp chưa đăng</span>
           {draftCount > 0 && (
-            <span className="w-5 h-5 rounded-full bg-[#f6be3b]/20 border border-[#f6be3b]/40 flex items-center justify-center text-[#f6be3b] text-xs font-bold">
+            <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(196,149,106,0.18)', border: '0.5px solid rgba(196,149,106,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C4956A', fontSize: '0.72rem', fontWeight: 700, fontFamily: "'Be Vietnam Pro', sans-serif", flexShrink: 0 }}>
               {draftCount > 9 ? '9+' : draftCount}
             </span>
           )}
         </div>
         {draftCount === 0 ? (
-          <p className="text-[#e8dcc8]/30 text-xs italic">Không có bài nháp nào.</p>
+          <p style={{ color: '#A0794E', fontSize: '0.78rem', fontStyle: 'italic', fontFamily: "'Be Vietnam Pro', sans-serif" }}>Không có bài nháp nào.</p>
         ) : (
-          <p className="text-[#e8dcc8]/50 text-sm">
-            Có <span className="text-[#f6be3b] font-semibold">{draftCount}</span> bài viết đang chờ xuất bản.
+          <p style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+            Có <span style={{ color: '#C4956A', fontWeight: 700 }}>{draftCount}</span> bài viết đang chờ xuất bản.
           </p>
         )}
-        <Link to="/admin/bai-viet?status=draft" className="mt-3 inline-flex items-center gap-1 text-xs text-[#dc143c] hover:text-[#f6be3b] transition-colors">
+        <Link to="/admin/bai-viet?status=draft" style={{ marginTop: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.78rem', color: '#8B1A1A', textDecoration: 'none', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600 }}
+          onMouseEnter={e => e.currentTarget.style.color='#C4956A'}
+          onMouseLeave={e => e.currentTarget.style.color='#8B1A1A'}>
           Xem bài nháp
           <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>arrow_forward</span>
         </Link>
@@ -169,22 +180,66 @@ export default function DashboardPage() {
 
   return (
     <AdminLayout topbarTitle="Tổng Quan" topbarBreadcrumbs={[{ label: 'Admin', path: '/admin' }]}>
-      <div className="mb-8">
-        <h1 className="font-cinzel text-[#f2dfd6] text-2xl tracking-wide uppercase">Tổng Quan Hệ Thống</h1>
-        <p className="text-[#e8dcc8]/40 text-sm mt-1 capitalize">{today}</p>
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ color: '#3D2B1A', fontSize: '1.5rem', fontFamily: "'Playfair Display', serif", fontWeight: 700, letterSpacing: '0.02em' }}>Tổng Quan Hệ Thống</h1>
+        <p style={{ color: '#A0794E', fontSize: '0.82rem', marginTop: '0.25rem', textTransform: 'capitalize', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{today}</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <StatCard icon="history_edu" label="Bài Viết"      value={articleCount.toLocaleString('vi-VN')} sub="Tổng số bài"  color="gold" />
         <StatCard icon="person"      label="Anh Hùng"      value={heroCount.toLocaleString('vi-VN')}    sub="Đã ghi danh" color="crimson" />
         <StatCard icon="payments"    label="Chờ Xác Nhận"  value={pendingCount.toLocaleString('vi-VN')} sub={`${formatVND(pendingAmount)} đang chờ`} color="green" />
         <StatCard icon="draft"       label="Bài Nháp"      value={draftCount.toLocaleString('vi-VN')}   sub="Chưa xuất bản" color="blue" />
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
         <PendingTasksPanel pendingDonations={pendingDonations} draftCount={draftCount} />
         <CampaignProgress goal={campaignGoal} raised={campaignRaised} />
       </div>
+
+      {/* Quick-access: Quản Lý Người Dùng */}
+      <Link
+        to="/admin/nguoi-dung"
+        style={{ textDecoration: 'none', display: 'block' }}
+      >
+        <div
+          style={{
+            ...cardStyle,
+            display: 'flex', alignItems: 'center', gap: '1rem',
+            padding: '1.25rem 1.5rem',
+            border: '0.5px solid rgba(196,149,106,0.5)',
+            transition: 'box-shadow 0.2s, border-color 0.2s, transform 0.2s',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.boxShadow = '0 6px 24px rgba(139,26,26,0.10)'
+            e.currentTarget.style.borderColor = '#C4956A'
+            e.currentTarget.style.transform = 'translateY(-2px)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.boxShadow = '0 2px 12px rgba(61,43,26,0.06)'
+            e.currentTarget.style.borderColor = 'rgba(196,149,106,0.5)'
+            e.currentTarget.style.transform = ''
+          }}
+        >
+          <div style={{
+            width: 48, height: 48, borderRadius: '50%', flexShrink: 0,
+            background: 'rgba(196,149,106,0.12)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '22px', color: '#C4956A', fontVariationSettings: "'FILL' 1" }}>group</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ color: '#3D2B1A', fontSize: '0.95rem', fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
+              Quản Lý Người Dùng
+            </div>
+            <div style={{ color: '#A0794E', fontSize: '0.78rem', fontFamily: "'Be Vietnam Pro', sans-serif", marginTop: '0.15rem' }}>
+              Xem danh sách thành viên, thay đổi vai trò (role)
+            </div>
+          </div>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'rgba(61,43,26,0.30)', flexShrink: 0 }}>arrow_forward</span>
+        </div>
+      </Link>
     </AdminLayout>
   )
 }
