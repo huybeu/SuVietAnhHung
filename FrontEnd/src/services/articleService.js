@@ -9,10 +9,12 @@ function toQS(params) {
 }
 
 export const articleService = {
-  getArticles:      (params, { signal } = {}) => httpClient.get(`/articles?${toQS(params)}`, signal),
-  getArticleById:   (id,     { signal } = {}) => httpClient.get(`/articles/${id}`, signal),
-  getArticleBySlug: (slug,   { signal } = {}) => httpClient.get(`/articles/slug/${slug}`, signal),
-  createArticle:    (data)                    => httpClient.post('/articles', data),
-  updateArticle:    (id, data)                => httpClient.patch(`/articles/${id}`, data),
-  deleteArticle:    (id)                      => httpClient.delete(`/articles/${id}`),
+  getArticles:        (params, { signal } = {}) => httpClient.get(`/articles?${toQS(params)}`, signal),
+  getArticleById:     (id,     { signal } = {}) => httpClient.get(`/articles/${id}`, signal),
+  getArticleBySlug:   (slug,   { signal } = {}) => httpClient.get(`/articles/slug/${slug}`, signal),
+  createArticle:      (data)                    => httpClient.post('/articles', data),
+  updateArticle:      (id, data)                => httpClient.patch(`/articles/${id}`, data),
+  deleteArticle:      (id)                      => httpClient.delete(`/articles/${id}`),
+  getTags:            ({ signal } = {})         => httpClient.get('/article-tags', signal),
+  toggleFeatured:     (id)                      => httpClient.patch(`/articles/${id}/featured`),
 }
