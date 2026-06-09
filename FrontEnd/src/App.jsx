@@ -22,6 +22,8 @@ const DashboardPage      = lazy(() => import('./pages/admin/DashboardPage'))
 const HeroListPage       = lazy(() => import('./pages/admin/HeroListPage'))
 const ArticleListPage    = lazy(() => import('./pages/admin/ArticleListPage'))
 const DonationsAdminPage = lazy(() => import('./pages/admin/DonationsAdminPage'))
+const VideoListPage      = lazy(() => import('./pages/admin/VideoListPage'))
+const UserListPage       = lazy(() => import('./pages/admin/UserListPage'))
 
 function PageLoader() {
   return (
@@ -69,6 +71,12 @@ export default function App() {
                 } />
                 <Route path="/admin/quyen-gop" element={
                   <ProtectedRoute><DonationsAdminPage /></ProtectedRoute>
+                } />
+                <Route path="/admin/video" element={
+                  <ProtectedRoute><VideoListPage /></ProtectedRoute>
+                } />
+                <Route path="/admin/nguoi-dung" element={
+                  <ProtectedRoute><UserListPage /></ProtectedRoute>
                 } />
 
                 {/* ── Error pages ──────────────────────────────────────────── */}

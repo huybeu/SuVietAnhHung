@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 const LEADER_IMG =
@@ -114,6 +115,7 @@ const STATS_HONOR = [
 ];
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -309,6 +311,7 @@ export default function LandingPage() {
           1. HERO SECTION
       ════════════════════════════════════════ */}
       <section
+        id="hero"
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -455,7 +458,9 @@ export default function LandingPage() {
 
           {/* CTA buttons */}
           <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+            {/* Scroll xuống section Dự Án */}
             <button
+              onClick={() => document.getElementById("du-an")?.scrollIntoView({ behavior: "smooth" })}
               style={{
                 background: "#8B1A1A",
                 color: "#FDF5EE",
@@ -484,7 +489,9 @@ export default function LandingPage() {
             >
               KHÁM PHÁ NGAY
             </button>
+            {/* Scroll xuống section Kho Phim */}
             <button
+              onClick={() => document.getElementById("phim")?.scrollIntoView({ behavior: "smooth" })}
               style={{
                 background: "transparent",
                 color: "#7B4A00",
@@ -534,6 +541,7 @@ export default function LandingPage() {
           2. PROGRESS & COUNTDOWN
       ════════════════════════════════════════ */}
       <section
+        id="du-an"
         className="reveal"
         style={{ padding: "6rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
       >
@@ -676,6 +684,7 @@ export default function LandingPage() {
           3. MISSION & VIDEOS
       ════════════════════════════════════════ */}
       <section
+        id="phim"
         className="reveal"
         style={{
           background: "#FAE8DA",
@@ -844,6 +853,7 @@ export default function LandingPage() {
           4. TIMELINE
       ════════════════════════════════════════ */}
       <section
+        id="thoi-dai"
         className="reveal"
         style={{ padding: "6rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
       >
@@ -956,6 +966,7 @@ export default function LandingPage() {
           5. TIER CARDS
       ════════════════════════════════════════ */}
       <section
+        id="dong-gop"
         className="reveal"
         style={{
           background: "#FAE8DA",
@@ -1082,7 +1093,9 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
+                {/* Chuyển đến trang quyên góp */}
                 <button
+                  onClick={() => navigate("/quyen-gop")}
                   style={{
                     width: "100%",
                     background: tier.highlighted ? "#8B1A1A" : "transparent",
@@ -1158,6 +1171,7 @@ export default function LandingPage() {
           6. HONOR BOARD
       ════════════════════════════════════════ */}
       <section
+        id="vinh-danh"
         className="reveal"
         style={{
           background: "#FDF5EE",
@@ -1439,7 +1453,9 @@ export default function LandingPage() {
             Ủng hộ dự án ngay!
           </div>
         )}
+        {/* Nút donate cố định — trỏ đến trang quyên góp */}
         <button
+          onClick={() => navigate("/quyen-gop")}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           style={{
@@ -1459,8 +1475,6 @@ export default function LandingPage() {
             transition: "transform 0.2s, box-shadow 0.2s, background 0.2s",
             fontFamily: "'Be Vietnam Pro', sans-serif",
           }}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
           onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.96)")}
           onMouseUp={(e) => (e.currentTarget.style.transform = "")}
         >

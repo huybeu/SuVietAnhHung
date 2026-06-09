@@ -7,7 +7,7 @@ export default function LoginPage() {
   const isRegister = location.pathname === '/dang-ky'
 
   const [username, setUsername] = useState('')
-  const [displayName, setDisplayName] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     setUsername('')
-    setDisplayName('')
+    setEmail('')
     setPassword('')
     setConfirmPassword('')
     setError('')
@@ -46,14 +46,15 @@ export default function LoginPage() {
   const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
-    if (!displayName.trim())         { setError('Vui lòng nhập tên hiển thị.'); return }
+    if (!email.trim())                { setError('Vui lòng nhập email.'); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError('Email không hợp lệ.'); return }
     if (!username.trim())             { setError('Vui lòng nhập tên đăng nhập.'); return }
     if (password.length < 6)          { setError('Mật khẩu phải có ít nhất 6 ký tự.'); return }
     if (password !== confirmPassword)  { setError('Mật khẩu xác nhận không khớp.'); return }
 
     setSubmitting(true)
     try {
-      await register(displayName.trim(), username.trim(), password)
+      await register(email.trim(), username.trim(), password)
       navigate('/ho-so')
     } catch (err) {
       setError(err.message)
@@ -241,9 +242,9 @@ export default function LoginPage() {
           {isRegister && (
             <form onSubmit={handleRegister} className="flex flex-col gap-4">
               <FormField
-                id="displayName" label="Tên hiển thị" type="text"
-                placeholder="Tên của bạn..." value={displayName}
-                onChange={setDisplayName} autoComplete="name"
+                id="reg-email" label="Email" type="email"
+                placeholder="email@example.com" value={email}
+                onChange={setEmail} autoComplete="email"
               />
               <FormField
                 id="reg-username" label="Tên đăng nhập" type="text"

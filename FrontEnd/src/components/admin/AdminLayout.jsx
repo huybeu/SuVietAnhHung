@@ -8,7 +8,8 @@ const AdminCtx = createContext(null)
 export function useAdminLayout() { return useContext(AdminCtx) }
 
 export default function AdminLayout({ children, topbarTitle = 'Admin', topbarBreadcrumbs = [], topbarActions }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen]           = useState(false)   // mobile drawer
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)   // desktop collapse
   const { user, loading } = useAuth()
   const location = useLocation()
   const navigate  = useNavigate()
@@ -34,10 +35,15 @@ export default function AdminLayout({ children, topbarTitle = 'Admin', topbarBre
           currentPath={location.pathname}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(c => !c)}
         />
 
-        {/* Main content (offset by sidebar on lg) */}
-        <div className="lg:ml-64" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflowX: 'hidden' }}>
+        {/* Main content — offset by sidebar width on desktop, with smooth transition */}
+        <div
+          className={sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-60'}
+          style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflowX: 'hidden', transition: 'margin-left 0.25s ease' }}
+        >
           <AdminTopbar
             title={topbarTitle}
             breadcrumbs={topbarBreadcrumbs}

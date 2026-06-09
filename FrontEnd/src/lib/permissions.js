@@ -28,9 +28,12 @@ export function can(role, action) {
 
 export function useRole() {
   try {
+    // DEV_BYPASS: không có localStorage user, nhưng vẫn cần quyền superadmin
+    if (import.meta.env.VITE_DEV_BYPASS === 'true') return 'superadmin'
+
     const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null')
     if (!u) return 'viewer'
-    if (u.role) return u.role
+    if (u.role) return u.role === 'admin' ? 'superadmin' : u.role
     if (u.isAdmin) return 'superadmin'
     return 'editor'
   } catch {

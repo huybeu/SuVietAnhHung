@@ -29,5 +29,11 @@ export const queryKeys = {
     all: () => ['eras'],
   },
 
+  videos: {
+    all:    ['videos'],
+    list:   (params) => ['videos', params],
+    detail: (id)     => ['video', id],
+  },
+
   siteConfig: () => ['site-config'],
 }
