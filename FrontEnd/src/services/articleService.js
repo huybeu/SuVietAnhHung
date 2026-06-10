@@ -15,6 +15,6 @@ export const articleService = {
   createArticle:      (data)                    => httpClient.post('/articles', data),
   updateArticle:      (id, data)                => httpClient.patch(`/articles/${id}`, data),
   deleteArticle:      (id)                      => httpClient.delete(`/articles/${id}`),
-  getTags:            ({ signal } = {})         => httpClient.get('/article-tags', signal),
+  getTags:            ({ signal } = {})         => httpClient.get('/tags', signal),
   toggleFeatured:     (id)                      => httpClient.patch(`/articles/${id}/featured`),
 }

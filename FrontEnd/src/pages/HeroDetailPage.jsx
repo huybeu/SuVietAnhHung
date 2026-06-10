@@ -41,11 +41,12 @@ export default function HeroDetailPage() {
     }
   }, [slug, navigate])
 
-  const { data: hero, isLoading, isError } = useQuery({
+  const { data: heroResponse, isLoading, isError } = useQuery({
     queryKey: queryKeys.heroes.bySlug(slug),
     queryFn:  ({ signal }) => heroService.getHeroBySlug(slug, { signal }),
     enabled:  !!slug,
   })
+  const hero = heroResponse?.data
 
   // document.title / og tags handled by <PageMeta> below
 
@@ -77,12 +78,30 @@ export default function HeroDetailPage() {
       <HeroBanner hero={hero} era={hero.era} />
       <HeroBreadcrumb era={hero.era} heroName={hero.name} />
 
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '3rem 1.5rem' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {/* Biography column */}
           <div style={{ flex: '1 1 400px', minWidth: 0 }}>
             <HeroLifespanBar birthYear={hero.birth_year} deathYear={hero.death_year} era={hero.era} />
-            <HeroBiography content={hero.biography} />
+
+            {/* Mô tả chi tiết */}
+            {hero.biography ? (
+              <HeroBiography content={hero.biography} />
+            ) : (
+              <div style={{
+                marginBottom: '2.5rem',
+                padding: '2rem',
+                background: 'rgba(196,149,106,0.06)',
+                border: '0.5px solid rgba(196,149,106,0.2)',
+                borderRadius: '0.75rem',
+                color: '#A0794E',
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                fontSize: '0.9rem',
+                textAlign: 'center',
+              }}>
+                Chưa có mô tả chi tiết về anh hùng này.
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -122,7 +141,6 @@ export default function HeroDetailPage() {
                 { label: 'Năm sinh',  value: formatYear(hero.birth_year) },
                 { label: 'Năm mất',  value: formatYear(hero.death_year) },
                 { label: 'Thời đại', value: hero.era?.name || '—' },
-                { label: 'Nổi bật',  value: hero.is_featured ? '⭐ Có' : 'Không' },
               ].map(f => (
                 <div key={f.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '0.5px solid rgba(212,184,150,0.5)' }}>
                   <span style={{ color: '#A0794E', fontSize: '0.8rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{f.label}</span>

@@ -49,7 +49,8 @@ export default function ArticleDetailPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
 
-  const { data: article, isLoading, isError, error } = useArticle(slug)
+  const { data: response, isLoading, isError, error } = useArticle(slug)
+  const article = response?.data
 
   // Redirect if not published
   useEffect(() => {
@@ -81,7 +82,7 @@ export default function ArticleDetailPage() {
     )
   }
 
-  const thumbnail = article.thumbnailUrl || article.thumbnail_url || article.image_url
+  const thumbnail = article.thumbnailUrl || article.thumbnail_url || article.image_url || article.cover_url
   const publishedAt = article.publishedAt || article.published_at
   const isFeatured = article.isFeatured || article.is_featured
   const tags = article.tags ?? []
@@ -205,6 +206,7 @@ export default function ArticleDetailPage() {
             </div>
           </div>
         )}
+
       </div>
 
       {/* Related articles */}

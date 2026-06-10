@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { heroService } from "../services/heroService";
 import { queryKeys } from "../lib/queryKeys";
-import { formatYear } from "../lib/format";
+import { formatYear, formatDateShort } from "../lib/format";
+import { useArticles } from "../hooks/useArticles";
 
 const LEADER_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuCJOZOokhcFoQvpJioq8a8l6mBekKDN0J62jLD7b_I7c6R8_tXi1OWqRdXSZS5wsIkDdc9JEO3hBTRuBGApVXQk6xNVu9ip-C2T1fca1oeRl57XRnhkQDW7DXc9xGCV0U92uzimuMmVHXVf3zunKKsZjd8SS1e_8srDiH0w2LARXvlTAB5U48ZBogHMMK-xQEbtBG1-CIlcKJBBnY7or30AWoWAsfH8FQEmVdQMhxagdZAyQmjDiPffWwfGGj4NuWshN3BIzYjtVg8";
@@ -117,11 +118,20 @@ const STATS_HONOR = [
   { label: "Triệu Đồng", value: "623" },
 ];
 
+const VIDEOS = [
+  { title: "Trận Bạch Đằng 938",    youtubeId: "nBPzK_8a_eE" },
+  { title: "Hội Nghị Diên Hồng",    youtubeId: "kVJi9e0KUCA" },
+  { title: "Chiến Thắng Điện Biên", youtubeId: "IFT48TM_Yyk" },
+  { title: "Thống Nhất 1975",       youtubeId: "LW9bIV75qZE" },
+];
+
 export default function LandingPage() {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const [videoModal, setVideoModal] = useState({ open: false, title: '', youtubeId: '' });
 
   const { data: featuredData } = useQuery({
     queryKey: queryKeys.heroes.list({ is_featured: true, pageSize: 4 }),
@@ -129,11 +139,24 @@ export default function LandingPage() {
   });
   const featuredHeroes = featuredData?.data?.slice(0, 4) ?? [];
 
+  const { data: featuredArticlesData } = useArticles({ status: 'published', is_featured: true, limit: 4 });
+  const featuredArticles = featuredArticlesData?.data?.slice(0, 4) ?? [];
+
   /* ── Countdown ── */
   useEffect(() => {
     const id = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  /* ── ESC to close video modal ── */
+  useEffect(() => {
+    if (!videoModal.open) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape') setVideoModal({ open: false, title: '', youtubeId: '' });
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [videoModal.open]);
 
   /* ── Reveal on scroll ── */
   useEffect(() => {
@@ -163,6 +186,17 @@ export default function LandingPage() {
 
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .animate-spin-slow { animation: spin-slow 4s linear infinite; }
+
+        @keyframes overlayFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes modalSlideIn {
+          from { opacity: 0; transform: scale(0.92) translateY(24px); }
+          to   { opacity: 1; transform: scale(1)    translateY(0);    }
+        }
+        .video-modal-overlay { animation: overlayFadeIn 0.22s ease; }
+        .video-modal-box     { animation: modalSlideIn 0.32s cubic-bezier(0.34,1.45,0.64,1); }
 
         .video-thumb {
           position: relative;
@@ -814,14 +848,13 @@ export default function LandingPage() {
               gap: "1.25rem",
             }}
           >
-            {[
-              "Trận Bạch Đằng 938",
-              "Hội Nghị Diên Hồng",
-              "Chiến Thắng Điện Biên",
-              "Thống Nhất 1975",
-            ].map((title) => (
-              <div className="video-thumb" key={title}>
-                <img src={VIDEO_IMG} alt={title} />
+            {VIDEOS.map((video) => (
+              <div
+                className="video-thumb"
+                key={video.title}
+                onClick={() => setVideoModal({ open: true, title: video.title, youtubeId: video.youtubeId })}
+              >
+                <img src={VIDEO_IMG} alt={video.title} />
                 <div className="play-overlay">
                   <span
                     className="material-symbols-outlined"
@@ -845,7 +878,7 @@ export default function LandingPage() {
                   }}
                 >
                   <p style={{ color: "#C4956A", fontSize: "0.78rem", margin: 0, fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
-                    {title}
+                    {video.title}
                   </p>
                 </div>
               </div>
@@ -1160,6 +1193,196 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+      {/* ════════════════════════════════════════
+          4.6. FEATURED ARTICLES
+      ════════════════════════════════════════ */}
+      <section
+        id="bai-viet-noi-bat"
+        style={{
+          background: "#FDF5EE",
+          borderTop: "0.5px solid #D4B896",
+          padding: "6rem 1.5rem",
+        }}
+      >
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          <p style={{
+            color: "#8B1A1A",
+            fontSize: "0.72rem",
+            letterSpacing: "0.22em",
+            textAlign: "center",
+            marginBottom: "0.5rem",
+            textTransform: "uppercase",
+            fontFamily: "'Be Vietnam Pro', sans-serif",
+            fontWeight: 600,
+          }}>
+            NHỮNG BÀI VIẾT NỔI BẬT
+          </p>
+          <h2 style={{
+            color: "#3D2B1A",
+            textAlign: "center",
+            fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
+            marginBottom: "3.5rem",
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: 700,
+          }}>
+            Bài Viết Nổi Bật
+          </h2>
+
+          {featuredArticles.length === 0 ? (
+            <div style={{
+              textAlign: "center",
+              padding: "4rem 1.5rem",
+              color: "#A0794E",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              fontSize: "0.9rem",
+              border: "0.5px dashed rgba(196,149,106,0.45)",
+              borderRadius: "12px",
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 40, color: "rgba(196,149,106,0.45)", display: "block", marginBottom: "0.75rem" }}>
+                article
+              </span>
+              Chưa có bài viết nổi bật nào được chọn.
+            </div>
+          ) : (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))",
+              gap: "1.5rem",
+            }}>
+              {featuredArticles.map((article) => {
+                const thumbnail = article.cover_url || article.thumbnailUrl || article.thumbnail_url;
+                const tags = article.tags || [];
+                const publishedAt = article.published_at || article.publishedAt;
+                return (
+                  <div
+                    key={article.id}
+                    onClick={() => navigate(`/bai-viet/${article.slug || article.id}`)}
+                    style={{
+                      background: "#FDF5EE",
+                      border: "0.5px solid #D4B896",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 12px rgba(61,43,26,0.07)",
+                      transition: "transform 0.2s, box-shadow 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-4px)";
+                      e.currentTarget.style.boxShadow = "0 10px 28px rgba(139,26,26,0.12)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "";
+                      e.currentTarget.style.boxShadow = "0 2px 12px rgba(61,43,26,0.07)";
+                    }}
+                  >
+                    {/* Cover image */}
+                    <div style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", background: "linear-gradient(135deg, #FAE8DA, #F5D5C0)" }}>
+                      {thumbnail
+                        ? <img src={thumbnail} alt={article.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: "2.5rem", color: "rgba(196,149,106,0.4)" }}>article</span>
+                          </div>
+                      }
+                    </div>
+
+                    {/* Content */}
+                    <div style={{ padding: "1.25rem 1.25rem 1rem" }}>
+                      {tags.length > 0 && (
+                        <div style={{ display: "flex", gap: "0.3rem", marginBottom: "0.6rem", flexWrap: "wrap" }}>
+                          {tags.slice(0, 2).map(tag => (
+                            <span key={tag.id || tag.slug} style={{
+                              padding: "1px 8px", borderRadius: 20, fontSize: "0.65rem", fontWeight: 600,
+                              background: "rgba(139,26,26,0.07)", color: "#8B1A1A",
+                              border: "0.5px solid rgba(139,26,26,0.18)",
+                              fontFamily: "'Be Vietnam Pro', sans-serif",
+                            }}>
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <h3 style={{
+                        color: "#3D2B1A",
+                        fontSize: "0.95rem",
+                        marginBottom: article.excerpt ? "0.4rem" : "0.75rem",
+                        fontFamily: "'Playfair Display', serif",
+                        fontWeight: 700,
+                        lineHeight: 1.35,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}>
+                        {article.title}
+                      </h3>
+
+                      {article.excerpt && (
+                        <p style={{
+                          color: "#A0794E",
+                          fontSize: "0.78rem",
+                          lineHeight: 1.55,
+                          marginBottom: "0.75rem",
+                          fontFamily: "'Be Vietnam Pro', sans-serif",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}>
+                          {article.excerpt}
+                        </p>
+                      )}
+
+                      {publishedAt && (
+                        <p style={{
+                          color: "#C4956A",
+                          fontSize: "0.7rem",
+                          fontFamily: "'Be Vietnam Pro', sans-serif",
+                          letterSpacing: "0.05em",
+                          margin: 0,
+                        }}>
+                          {formatDateShort(publishedAt)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
+            <button
+              onClick={() => navigate("/bai-viet")}
+              style={{
+                background: "transparent",
+                color: "#7B4A00",
+                border: "1px solid #C4956A",
+                borderRadius: "8px",
+                padding: "0.75rem 2rem",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                letterSpacing: "0.08em",
+                cursor: "pointer",
+                transition: "background 0.2s, transform 0.2s",
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                textTransform: "uppercase",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(196,149,106,0.10)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.transform = "";
+              }}
+            >
+              XEM TẤT CẢ BÀI VIẾT
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* ════════════════════════════════════════
           5. TIER CARDS
@@ -1729,6 +1952,184 @@ export default function LandingPage() {
           </span>
         </button>
       </div>
+      {/* ════════════════════════════════════════
+          VIDEO MODAL
+      ════════════════════════════════════════ */}
+      {videoModal.open && (
+        <div
+          className="video-modal-overlay"
+          onClick={() => setVideoModal({ open: false, title: '', youtubeId: '' })}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            background: "rgba(61,43,26,0.65)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+          }}
+        >
+          <div
+            className="video-modal-box"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%",
+              maxWidth: "900px",
+              background: "#FDF5EE",
+              borderRadius: "16px",
+              overflow: "hidden",
+              boxShadow: "0 8px 48px rgba(61,43,26,0.32), 0 0 0 1px rgba(212,184,150,0.6)",
+              border: "1px solid #D4B896",
+              position: "relative",
+            }}
+          >
+            {/* ── Góc trang trí ── */}
+            {[
+              { top: 0,    left: 0,    borderTop: "2px solid #C4956A", borderLeft:  "2px solid #C4956A", borderRadius: "4px 0 0 0"    },
+              { top: 0,    right: 0,   borderTop: "2px solid #C4956A", borderRight: "2px solid #C4956A", borderRadius: "0 4px 0 0"    },
+              { bottom: 0, left: 0,    borderBottom: "2px solid #C4956A", borderLeft:  "2px solid #C4956A", borderRadius: "0 0 0 4px" },
+              { bottom: 0, right: 0,   borderBottom: "2px solid #C4956A", borderRight: "2px solid #C4956A", borderRadius: "0 0 4px 0" },
+            ].map((s, i) => (
+              <div key={i} style={{ position: "absolute", width: 20, height: 20, zIndex: 2, ...s }} />
+            ))}
+
+            {/* ── Header ── */}
+            <div style={{
+              padding: "1.25rem 1.5rem 1.1rem",
+              background: "linear-gradient(180deg, #FAE8DA 0%, #FDF5EE 100%)",
+              borderBottom: "0.5px solid #D4B896",
+              position: "relative",
+            }}>
+              {/* Nút đóng */}
+              <button
+                onClick={() => setVideoModal({ open: false, title: '', youtubeId: '' })}
+                style={{
+                  position: "absolute",
+                  top: "1rem",
+                  right: "1rem",
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: "rgba(196,149,106,0.15)",
+                  border: "1px solid #D4B896",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#5C3A1E",
+                  transition: "all 0.2s",
+                  zIndex: 3,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#8B1A1A";
+                  e.currentTarget.style.borderColor = "#8B1A1A";
+                  e.currentTarget.style.color = "#FDF5EE";
+                  e.currentTarget.style.transform = "scale(1.08)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(196,149,106,0.15)";
+                  e.currentTarget.style.borderColor = "#D4B896";
+                  e.currentTarget.style.color = "#5C3A1E";
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>close</span>
+              </button>
+
+              {/* Nhãn danh mục */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
+                <p style={{
+                  color: "#8B1A1A",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.24em",
+                  textTransform: "uppercase",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  fontWeight: 700,
+                  margin: 0,
+                }}>
+                  Kho Phim Lịch Sử
+                </p>
+                <span style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.25rem",
+                  background: "rgba(139,26,26,0.08)",
+                  border: "0.5px solid rgba(139,26,26,0.25)",
+                  borderRadius: "20px",
+                  padding: "1px 8px",
+                  color: "#8B1A1A",
+                  fontSize: "0.6rem",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#8B1A1A", display: "inline-block", animation: "bounce-arrow 1.4s ease-in-out infinite" }} />
+                  ĐANG PHÁT
+                </span>
+              </div>
+
+              {/* Tiêu đề */}
+              <h3 style={{
+                color: "#3D2B1A",
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(1rem, 2.5vw, 1.4rem)",
+                fontWeight: 700,
+                margin: "0 3rem 1rem 0",
+                lineHeight: 1.3,
+              }}>
+                {videoModal.title}
+              </h3>
+
+              {/* Divider trang trí */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, #C4956A 0%, rgba(196,149,106,0.2) 70%, transparent 100%)" }} />
+                <span style={{ color: "rgba(196,149,106,0.6)", fontSize: "0.65rem" }}>✦</span>
+              </div>
+            </div>
+
+            {/* ── Video iframe ── */}
+            <div style={{ position: "relative", width: "100%", paddingTop: "56.25%", background: "#000" }}>
+              <iframe
+                src={`https://www.youtube.com/embed/${videoModal.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+                title={videoModal.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
+              />
+            </div>
+
+            {/* ── Footer ── */}
+            <div style={{
+              padding: "0.55rem 1.5rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.4rem",
+              borderTop: "0.5px solid #D4B896",
+              background: "#FAE8DA",
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "11px", color: "#A0794E" }}>keyboard</span>
+              <span style={{ color: "#A0794E", fontSize: "0.67rem", fontFamily: "'Be Vietnam Pro', sans-serif", letterSpacing: "0.04em" }}>
+                Nhấn{" "}
+                <span style={{
+                  background: "rgba(196,149,106,0.18)",
+                  border: "0.5px solid #C4956A",
+                  borderRadius: "3px",
+                  padding: "0 5px",
+                  fontSize: "0.62rem",
+                  color: "#7B4A00",
+                  fontFamily: "monospace",
+                  letterSpacing: 0,
+                }}>ESC</span>{" "}
+                hoặc bấm ra ngoài để đóng
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

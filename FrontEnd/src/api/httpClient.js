@@ -7,8 +7,10 @@ export function setRefreshCallback(fn) { refreshCallback = fn }
 export function setLogoutCallback(fn)  { logoutCallback  = fn }
 
 // ── Headers ───────────────────────────────────────────────────────────────────
+const DEV_BYPASS = import.meta.env.VITE_DEV_BYPASS === 'true'
+
 function getHeaders(isFormData = false) {
-  const token = localStorage.getItem('authToken')
+  const token = DEV_BYPASS ? 'dev-bypass-token' : localStorage.getItem('authToken')
   if (isFormData) {
     return token ? { Authorization: `Bearer ${token}` } : {}
   }
