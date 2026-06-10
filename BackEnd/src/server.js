@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 3000;
 const startServer = async () => {
   await connectDatabase();
 
-  // Tạo bảng mới nếu chưa tồn tại (không sửa bảng cũ)
-  await sequelize.sync();
+  // Cập nhật cấu trúc bảng theo model (thêm cột mới nếu thiếu)
+  await sequelize.sync({ alter: true });
   console.log('Đồng bộ database thành công.');
 
   const server = app.listen(PORT, () => {

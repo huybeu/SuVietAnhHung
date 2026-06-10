@@ -18,6 +18,9 @@ const Article = sequelize.define(
       allowNull: false,
       unique: true,
     },
+    image_url: {
+      type: DataTypes.TEXT,
+    },
     excerpt: {
       type: DataTypes.TEXT,
     },
