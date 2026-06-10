@@ -4,7 +4,7 @@ export default function HeroBanner({ hero, era }) {
   const { name, title, birth_year, death_year, avatar_url, cover_url } = hero
 
   return (
-    <section style={{ position: 'relative', minHeight: '70vh', overflow: 'hidden', backgroundColor: '#FDF5EE' }}>
+    <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#FDF5EE' }}>
       {/* Background cover */}
       {cover_url && (
         <img
@@ -37,14 +37,15 @@ export default function HeroBanner({ hero, era }) {
 
       {/* Content */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
-        maxWidth: 1100, margin: '0 auto', padding: 'clamp(1rem, 4vw, 4rem) 1.5rem clamp(2rem, 5vw, 4rem)',
-        display: 'flex', gap: '1rem', alignItems: 'flex-end', flexWrap: 'wrap',
+        position: 'relative', zIndex: 10,
+        maxWidth: 1100, margin: '0 auto',
+        padding: 'clamp(5rem, 8vw, 7rem) 1.5rem clamp(2rem, 4vw, 3rem)',
+        display: 'flex', gap: '1.5rem', alignItems: 'flex-end', flexWrap: 'wrap',
       }}>
         {/* Avatar */}
         <div style={{ flexShrink: 0 }}>
           <div style={{
-            width: 'clamp(96px,12vw,160px)', height: 'clamp(96px,12vw,160px)',
+            width: 'clamp(80px,10vw,120px)', height: 'clamp(80px,10vw,120px)',
             borderRadius: '50%', overflow: 'hidden',
             border: '2px solid #8B1A1A',
             boxShadow: '0 0 24px rgba(139,26,26,0.22)',
@@ -53,7 +54,7 @@ export default function HeroBanner({ hero, era }) {
           }}>
             {avatar_url
               ? <img src={avatar_url} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <span style={{ color: '#8B1A1A', fontSize: '2.5rem', fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
+              : <span style={{ color: '#8B1A1A', fontSize: '2rem', fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
                   {name?.[0] || '?'}
                 </span>
             }
@@ -61,9 +62,9 @@ export default function HeroBanner({ hero, era }) {
         </div>
 
         {/* Text */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', paddingBottom: '0.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', paddingBottom: '0.25rem' }}>
           <h1 style={{
-            fontSize: 'clamp(2rem,5vw,3.5rem)', color: '#3D2B1A',
+            fontSize: 'clamp(1.8rem,4vw,2.8rem)', color: '#3D2B1A',
             lineHeight: 1.1, margin: 0,
             fontFamily: "'Playfair Display', serif", fontWeight: 700,
             textShadow: '0 1px 4px rgba(253,245,238,0.8)',
@@ -71,26 +72,20 @@ export default function HeroBanner({ hero, era }) {
             {name}
           </h1>
           {title && (
-            <p style={{ color: '#C4956A', fontSize: '1.1rem', margin: 0, fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
+            <p style={{ color: '#C4956A', fontSize: '1rem', margin: 0, fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
               {title}
             </p>
           )}
-          <span style={{ color: 'rgba(196,149,106,0.6)', fontSize: '0.85rem', letterSpacing: '0.15em' }}>
+          <span style={{ color: 'rgba(196,149,106,0.6)', fontSize: '0.8rem', letterSpacing: '0.15em' }}>
             ─── ✦ ───
           </span>
           {(birth_year != null || death_year != null) && (
-            <p style={{ color: '#5C3A1E', fontSize: '0.85rem', letterSpacing: '0.2em', margin: 0, fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+            <p style={{ color: '#5C3A1E', fontSize: '0.82rem', letterSpacing: '0.2em', margin: 0, fontFamily: "'Be Vietnam Pro', sans-serif" }}>
               {formatYear(birth_year)} &ndash; {formatYear(death_year)}
             </p>
           )}
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <div className="bounce-arrow" style={{
-        position: 'absolute', bottom: '1rem', left: '50%', transform: 'translateX(-50%)',
-        color: 'rgba(196,149,106,0.55)', fontSize: '1.5rem', zIndex: 10, userSelect: 'none',
-      }}>↓</div>
     </section>
   )
 }

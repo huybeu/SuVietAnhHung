@@ -7,7 +7,6 @@ import ArticleSearch from '../components/article/ArticleSearch'
 import TagFilter from '../components/article/TagFilter'
 import HeroDropdownFilter from '../components/article/HeroDropdownFilter'
 import Pagination from '../components/article/Pagination'
-import FeaturedArticleSection from '../components/article/FeaturedArticleSection'
 import PageMeta from '../components/PageMeta'
 
 const PAGE_SIZE = 12
@@ -112,9 +111,6 @@ export default function PublicArticleListPage() {
       </div>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1.5rem' }}>
-        {/* Featured section */}
-        {!hasFilters && <FeaturedArticleSection />}
-
         {/* Filter bar */}
         <div style={{
           background: '#FAE8DA', border: '0.5px solid rgba(196,149,106,0.3)',

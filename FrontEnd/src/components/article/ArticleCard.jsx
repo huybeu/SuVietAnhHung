@@ -15,6 +15,13 @@ function highlight(text, query) {
   )
 }
 
+function cardReadingTime(article) {
+  const text = ((article.content || '') + ' ' + (article.excerpt || '') + ' ' + (article.summary || ''))
+    .replace(/<[^>]+>/g, '')
+  const words = text.trim().split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.round(words / 200))
+}
+
 export default function ArticleCard({ article, searchQuery = '' }) {
   const [hovered, setHovered] = useState(false)
   const href = `/bai-viet/${article.slug || article.id}`
@@ -23,6 +30,9 @@ export default function ArticleCard({ article, searchQuery = '' }) {
   const publishedAt = article.publishedAt || article.published_at
   const isFeatured = article.isFeatured || article.is_featured
   const tags = article.tags || []
+  const author = article.author
+  const viewCount = article.viewCount || article.view_count || 0
+  const mins = cardReadingTime(article)
 
   return (
     <Link to={href} style={{ textDecoration: 'none', display: 'block', height: '100%' }}
@@ -102,15 +112,34 @@ export default function ArticleCard({ article, searchQuery = '' }) {
             </div>
           )}
 
-          {/* Date */}
-          <div style={{ marginTop: 'auto', paddingTop: '0.35rem' }}>
-            {publishedAt && (
-              <span style={{
-                color: 'rgba(61,43,26,0.4)', fontFamily: 'monospace', fontSize: '0.7rem', flexShrink: 0,
-              }}>
-                {formatDateShort(publishedAt)}
+          {/* Footer row */}
+          <div style={{ marginTop: 'auto', paddingTop: '0.5rem', borderTop: '0.5px solid rgba(196,149,106,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              {publishedAt && (
+                <span style={{ color: 'rgba(61,43,26,0.45)', fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.68rem', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 12 }}>calendar_today</span>
+                  {formatDateShort(publishedAt)}
+                </span>
+              )}
+              {viewCount > 0 && (
+                <span style={{ color: 'rgba(61,43,26,0.45)', fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.68rem', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 12 }}>visibility</span>
+                  {viewCount > 999 ? `${(viewCount/1000).toFixed(1)}k` : viewCount}
+                </span>
+              )}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              {author && (
+                <span style={{ color: '#8B1A1A', fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.68rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 12 }}>person</span>
+                  {author.username}
+                </span>
+              )}
+              <span style={{ color: 'rgba(61,43,26,0.4)', fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.68rem', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 12 }}>schedule</span>
+                {mins} phút
               </span>
-            )}
+            </div>
           </div>
         </div>
       </div>

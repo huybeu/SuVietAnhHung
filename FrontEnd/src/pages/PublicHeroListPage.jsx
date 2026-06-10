@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import { heroService } from '../services/heroService'
 import { queryKeys } from '../lib/queryKeys'
 import PageMeta from '../components/PageMeta'
-import FeaturedBadge from '../components/hero/FeaturedBadge'
 import { useDebounce } from '../hooks/useDebounce'
 
 const PAGE_SIZE = 12
@@ -87,12 +86,6 @@ function HeroCard({ hero }) {
             </div>
           )}
 
-          {/* Featured badge */}
-          {hero.is_featured && (
-            <div style={{ position: 'absolute', top: 8, right: 8 }}>
-              <FeaturedBadge />
-            </div>
-          )}
         </div>
 
         {/* Info */}
@@ -449,255 +442,193 @@ export default function PublicHeroListPage() {
         </p>
       </div>
 
-      {/* Anh Hùng Nổi Bật */}
-      {!hasFilters && <FeaturedSection />}
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1.5rem' }}>
-        {/* Filter bar */}
-        <div style={{
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2rem 2rem', display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+
+        {/* ── Sidebar lọc ── */}
+        <aside style={{
+          width: 300, flexShrink: 0,
+          position: 'sticky', top: 80, alignSelf: 'flex-start',
           background: '#FAE8DA',
           border: '0.5px solid rgba(196,149,106,0.3)',
-          borderRadius: 14,
-          padding: '1rem 1.25rem',
-          marginBottom: '2rem',
+          borderRadius: 16,
+          padding: '1.5rem',
+          display: 'flex', flexDirection: 'column', gap: '1.4rem',
         }}>
-          {/* Search + meta row */}
-          <div className="flex flex-wrap gap-3 items-center" style={{ marginBottom: '0.85rem' }}>
-            {/* Search input */}
-            <div style={{ position: 'relative', flex: '1 1 220px', minWidth: 180 }}>
-              <span
-                className="material-symbols-outlined"
-                style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 18, color: 'rgba(61,43,26,0.35)', pointerEvents: 'none' }}
-              >
+          {/* Tìm kiếm */}
+          <div>
+            <label style={{ display: 'block', color: '#A0794E', fontSize: '0.7rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+              Tìm kiếm
+            </label>
+            <div style={{ position: 'relative' }}>
+              <span className="material-symbols-outlined" style={{ position: 'absolute', left: 9, top: '50%', transform: 'translateY(-50%)', fontSize: 17, color: 'rgba(61,43,26,0.35)', pointerEvents: 'none' }}>
                 search
               </span>
               <input
                 type="text"
                 value={localQ}
                 onChange={e => setLocalQ(e.target.value)}
-                placeholder="Tìm kiếm anh hùng..."
+                placeholder="Tên anh hùng..."
                 className="input-gold w-full"
-                style={{ height: 40, paddingLeft: 36, paddingRight: localQ ? 32 : 10, fontSize: '0.88rem' }}
+                style={{ height: 38, paddingLeft: 32, paddingRight: localQ ? 28 : 10, fontSize: '0.85rem' }}
               />
               {localQ && (
                 <button
                   onClick={() => { setLocalQ(''); setParam('q', '') }}
-                  style={{
-                    position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    color: 'rgba(61,43,26,0.4)', fontSize: 15, lineHeight: 1, padding: 2,
-                  }}
+                  style={{ position: 'absolute', right: 7, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(61,43,26,0.4)', fontSize: 14, lineHeight: 1, padding: 2 }}
                 >
                   ✕
                 </button>
               )}
             </div>
-
-            {/* Clear filters */}
-            {hasFilters && (
-              <button
-                onClick={clearFilters}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '0.3rem',
-                  height: 40, padding: '0 0.75rem',
-                  background: 'none', border: '0.5px solid rgba(139,26,26,0.25)',
-                  borderRadius: 8, cursor: 'pointer',
-                  color: '#8B1A1A', fontSize: '0.85rem',
-                  fontFamily: "'Be Vietnam Pro', sans-serif",
-                  fontWeight: 600, flexShrink: 0, transition: 'all 0.15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,26,26,0.06)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'none'}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>filter_alt_off</span>
-                Xoá lọc
-              </button>
-            )}
-
-            {/* Result count */}
-            {!isLoading && (
-              <span style={{
-                marginLeft: 'auto',
-                color: '#A0794E',
-                fontSize: '0.82rem',
-                fontFamily: "'Be Vietnam Pro', sans-serif",
-                flexShrink: 0,
-              }}>
-                {totalCount.toLocaleString('vi-VN')} anh hùng
-              </span>
-            )}
           </div>
 
-          {/* Era chips + Nổi Bật toggle — một hàng */}
-          <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            {/* "Tất Cả" luôn hiện, kể cả khi chưa load xong eras */}
-            <button
-              onClick={() => handleEraSelect('')}
-              style={{
-                height: 32, padding: '0 0.875rem', borderRadius: 20,
-                border: !currentEra ? '1.5px solid #8B1A1A' : '0.5px solid rgba(196,149,106,0.45)',
-                background: !currentEra ? '#8B1A1A' : 'transparent',
-                color: !currentEra ? '#FDF5EE' : '#5C3A1E',
-                fontFamily: "'Be Vietnam Pro', sans-serif",
-                fontSize: '0.8rem', fontWeight: !currentEra ? 700 : 500,
-                cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
-                boxShadow: !currentEra ? '0 2px 8px rgba(139,26,26,0.22)' : 'none',
-              }}
-            >
-              Tất Cả
-            </button>
+          {/* Lọc theo thời đại */}
+          <div>
+            <label style={{ display: 'block', color: '#A0794E', fontSize: '0.7rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+              Thời đại
+            </label>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={currentEra}
+                onChange={e => handleEraSelect(e.target.value)}
+                style={{
+                  width: '100%', height: 38,
+                  padding: '0 2rem 0 0.75rem',
+                  appearance: 'none',
+                  background: '#FDF5EE',
+                  border: currentEra ? '1.5px solid #8B1A1A' : '0.5px solid rgba(196,149,106,0.5)',
+                  borderRadius: 8,
+                  color: currentEra ? '#3D2B1A' : '#A0794E',
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  fontSize: '0.85rem',
+                  fontWeight: currentEra ? 600 : 400,
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+              >
+                <option value="">Tất cả thời đại</option>
+                {eras.map(era => (
+                  <option key={era.id} value={String(era.id)}>{era.name}</option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined" style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', fontSize: 18, color: '#A0794E', pointerEvents: 'none' }}>
+                expand_more
+              </span>
+            </div>
+          </div>
 
-            {/* Era-specific chips chỉ hiện khi có data */}
-            {eras.length > 0 && <EraFilter eras={eras} activeEra={currentEra} onSelect={handleEraSelect} />}
-
-            {/* Divider — chỉ hiện khi có eras */}
-            {eras.length > 0 && (
-              <div style={{ width: 1, height: 22, background: 'rgba(196,149,106,0.35)', flexShrink: 0, alignSelf: 'center' }} />
-            )}
-
-            {/* Nổi Bật toggle chip */}
+          {/* Nổi bật toggle */}
+          <div>
+            <label style={{ display: 'block', color: '#A0794E', fontSize: '0.7rem', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+              Lọc khác
+            </label>
             <button
               onClick={handleFeaturedToggle}
               style={{
-                height: 32,
-                padding: '0 0.9rem',
-                borderRadius: 20,
-                border: currentFeatured === 'yes' ? '1.5px solid #C4956A' : '0.5px solid rgba(196,149,106,0.45)',
-                background: currentFeatured === 'yes'
-                  ? 'linear-gradient(135deg, #8B1A1A 0%, #C4956A 100%)'
-                  : 'transparent',
+                width: '100%', height: 38,
+                borderRadius: 8,
+                border: currentFeatured === 'yes' ? '1.5px solid #8B1A1A' : '0.5px solid rgba(196,149,106,0.45)',
+                background: currentFeatured === 'yes' ? '#8B1A1A' : '#FDF5EE',
                 color: currentFeatured === 'yes' ? '#FDF5EE' : '#5C3A1E',
                 fontFamily: "'Be Vietnam Pro', sans-serif",
-                fontSize: '0.8rem',
+                fontSize: '0.85rem',
                 fontWeight: currentFeatured === 'yes' ? 700 : 500,
                 cursor: 'pointer',
                 transition: 'all 0.15s',
-                whiteSpace: 'nowrap',
-                boxShadow: currentFeatured === 'yes' ? '0 2px 8px rgba(139,26,26,0.22)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.25rem',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
               }}
             >
-              ⭐ Nổi Bật
+              ⭐ Anh hùng nổi bật
             </button>
           </div>
 
-          {/* Active filter chips */}
+          {/* Nút xóa bộ lọc */}
           {hasFilters && (
-            <div className="flex flex-wrap gap-2" style={{ marginTop: '0.6rem' }}>
-              {currentQ && (
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-                  padding: '2px 10px', borderRadius: 20, fontSize: '0.78rem',
-                  background: 'rgba(139,26,26,0.08)', color: '#8B1A1A',
-                  border: '0.5px solid rgba(139,26,26,0.25)',
-                  fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600,
-                }}>
-                  Tên: {currentQ}
-                  <button
-                    onClick={() => { setLocalQ(''); setParam('q', '') }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', padding: 0, lineHeight: 1, marginLeft: 2 }}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-              {currentFeatured === 'yes' && (
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-                  padding: '2px 10px', borderRadius: 20, fontSize: '0.78rem',
-                  background: 'rgba(139,26,26,0.08)', color: '#8B1A1A',
-                  border: '0.5px solid rgba(139,26,26,0.25)',
-                  fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600,
-                }}>
-                  ⭐ Nổi Bật
-                  <button
-                    onClick={handleFeaturedToggle}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', padding: 0, lineHeight: 1, marginLeft: 2 }}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-              {currentEra && eras.length > 0 && (
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-                  padding: '2px 10px', borderRadius: 20, fontSize: '0.78rem',
-                  background: 'rgba(196,149,106,0.12)', color: '#C4956A',
-                  border: '0.5px solid rgba(196,149,106,0.35)',
-                  fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600,
-                }}>
-                  Thời kỳ: {eras.find(e => String(e.id) === String(currentEra))?.name ?? currentEra}
-                  <button
-                    onClick={() => handleEraSelect('')}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C4956A', padding: 0, lineHeight: 1, marginLeft: 2 }}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
+            <button
+              onClick={clearFilters}
+              style={{
+                width: '100%', height: 36,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                background: 'none',
+                border: '0.5px solid rgba(139,26,26,0.3)',
+                borderRadius: 8, cursor: 'pointer',
+                color: '#8B1A1A', fontSize: '0.82rem',
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                fontWeight: 600, transition: 'all 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,26,26,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'none'}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 15 }}>filter_alt_off</span>
+              Xóa bộ lọc
+            </button>
+          )}
+
+          {/* Số kết quả */}
+          {!isLoading && (
+            <div style={{
+              borderTop: '0.5px solid rgba(196,149,106,0.3)',
+              paddingTop: '1rem',
+              color: '#A0794E', fontSize: '0.82rem',
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              textAlign: 'center',
+            }}>
+              {totalCount.toLocaleString('vi-VN')} anh hùng
             </div>
           )}
-        </div>
+        </aside>
 
-        {/* Hero grid */}
-        {isError ? (
-          <div style={{ textAlign: 'center', padding: '5rem 0', color: '#8B1A1A' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '1rem', color: '#C4956A' }}>error_outline</span>
-            <p style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, marginBottom: '1rem' }}>
-              Không thể tải dữ liệu. Vui lòng thử lại.
-            </p>
-            <button
-              onClick={refetch}
-              style={{
-                padding: '0.5rem 1.5rem', background: '#8B1A1A', color: '#FDF5EE',
-                border: 'none', borderRadius: 8, cursor: 'pointer',
-                fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, fontSize: '0.9rem',
-              }}
-            >
-              Thử lại
-            </button>
-          </div>
-        ) : isLoading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
-            {Array.from({ length: PAGE_SIZE }).map((_, i) => <HeroCardSkeleton key={i} />)}
-          </div>
-        ) : heroes.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '5rem 0', color: '#A0794E' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '3.5rem', display: 'block', marginBottom: '1rem', color: 'rgba(196,149,106,0.45)' }}>search_off</span>
-            <p style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, fontSize: '1rem', marginBottom: '0.5rem', color: '#5C3A1E' }}>
-              Không tìm thấy anh hùng nào
-            </p>
-            <p style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.88rem' }}>
-              {hasFilters ? 'Thử thay đổi hoặc xoá bộ lọc.' : 'Hệ thống chưa có dữ liệu.'}
-            </p>
-            {hasFilters && (
+        {/* ── Khu vực kết quả ── */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {isError ? (
+            <div style={{ textAlign: 'center', padding: '5rem 0', color: '#8B1A1A' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '1rem', color: '#C4956A' }}>error_outline</span>
+              <p style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, marginBottom: '1rem' }}>
+                Không thể tải dữ liệu. Vui lòng thử lại.
+              </p>
               <button
-                onClick={clearFilters}
-                style={{
-                  marginTop: '1rem', padding: '0.5rem 1.25rem',
-                  background: 'none', border: '0.5px solid rgba(139,26,26,0.3)',
-                  borderRadius: 8, cursor: 'pointer', color: '#8B1A1A',
-                  fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, fontSize: '0.88rem',
-                }}
+                onClick={refetch}
+                style={{ padding: '0.5rem 1.5rem', background: '#8B1A1A', color: '#FDF5EE', border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, fontSize: '0.9rem' }}
               >
-                Xoá bộ lọc
+                Thử lại
               </button>
-            )}
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
-            {heroes.map(hero => <HeroCard key={hero.id} hero={hero} />)}
-          </div>
-        )}
+            </div>
+          ) : isLoading ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem', justifyContent: 'center' }}>
+              {Array.from({ length: PAGE_SIZE }).map((_, i) => <HeroCardSkeleton key={i} />)}
+            </div>
+          ) : heroes.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '5rem 0', color: '#A0794E' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '3.5rem', display: 'block', marginBottom: '1rem', color: 'rgba(196,149,106,0.45)' }}>search_off</span>
+              <p style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, fontSize: '1rem', marginBottom: '0.5rem', color: '#5C3A1E' }}>
+                Không tìm thấy anh hùng nào
+              </p>
+              <p style={{ fontFamily: "'Be Vietnam Pro', sans-serif", fontSize: '0.88rem' }}>
+                {hasFilters ? 'Thử thay đổi hoặc xoá bộ lọc.' : 'Hệ thống chưa có dữ liệu.'}
+              </p>
+              {hasFilters && (
+                <button
+                  onClick={clearFilters}
+                  style={{ marginTop: '1rem', padding: '0.5rem 1.25rem', background: 'none', border: '0.5px solid rgba(139,26,26,0.3)', borderRadius: 8, cursor: 'pointer', color: '#8B1A1A', fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, fontSize: '0.88rem' }}
+                >
+                  Xoá bộ lọc
+                </button>
+              )}
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.25rem' }}>
+              {heroes.map(hero => <HeroCard key={hero.id} hero={hero} />)}
+            </div>
+          )}
 
-        <Pagination
-          page={currentPage}
-          total={totalCount}
-          pageSize={PAGE_SIZE}
-          onPageChange={handlePageChange}
-        />
+          <Pagination
+            page={currentPage}
+            total={totalCount}
+            pageSize={PAGE_SIZE}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
     </div>
   )
