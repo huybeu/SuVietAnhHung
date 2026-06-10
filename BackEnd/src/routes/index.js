@@ -8,12 +8,20 @@
 
 const express = require('express');
 const router = express.Router();
-const authRoutes = require('./authRoutes');
-const userRoutes = require('./userRoutes');
-const AppError = require('../utils/AppError');
+const authRoutes    = require('./authRoutes');
+const userRoutes    = require('./userRoutes');
+const articleRoutes = require('./articleRoutes');
+const heroRoutes    = require('./heroRoutes');
+const eraRoutes     = require('./eraRoutes');
+const tagRoutes     = require('./tagRoutes');
+const AppError      = require('../utils/AppError');
 
-router.use('/auth', authRoutes);
-router.use('/users', userRoutes);
+router.use('/auth',     authRoutes);
+router.use('/users',    userRoutes);
+router.use('/articles', articleRoutes);
+router.use('/heroes',   heroRoutes);
+router.use('/eras',     eraRoutes);
+router.use('/tags',     tagRoutes);
 
 // Catch-all cho route không tồn tại
 router.all('*', (req, res, next) => {

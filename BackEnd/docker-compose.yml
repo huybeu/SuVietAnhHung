@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: suviet_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: suviet2024
+      MYSQL_DATABASE: su_viet_anh_hung
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - suviet_mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+
+volumes:
+  suviet_mysql_data:
