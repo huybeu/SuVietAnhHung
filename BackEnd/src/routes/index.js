@@ -6,26 +6,31 @@
  * Cũng xử lý route 404 cho các path không tồn tại.
  */
 
-const express = require('express');
-const router = express.Router();
-const authRoutes    = require('./authRoutes');
-const userRoutes    = require('./userRoutes');
-const articleRoutes = require('./articleRoutes');
-const heroRoutes    = require('./heroRoutes');
-const eraRoutes     = require('./eraRoutes');
-const tagRoutes     = require('./tagRoutes');
-const AppError      = require('../utils/AppError');
+import express from 'express';
+import authRoutes from './authRoutes.js';
+import userRoutes from './userRoutes.js';
+import eraRoutes from './eraRoutes.js';
+import adminEraRoutes from './adminEraRoutes.js';
+import heroRoutes from './heroRoutes.js';
+import adminHeroRoutes from './adminHeroRoutes.js';
+import articleRoutes from './articleRoutes.js';
+import adminArticleRoutes from './adminArticleRoutes.js';
+import AppError from '../utils/AppError.js';
 
-router.use('/auth',     authRoutes);
-router.use('/users',    userRoutes);
+const router = express.Router();
+
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+router.use('/eras', eraRoutes);
+router.use('/admin/eras', adminEraRoutes);
+router.use('/heroes', heroRoutes);
+router.use('/admin/heroes', adminHeroRoutes);
 router.use('/articles', articleRoutes);
-router.use('/heroes',   heroRoutes);
-router.use('/eras',     eraRoutes);
-router.use('/tags',     tagRoutes);
+router.use('/admin/articles', adminArticleRoutes);
 
 // Catch-all cho route không tồn tại
 router.all('*', (req, res, next) => {
   next(new AppError(`Không tìm thấy route: ${req.method} ${req.originalUrl}`, 404));
 });
 
-module.exports = router;
+export default router;
