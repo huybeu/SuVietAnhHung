@@ -40,8 +40,8 @@ export function AuthProvider({ children }) {
     return loggedIn
   }, [])
 
-  const register = useCallback(async (displayName, username, password) => {
-    const registered = await authService.register(displayName, username, password)
+  const register = useCallback(async (email, username, password) => {
+    const registered = await authService.register(email, username, password)
     setUser(registered)
     return registered
   }, [])

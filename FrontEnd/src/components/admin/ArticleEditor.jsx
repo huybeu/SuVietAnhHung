@@ -214,7 +214,8 @@ export default function ArticleEditor({ articleId, onSaved }) {
     queryKey: ['article-admin', articleId],
     queryFn: () => fetchArticleAdmin(articleId),
     enabled: !!articleId,
-    onSuccess: (data) => {
+    onSuccess: (res) => {
+      const data = res?.data ?? res
       setValue('title', data.title || '')
       setValue('slug', data.slug || '')
       setValue('excerpt', data.excerpt || '')

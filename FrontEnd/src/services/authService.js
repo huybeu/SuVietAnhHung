@@ -58,19 +58,20 @@ function clearAuth() {
 export const authService = {
   /**
    * Đăng nhập
-   * Backend: POST /api/auth/login → { token, user }
+   * Backend: POST /api/v1/auth/login → { success, data: { accessToken, user } }
    */
-  async login(username, password) {
+  async login(email, password) {
     if (!USE_MOCK) {
-      const { token, user } = await httpClient.post('/auth/login', { username, password })
-      storeAuth(user, token)
+      const res = await httpClient.post('/auth/login', { email, password })
+      const { accessToken, user } = res.data
+      storeAuth(user, accessToken)
       return user
     }
 
     const found = MOCK_USERS.find(
-      u => u.username.toLowerCase() === username.trim().toLowerCase() && u.password === password
+      u => (u.email === email.trim().toLowerCase() || u.username.toLowerCase() === email.trim().toLowerCase()) && u.password === password
     )
-    if (!found) throw new Error('Tên đăng nhập hoặc mật khẩu không đúng.')
+    if (!found) throw new Error('Email hoặc mật khẩu không đúng.')
     const { password: _pw, ...user } = found
     storeAuth(user, null)
     return user
@@ -78,12 +79,13 @@ export const authService = {
 
   /**
    * Đăng ký
-   * Backend: POST /api/auth/register → { token, user }
+   * Backend: POST /api/v1/auth/register → { success, data: user }
    */
-  async register(displayName, username, password) {
+  async register(email, username, password) {
     if (!USE_MOCK) {
-      const { token, user } = await httpClient.post('/auth/register', { displayName, username, password })
-      storeAuth(user, token)
+      const res = await httpClient.post('/auth/register', { username, email, password })
+      const user = res.data
+      storeAuth(user, null)
       return user
     }
 
@@ -91,14 +93,14 @@ export const authService = {
       u => u.username.toLowerCase() === username.trim().toLowerCase()
     )
     if (exists) throw new Error('Tên đăng nhập đã được sử dụng.')
-    const user = { id: Date.now(), name: displayName.trim(), username: username.trim(), isAdmin: false, email: '' }
+    const user = { id: Date.now(), name: username.trim(), username: username.trim(), role: 'viewer', email: email.trim() }
     storeAuth(user, null)
     return user
   },
 
   /**
    * Đăng xuất
-   * Backend (tuỳ chọn): POST /api/auth/logout
+   * Backend: POST /api/v1/auth/logout
    */
   async logout() {
     if (!USE_MOCK) {
@@ -109,7 +111,7 @@ export const authService = {
 
   /**
    * Refresh access token
-   * Backend: POST /api/auth/refresh → { token, user }
+   * Backend: POST /api/v1/auth/refresh → { success, data: { accessToken } }
    * Được gọi tự động bởi httpClient khi nhận 401.
    */
   async refreshToken() {
@@ -118,8 +120,12 @@ export const authService = {
     if (!token) return null
 
     try {
-      const { token: newToken, user } = await httpClient.post('/auth/refresh', {})
-      storeAuth(user, newToken)
+      const res = await httpClient.post('/auth/refresh', {})
+      const { accessToken: newToken } = res.data
+      if (newToken) {
+        localStorage.setItem(TOKEN_KEY, newToken)
+        localStorage.setItem(TOKEN_EXPIRY_KEY, String(Date.now() + DEFAULT_TTL))
+      }
       return newToken
     } catch {
       clearAuth()
