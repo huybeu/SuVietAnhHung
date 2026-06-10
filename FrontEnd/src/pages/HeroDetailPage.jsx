@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { heroService } from '../services/heroService'
 import { queryKeys } from '../lib/queryKeys'
 import { formatYear } from '../lib/format'
+import PageMeta from '../components/PageMeta'
 import HeroBanner from '../components/hero/HeroBanner'
 import HeroBreadcrumb from '../components/hero/HeroBreadcrumb'
 import HeroLifespanBar from '../components/hero/HeroLifespanBar'
@@ -46,10 +47,7 @@ export default function HeroDetailPage() {
     enabled:  !!slug,
   })
 
-  useEffect(() => {
-    if (hero) document.title = `${hero.name} — ${hero.title || 'Anh Hùng Lịch Sử'} | Sử Việt Anh Hùng`
-    return () => { document.title = 'Sử Việt Anh Hùng' }
-  }, [hero])
+  // document.title / og tags handled by <PageMeta> below
 
   if (!slug) return null
   if (isLoading) return <Skeleton />
@@ -70,8 +68,12 @@ export default function HeroDetailPage() {
 
   const sidebarTop = 112
 
+  const metaTitle = hero ? `${hero.name} — ${hero.title || 'Anh Hùng Lịch Sử'}` : ''
+  const metaDesc  = hero ? (hero.biography ? hero.biography.replace(/<[^>]+>/g, '').slice(0, 160) : `Tìm hiểu về anh hùng ${hero.name}`) : ''
+
   return (
     <div style={{ backgroundColor: '#FDF5EE', minHeight: '100vh' }}>
+      <PageMeta title={metaTitle} description={metaDesc} image={hero.avatar_url || hero.image_url} />
       <HeroBanner hero={hero} era={hero.era} />
       <HeroBreadcrumb era={hero.era} heroName={hero.name} />
 
@@ -132,7 +134,7 @@ export default function HeroDetailPage() {
         </div>
       </div>
 
-      <RelatedArticles articles={hero.articles || []} />
+      <RelatedArticles articles={hero.articles || []} heroId={hero.id} heroName={hero.name} />
 
       {hero.videos?.length > 0 && (
         <section style={{ padding: '4rem 1.5rem', background: '#FAE8DA', borderTop: '0.5px solid #D4B896' }}>

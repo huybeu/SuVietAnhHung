@@ -15,5 +15,6 @@ export const heroService = {
   createHero:    (data)                    => httpClient.post('/heroes', data),
   updateHero:    (id, data)                => httpClient.patch(`/heroes/${id}`, data),
   deleteHero:    (id)                      => httpClient.delete(`/heroes/${id}`),
-  reorderHeroes: (ids)                     => httpClient.patch('/heroes/reorder', { ids }),
+  reorderHeroes:  (ids)                    => httpClient.patch('/heroes/reorder', { ids }),
+  toggleFeatured: (id)                     => httpClient.patch(`/heroes/${id}/featured`),
 }

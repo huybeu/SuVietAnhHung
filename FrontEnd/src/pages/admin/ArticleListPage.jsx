@@ -6,10 +6,12 @@ import DataTable from '../../components/ui/DataTable'
 import StatusBadge from '../../components/ui/StatusBadge'
 import ConfirmModal from '../../components/ui/ConfirmModal'
 import ViewerBanner from '../../components/admin/ViewerBanner'
+import OptimisticToggle from '../../components/ui/OptimisticToggle'
 import { can, useRole } from '../../lib/permissions'
 import { articleService } from '../../services/articleService'
 import { queryKeys }       from '../../lib/queryKeys'
 import { formatDateShort } from '../../lib/format'
+import { useToggleArticleFeatured } from '../../hooks/useToggleArticleFeatured'
 
 // ── Filter Bar ────────────────────────────────────────────────────────────────
 function ArticleFilterBar({ searchParams, setSearchParams }) {
@@ -94,6 +96,7 @@ export default function ArticleListPage() {
 
   const [selectedIds, setSelectedIds] = useState(new Set())
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const toggleFeaturedMutation = useToggleArticleFeatured()
 
   const currentPage = parseInt(searchParams.get('page') || '1')
 
@@ -172,6 +175,29 @@ export default function ArticleListPage() {
           {(row.view_count || 0).toLocaleString('vi-VN')}
         </span>
       ),
+    },
+    {
+      key: 'is_featured',
+      header: 'Nổi Bật',
+      render: (row) => {
+        const isFeatured = row.is_featured || row.isFeatured
+        const canToggle = can(role, 'articles:publish') && row.status === 'published'
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <OptimisticToggle
+              value={!!isFeatured}
+              disabled={!canToggle}
+              label={canToggle ? (isFeatured ? 'Bỏ nổi bật' : 'Đánh dấu nổi bật') : 'Chỉ áp dụng cho bài đã xuất bản'}
+              onChange={() => toggleFeaturedMutation.mutateAsync(row.id)}
+            />
+            {!canToggle && row.status !== 'published' && (
+              <span style={{ color: 'rgba(61,43,26,0.35)', fontSize: '0.72rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+                —
+              </span>
+            )}
+          </div>
+        )
+      },
     },
   ]
 

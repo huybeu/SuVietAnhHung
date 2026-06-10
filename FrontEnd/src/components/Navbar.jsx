@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-export default function Navbar({ activePage }) {
+export default function Navbar() {
   const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -10,58 +10,11 @@ export default function Navbar({ activePage }) {
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
-  const isHomePage = location.pathname === '/'
 
-  // Scroll đến section trên trang chủ, hoặc navigate về home rồi scroll
-  function goToSection(anchor) {
-    setMobileOpen(false)
-    if (isHomePage) {
-      document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      navigate('/')
-      // Chờ React render xong trang chủ rồi scroll
-      setTimeout(() => {
-        document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' })
-      }, 350)
-    }
-  }
+  const isAdmin  = user?.isAdmin
+  const userName = user?.displayName ?? user?.name ?? ''
 
-  const isAdmin    = user?.isAdmin
-  const userName   = user?.displayName ?? user?.name ?? ''
-
-  // Scroll-spy: theo dõi section nào đang hiển thị trên homepage
-  const [scrollActiveKey, setScrollActiveKey] = useState('khoi-kien')
-
-  useEffect(() => {
-    if (!isHomePage) { setScrollActiveKey('khoi-kien'); return }
-
-    // Thứ tự section trên trang, ánh xạ id → key nav
-    const SECTIONS = [
-      { id: 'hero',       key: 'khoi-kien' },
-      { id: 'du-an',      key: 'du-an'     },
-      { id: 'thoi-dai',   key: 'thoi-dai'  },
-      { id: 'dong-gop',   key: 'bieu-bang' },
-      { id: 'vinh-danh',  key: 'vinh-danh' },
-    ]
-
-    function updateActive() {
-      // Tìm section cuối cùng có top <= scroll + 1/3 chiều cao viewport
-      const trigger = window.scrollY + window.innerHeight / 3
-      let current = SECTIONS[0].key
-      for (const { id, key } of SECTIONS) {
-        const el = document.getElementById(id)
-        if (el && el.offsetTop <= trigger) current = key
-      }
-      setScrollActiveKey(current)
-    }
-
-    updateActive()
-    window.addEventListener('scroll', updateActive, { passive: true })
-    return () => window.removeEventListener('scroll', updateActive)
-  }, [isHomePage])
-
-  // Key active: ưu tiên scroll-spy khi ở homepage
-  const activeKey = isHomePage ? scrollActiveKey : activePage
+  const activeKey = location.pathname
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -91,13 +44,10 @@ export default function Navbar({ activePage }) {
     navigate('/')
   }
 
-  // anchor: id của section tương ứng trên trang chủ (null = điều hướng bình thường)
   const links = [
-    { label: 'Khởi Kiến', key: 'khoi-kien', to: '/',    anchor: null         },
-    { label: 'Dự Án',     key: 'du-an',     to: null,   anchor: 'du-an'      },
-    { label: 'Thời Đại',  key: 'thoi-dai',  to: null,   anchor: 'thoi-dai'   },
-    { label: 'Biểu Bảng', key: 'bieu-bang', to: null,   anchor: 'dong-gop'   },
-    { label: 'Vinh Danh', key: 'vinh-danh', to: null,   anchor: 'vinh-danh'  },
+    { label: 'Trang Chủ', key: '/', to: '/', exact: true },
+    { label: 'Anh Hùng', key: '/anh-hung', to: '/anh-hung' },
+    { label: 'Bài Viết', key: '/bai-viet', to: '/bai-viet' },
   ]
 
   return (
@@ -124,36 +74,20 @@ export default function Navbar({ activePage }) {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          {links.map(({ label, key, to, anchor }) => {
-            const isActive = activeKey === key
-            // Item có anchor → dùng button để scroll; không có anchor → dùng Link
-            const sharedStyle = {
+          {links.map(({ label, key, to, exact }) => {
+            const isActive = exact ? activeKey === key : activeKey.startsWith(key)
+            const linkStyle = {
               color: isActive ? '#8B1A1A' : 'rgba(61,43,26,0.55)',
               borderBottom: isActive ? '2px solid #8B1A1A' : '2px solid transparent',
               paddingBottom: '4px',
               textDecoration: 'none',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
             }
-            return anchor ? (
-              <button
-                key={key}
-                className="font-vietnam text-sm font-semibold tracking-wider uppercase transition-all"
-                style={sharedStyle}
-                onClick={() => goToSection(anchor)}
-                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#8B1A1A' }}
-                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'rgba(61,43,26,0.55)' }}
-              >
-                {label}
-              </button>
-            ) : (
+            return (
               <Link
                 key={key}
                 to={to}
                 className="font-vietnam text-sm font-semibold tracking-wider uppercase transition-all"
-                style={sharedStyle}
+                style={linkStyle}
                 onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#8B1A1A' }}
                 onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'rgba(61,43,26,0.55)' }}
               >
@@ -277,17 +211,6 @@ export default function Navbar({ activePage }) {
             </div>
           </div>
 
-          {/* Nút ĐÓNG GÓP desktop → trang quyên góp */}
-          <button
-            onClick={() => navigate('/quyen-gop')}
-            className="hidden md:block font-vietnam font-bold text-sm tracking-widest rounded-lg transition-all hover:scale-[1.03] active:scale-95"
-            style={{ background: '#8B1A1A', color: '#FDF5EE', padding: '0.5rem 1.25rem', border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(139,26,26,0.40)' }}
-            onMouseEnter={e => e.currentTarget.style.background = '#6B1414'}
-            onMouseLeave={e => e.currentTarget.style.background = '#8B1A1A'}
-          >
-            ĐÓNG GÓP
-          </button>
-
           {/* Mobile hamburger */}
           <button
             className="md:hidden flex items-center justify-center focus:outline-none"
@@ -321,31 +244,18 @@ export default function Navbar({ activePage }) {
         >
           {/* Nav links — mobile */}
           <div className="flex flex-col" style={{ borderBottom: '0.5px solid #D4B896' }}>
-            {links.map(({ label, key, to, anchor }) => {
-              const isActive = activeKey === key
+            {links.map(({ label, key, to, exact }) => {
+              const isActive = exact ? activeKey === key : activeKey.startsWith(key)
               const mobileItemStyle = {
                 color: isActive ? '#8B1A1A' : '#5C3A1E',
                 background: isActive ? 'rgba(139,26,26,0.07)' : 'transparent',
                 borderLeft: isActive ? '3px solid #8B1A1A' : '3px solid transparent',
                 textDecoration: 'none',
-                textAlign: 'left',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                border: 'none',
-                width: '100%',
               }
-              return anchor ? (
-                <button
-                  key={key}
-                  onClick={() => goToSection(anchor)}
-                  className="font-vietnam px-6 py-4 text-sm font-semibold tracking-wider uppercase transition-colors"
-                  style={mobileItemStyle}
-                >
-                  {label}
-                </button>
-              ) : (
+              return (
                 <Link
-                  key={key} to={to}
+                  key={key}
+                  to={to}
                   onClick={() => setMobileOpen(false)}
                   className="font-vietnam px-6 py-4 text-sm font-semibold tracking-wider uppercase transition-colors"
                   style={mobileItemStyle}
@@ -405,16 +315,6 @@ export default function Navbar({ activePage }) {
             )}
           </div>
 
-          {/* Nút ĐÓNG GÓP NGAY mobile → trang quyên góp */}
-          <div style={{ padding: '1rem', borderTop: '0.5px solid #D4B896' }}>
-            <button
-              onClick={() => { navigate('/quyen-gop'); setMobileOpen(false) }}
-              className="w-full font-vietnam font-bold text-sm tracking-widest rounded-lg"
-              style={{ background: '#8B1A1A', color: '#FDF5EE', padding: '0.75rem', border: 'none', cursor: 'pointer' }}
-            >
-              ĐÓNG GÓP NGAY
-            </button>
-          </div>
         </div>
       </div>
     </>

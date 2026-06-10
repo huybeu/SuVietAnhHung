@@ -8,27 +8,23 @@ import { can, useRole } from '../../lib/permissions'
 import { heroService } from '../../services/heroService'
 import { queryKeys }   from '../../lib/queryKeys'
 import { formatYear }  from '../../lib/format'
+import { useToggleFeatured } from '../../hooks/useToggleFeatured'
 
-// ── Optimistic Toggle Hook — FE-030 ──────────────────────────────────────────
-// Cập nhật optimistic + rollback đầy đủ khi gặp lỗi
-function useOptimisticToggle(field) {
+// ── Optimistic Toggle cho is_active (dùng updateHero thông thường) ────────────
+function useActiveToggle() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, value }) => heroService.updateHero(id, { [field]: value }),
+    mutationFn: ({ id, value }) => heroService.updateHero(id, { is_active: value }),
     onMutate: async ({ id, value }) => {
-      // Hủy refetch đang chạy để tránh ghi đè optimistic update
       await queryClient.cancelQueries({ queryKey: queryKeys.heroes.all })
-      // Snapshot toàn bộ hero queries để rollback
       const prev = queryClient.getQueriesData({ queryKey: queryKeys.heroes.all })
-      // Apply optimistic update
       queryClient.setQueriesData({ queryKey: queryKeys.heroes.all }, (old) => {
         if (!old?.data) return old
-        return { ...old, data: old.data.map(h => h.id === id ? { ...h, [field]: value } : h) }
+        return { ...old, data: old.data.map(h => h.id === id ? { ...h, is_active: value } : h) }
       })
       return { prev }
     },
     onError: (_err, _vars, context) => {
-      // Rollback về snapshot trước đó
       if (context?.prev) {
         context.prev.forEach(([key, data]) => queryClient.setQueryData(key, data))
       }
@@ -75,27 +71,68 @@ function HeroFilterBar({ searchParams, setSearchParams, eras }) {
   return (
     <div style={{ marginBottom: '1rem' }}>
       <div className="flex flex-wrap gap-2 items-center">
-        <div style={{ position: 'relative', flex: '1 1 160px', minWidth: 140 }}>
-          <span className="material-symbols-outlined" style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'rgba(61,43,26,0.35)', pointerEvents: 'none' }}>search</span>
-          <input className="input-gold w-full" style={{ height: 36, paddingLeft: 30, paddingRight: 8, fontSize: '0.83rem' }} placeholder="Tìm kiếm anh hùng..." value={localQ} onChange={e => handleSearch(e.target.value)} />
+        {/* Search */}
+        <div style={{ position: 'relative', flex: '1 1 180px', minWidth: 160 }}>
+          <span className="material-symbols-outlined" style={{ position: 'absolute', left: 9, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'rgba(61,43,26,0.35)', pointerEvents: 'none' }}>search</span>
+          <input
+            className="input-gold w-full"
+            style={{ height: 38, paddingLeft: 32, paddingRight: 8, fontSize: '0.85rem' }}
+            placeholder="Tìm kiếm anh hùng..."
+            value={localQ}
+            onChange={e => handleSearch(e.target.value)}
+          />
         </div>
-        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 130px' }} value={activeEra} onChange={e => setParam('era', e.target.value)}>
+
+        {/* Era */}
+        <select
+          className="input-gold cursor-pointer"
+          style={{ height: 38, padding: '0 0.75rem', fontSize: '0.85rem', flex: 'none', width: 'auto', minWidth: 140 }}
+          value={activeEra}
+          onChange={e => setParam('era', e.target.value)}
+        >
           <option value="">Tất cả thời kỳ</option>
           {eras?.map(era => <option key={era.id} value={era.id}>{era.name}</option>)}
         </select>
-        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 120px' }} value={activeFeatured} onChange={e => setParam('featured', e.target.value)}>
+
+        {/* Featured */}
+        <select
+          className="input-gold cursor-pointer"
+          style={{ height: 38, padding: '0 0.75rem', fontSize: '0.85rem', flex: 'none', width: 'auto', minWidth: 130 }}
+          value={activeFeatured}
+          onChange={e => setParam('featured', e.target.value)}
+        >
           <option value="all">Nổi bật: Tất cả</option>
-          <option value="yes">Có</option>
-          <option value="no">Không</option>
+          <option value="yes">⭐ Có</option>
+          <option value="no">Không nổi bật</option>
         </select>
-        <select className="input-gold cursor-pointer" style={{ height: 36, padding: '0 0.6rem', fontSize: '0.83rem', flex: '0 1 140px' }} value={activeActive} onChange={e => setParam('active', e.target.value)}>
+
+        {/* Active status */}
+        <select
+          className="input-gold cursor-pointer"
+          style={{ height: 38, padding: '0 0.75rem', fontSize: '0.85rem', flex: 'none', width: 'auto', minWidth: 150 }}
+          value={activeActive}
+          onChange={e => setParam('active', e.target.value)}
+        >
           <option value="all">Trạng thái: Tất cả</option>
-          <option value="yes">Đang hoạt động</option>
-          <option value="no">Ẩn</option>
+          <option value="yes">✓ Đang hoạt động</option>
+          <option value="no">✕ Đã ẩn</option>
         </select>
+
         {hasFilters && (
-          <button onClick={clearAll} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', height: 36, padding: '0 0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#8B1A1A', fontSize: '0.82rem', fontFamily: "'Be Vietnam Pro', sans-serif", transition: 'color 0.15s', flexShrink: 0 }}
-            onMouseEnter={e => e.currentTarget.style.color='#C4956A'} onMouseLeave={e => e.currentTarget.style.color='#8B1A1A'}>
+          <button
+            onClick={clearAll}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.25rem',
+              height: 38, padding: '0 0.75rem',
+              background: 'none', border: '0.5px solid rgba(139,26,26,0.25)',
+              borderRadius: 8, cursor: 'pointer',
+              color: '#8B1A1A', fontSize: '0.83rem',
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              transition: 'all 0.15s', flexShrink: 0,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(139,26,26,0.06)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'none' }}
+          >
             <span className="material-symbols-outlined" style={{ fontSize: 16 }}>filter_alt_off</span>
             Xoá lọc
           </button>
@@ -149,6 +186,8 @@ function BatchActionsBar({ selectedIds, onActivateAll, onHideAll, onDeleteAll, r
   )
 }
 
+const MAX_FEATURED = 4
+
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function HeroManager() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -186,8 +225,14 @@ export default function HeroManager() {
     queryFn:  ({ signal }) => heroService.getEras({ signal }),
   })
 
-  const featuredMutation = useOptimisticToggle('is_featured')
-  const activeMutation   = useOptimisticToggle('is_active')
+  const { data: featuredData } = useQuery({
+    queryKey: [...queryKeys.heroes.all, 'featured-count'],
+    queryFn:  ({ signal }) => heroService.getHeroes({ is_featured: true, pageSize: 1000 }, { signal }),
+  })
+  const featuredCount = featuredData?.total ?? featuredData?.data?.length ?? 0
+
+  const featuredMutation = useToggleFeatured()
+  const activeMutation   = useActiveToggle()
 
   const quickEditMutation = useMutation({
     mutationFn: ({ id, values }) => heroService.updateHero(id, values),
@@ -288,8 +333,36 @@ export default function HeroManager() {
     { key: 'era',   header: 'Thời Kỳ',        render: (row) => <span style={{ color: '#5C3A1E', fontSize: '0.85rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>{row.era?.name || '—'}</span> },
     { key: 'years', header: 'Năm Sinh – Mất', render: (row) => <span style={{ color: '#A0794E', fontSize: '0.78rem', fontFamily: 'monospace' }}>{formatYear(row.birth_year)} – {formatYear(row.death_year)}</span> },
     {
-      key: 'is_featured', header: 'Nổi Bật',
-      render: (row) => <OptimisticToggle value={row.is_featured} onChange={(v) => featuredMutation.mutateAsync({ id: row.id, value: v })} disabled={!can(role, 'heroes:write')} />,
+      key: 'is_featured',
+      header: (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', whiteSpace: 'nowrap' }}>
+          Nổi Bật
+          <span style={{
+            fontSize: '0.65rem', fontWeight: 700,
+            padding: '0.05rem 0.4rem', borderRadius: '10px',
+            background: featuredCount >= MAX_FEATURED ? 'rgba(139,26,26,0.12)' : 'rgba(196,149,106,0.15)',
+            color: featuredCount >= MAX_FEATURED ? '#8B1A1A' : '#A0794E',
+            border: `0.5px solid ${featuredCount >= MAX_FEATURED ? 'rgba(139,26,26,0.30)' : 'rgba(196,149,106,0.35)'}`,
+            fontFamily: "'Be Vietnam Pro', sans-serif",
+          }}>
+            {featuredCount}/{MAX_FEATURED}
+          </span>
+        </span>
+      ),
+      render: (row) => {
+        const atLimit = !row.is_featured && featuredCount >= MAX_FEATURED
+        return (
+          <OptimisticToggle
+            value={row.is_featured}
+            onChange={async (v) => {
+              if (v && featuredCount >= MAX_FEATURED) return
+              return featuredMutation.mutateAsync({ id: row.id, currentValue: row.is_featured })
+            }}
+            disabled={!can(role, 'heroes:write') || atLimit}
+            label={atLimit ? `Đã đạt tối đa ${MAX_FEATURED} anh hùng nổi bật` : undefined}
+          />
+        )
+      },
     },
     {
       key: 'is_active', header: 'Hoạt Động',
