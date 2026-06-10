@@ -40,5 +40,11 @@ export const queryKeys = {
     detail: (id)     => ['video', id],
   },
 
+  users: {
+    all:    ['users'],
+    list:   (params) => ['users', params],
+    detail: (id)     => ['user', id],
+  },
+
   siteConfig: () => ['site-config'],
 }

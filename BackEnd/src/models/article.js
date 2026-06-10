@@ -44,10 +44,6 @@ const Article = sequelize.define(
     published_at: {
       type: DataTypes.DATE,
     },
-    is_featured: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
   },
   {
     tableName: 'articles',

@@ -11,12 +11,6 @@ const authenticate = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    // Dev bypass: cho phép dev-bypass-token khi chạy ở môi trường development
-    if (process.env.NODE_ENV === 'development' && token === 'dev-bypass-token') {
-      req.user = { id: null, username: 'dev', role: 'admin', is_active: true };
-      return next();
-    }
-
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
