@@ -18,6 +18,10 @@ const DonationPage   = lazy(() => import('./pages/DonationPage'))
 const NotFoundPage   = lazy(() => import('./pages/NotFoundPage'))
 const ForbiddenPage  = lazy(() => import('./pages/ForbiddenPage'))
 
+const PublicHeroListPage    = lazy(() => import('./pages/PublicHeroListPage'))
+const PublicArticleListPage = lazy(() => import('./pages/PublicArticleListPage'))
+const ArticleDetailPage     = lazy(() => import('./pages/ArticleDetailPage'))
+
 const DashboardPage      = lazy(() => import('./pages/admin/DashboardPage'))
 const HeroListPage       = lazy(() => import('./pages/admin/HeroListPage'))
 const ArticleListPage    = lazy(() => import('./pages/admin/ArticleListPage'))
@@ -49,7 +53,10 @@ export default function App() {
                 <Route path="/"               element={<PublicLayout><LandingPage /></PublicLayout>} />
                 <Route path="/dang-nhap"      element={<LoginPage />} />
                 <Route path="/dang-ky"        element={<LoginPage />} />
+                <Route path="/anh-hung"        element={<PublicLayout><PublicHeroListPage /></PublicLayout>} />
                 <Route path="/anh-hung/:slug" element={<PublicLayout><HeroDetailPage /></PublicLayout>} />
+                <Route path="/bai-viet"       element={<PublicLayout><PublicArticleListPage /></PublicLayout>} />
+                <Route path="/bai-viet/:slug" element={<PublicLayout><ArticleDetailPage /></PublicLayout>} />
                 <Route path="/quyen-gop"      element={<PublicLayout><DonationPage /></PublicLayout>} />
 
                 {/* ── Auth-protected public pages ──────────────────────────── */}

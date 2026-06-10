@@ -2,12 +2,11 @@ import { useState, createContext, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import AdminSidebar from './AdminSidebar'
-import AdminTopbar from './AdminTopbar'
 
 const AdminCtx = createContext(null)
 export function useAdminLayout() { return useContext(AdminCtx) }
 
-export default function AdminLayout({ children, topbarTitle = 'Admin', topbarBreadcrumbs = [], topbarActions }) {
+export default function AdminLayout({ children, topbarTitle, topbarBreadcrumbs, topbarActions }) {
   const [sidebarOpen, setSidebarOpen]           = useState(false)   // mobile drawer
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)   // desktop collapse
   const { user, loading } = useAuth()
@@ -44,12 +43,6 @@ export default function AdminLayout({ children, topbarTitle = 'Admin', topbarBre
           className={sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-60'}
           style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflowX: 'hidden', transition: 'margin-left 0.25s ease' }}
         >
-          <AdminTopbar
-            title={topbarTitle}
-            breadcrumbs={topbarBreadcrumbs}
-            actions={topbarActions}
-            onMenuToggle={() => setSidebarOpen(o => !o)}
-          />
           <main style={{ flex: 1, padding: '1.5rem', overflowX: 'hidden' }}>
             {children}
           </main>

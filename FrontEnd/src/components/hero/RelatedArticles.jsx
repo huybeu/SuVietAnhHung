@@ -46,8 +46,12 @@ function ArticleCard({ article }) {
   )
 }
 
-export default function RelatedArticles({ articles = [] }) {
+export default function RelatedArticles({ articles = [], heroId, heroName }) {
   if (!articles.length) return null
+  const shown = articles.slice(0, 5)
+  const seeAllHref = heroId ? `/bai-viet?hero=${heroId}` : '/bai-viet'
+  const seeAllLabel = heroName ? `Xem tất cả bài viết về ${heroName} →` : 'Xem tất cả bài viết →'
+
   return (
     <section style={{ padding: '4rem 1.5rem', background: '#FAE8DA', borderTop: '0.5px solid #D4B896', borderBottom: '0.5px solid #D4B896' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -64,14 +68,17 @@ export default function RelatedArticles({ articles = [] }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-          {articles.slice(0, 3).map(a => <ArticleCard key={a.id} article={a} />)}
+          {shown.map(a => <ArticleCard key={a.id} article={a} />)}
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <Link to="/bai-viet" style={{ color: '#8B1A1A', fontSize: '0.85rem', textDecoration: 'none', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
+          <Link
+            to={seeAllHref}
+            style={{ color: '#8B1A1A', fontSize: '0.85rem', textDecoration: 'none', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
             onMouseEnter={e => e.target.style.color='#6B1414'}
-            onMouseLeave={e => e.target.style.color='#8B1A1A'}>
-            Xem tất cả bài viết →
+            onMouseLeave={e => e.target.style.color='#8B1A1A'}
+          >
+            {seeAllLabel}
           </Link>
         </div>
       </div>

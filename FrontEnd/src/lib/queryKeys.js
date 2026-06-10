@@ -14,8 +14,13 @@ export const queryKeys = {
     all:        ['articles'],
     list:       (params) => ['articles', params],
     detail:     (id)     => ['article', id],
+    bySlug:     (slug)   => ['article-slug', slug],
     count:      ()       => ['articles-count'],
     draftCount: ()       => ['articles-draft-count'],
+  },
+
+  articleTags: {
+    all: () => ['article-tags'],
   },
 
   donations: {

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { useQuery } from "@tanstack/react-query";
+import { heroService } from "../services/heroService";
+import { queryKeys } from "../lib/queryKeys";
+import { formatYear } from "../lib/format";
 
 const LEADER_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuCJOZOokhcFoQvpJioq8a8l6mBekKDN0J62jLD7b_I7c6R8_tXi1OWqRdXSZS5wsIkDdc9JEO3hBTRuBGApVXQk6xNVu9ip-C2T1fca1oeRl57XRnhkQDW7DXc9xGCV0U92uzimuMmVHXVf3zunKKsZjd8SS1e_8srDiH0w2LARXvlTAB5U48ZBogHMMK-xQEbtBG1-CIlcKJBBnY7or30AWoWAsfH8FQEmVdQMhxagdZAyQmjDiPffWwfGGj4NuWshN3BIzYjtVg8";
@@ -120,6 +123,12 @@ export default function LandingPage() {
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const { data: featuredData } = useQuery({
+    queryKey: queryKeys.heroes.list({ is_featured: true, pageSize: 4 }),
+    queryFn: ({ signal }) => heroService.getHeroes({ is_featured: true, pageSize: 4 }, { signal }),
+  });
+  const featuredHeroes = featuredData?.data?.slice(0, 4) ?? [];
+
   /* ── Countdown ── */
   useEffect(() => {
     const id = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
@@ -214,13 +223,6 @@ export default function LandingPage() {
           pointer-events: none;
         }
 
-        .progress-fill {
-          background: linear-gradient(90deg, #8B1A1A, #C4956A);
-          height: 100%;
-          border-radius: 9999px;
-          transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-        }
-
         .reveal {
           opacity: 0;
           transform: translateY(28px);
@@ -304,9 +306,6 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* ── Navbar ── */}
-      <Navbar activePage="khoi-kien" />
-
       {/* ════════════════════════════════════════
           1. HERO SECTION
       ════════════════════════════════════════ */}
@@ -326,16 +325,16 @@ export default function LandingPage() {
         {/* Đông Sơn grid overlay */}
         <div className="dong-son-bg" style={{ position: "absolute", inset: 0, zIndex: 0 }} />
 
-        {/* Warm glow */}
+        {/* Warm glow — lớn hơn, đậm hơn */}
         <div
           style={{
             position: "absolute",
-            top: "25%",
+            top: "20%",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "700px",
-            height: "400px",
-            background: "radial-gradient(ellipse, rgba(139,26,26,0.06) 0%, transparent 70%)",
+            width: "900px",
+            height: "600px",
+            background: "radial-gradient(ellipse, rgba(139,26,26,0.09) 0%, rgba(196,149,106,0.05) 45%, transparent 70%)",
             zIndex: 0,
             pointerEvents: "none",
           }}
@@ -347,19 +346,28 @@ export default function LandingPage() {
             position: "relative",
             zIndex: 1,
             textAlign: "center",
-            maxWidth: "820px",
-            padding: "0 1.5rem",
-            paddingTop: "90px",
+            maxWidth: "960px",
+            padding: "0 2rem",
+            paddingTop: "96px",
           }}
         >
           {/* Floating castle icon */}
-          <div className="float-anim" style={{ marginBottom: "2.5rem", display: "inline-block" }}>
+          <div className="float-anim" style={{ marginBottom: "3rem", display: "inline-block" }}>
             <div style={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+              <span
+                style={{
+                  position: "absolute",
+                  inset: "-22px",
+                  borderRadius: "50%",
+                  border: "1px solid rgba(196,149,106,0.35)",
+                  display: "block",
+                }}
+              />
               <span
                 className="animate-pulse"
                 style={{
                   position: "absolute",
-                  inset: "-14px",
+                  inset: "-12px",
                   borderRadius: "50%",
                   border: "1.5px solid #C4956A",
                   display: "block",
@@ -368,10 +376,10 @@ export default function LandingPage() {
               <span
                 className="material-symbols-outlined"
                 style={{
-                  fontSize: "72px",
+                  fontSize: "100px",
                   color: "#8B1A1A",
                   fontVariationSettings: '"FILL" 1',
-                  filter: "drop-shadow(0 4px 16px rgba(139,26,26,0.25))",
+                  filter: "drop-shadow(0 6px 24px rgba(139,26,26,0.30))",
                 }}
               >
                 castle
@@ -382,11 +390,11 @@ export default function LandingPage() {
           {/* Label */}
           <p
             style={{
-              fontSize: "0.72rem",
-              letterSpacing: "0.25em",
+              fontSize: "0.78rem",
+              letterSpacing: "0.28em",
               textTransform: "uppercase",
               color: "#8B1A1A",
-              marginBottom: "1rem",
+              marginBottom: "1.25rem",
               fontFamily: "'Be Vietnam Pro', sans-serif",
               fontWeight: 600,
             }}
@@ -395,27 +403,26 @@ export default function LandingPage() {
           </p>
 
           {/* H1 — Playfair Display #8B1A1A */}
-          <h1 style={{ marginBottom: "1.25rem", lineHeight: 1.15, fontFamily: "'Playfair Display', serif" }}>
+          <h1 style={{ marginBottom: "1.5rem", lineHeight: 1.1, fontFamily: "'Playfair Display', serif" }}>
             <span
               style={{
                 display: "block",
-                fontSize: "clamp(2.4rem, 7vw, 4.5rem)",
+                fontSize: "clamp(3rem, 9vw, 6rem)",
                 fontWeight: 700,
                 color: "#8B1A1A",
-                letterSpacing: "-0.01em",
+                letterSpacing: "-0.02em",
               }}
             >
               Giữ Lấy Sử Việt
             </span>
-            {/* H2 — Lora italic #7B4A00 */}
             <span
               style={{
                 display: "block",
-                fontSize: "clamp(0.95rem, 2.5vw, 1.35rem)",
+                fontSize: "clamp(1.1rem, 3vw, 1.6rem)",
                 fontWeight: 600,
                 color: "#7B4A00",
-                marginTop: "0.6rem",
-                letterSpacing: "0.06em",
+                marginTop: "0.75rem",
+                letterSpacing: "0.05em",
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
               }}
@@ -428,9 +435,9 @@ export default function LandingPage() {
           <div
             style={{
               height: "1px",
-              background: "linear-gradient(90deg, transparent, rgba(196,149,106,0.45), transparent)",
-              maxWidth: "320px",
-              margin: "0 auto 1.5rem",
+              background: "linear-gradient(90deg, transparent, rgba(196,149,106,0.55), transparent)",
+              maxWidth: "400px",
+              margin: "0 auto 2rem",
             }}
           />
 
@@ -441,24 +448,23 @@ export default function LandingPage() {
               fontStyle: "italic",
               fontWeight: 300,
               color: "#5C3A1E",
-              fontSize: "0.97rem",
-              maxWidth: "520px",
-              margin: "0 auto 2.5rem",
-              lineHeight: 1.9,
+              fontSize: "1.05rem",
+              maxWidth: "600px",
+              margin: "0 auto 3rem",
+              lineHeight: 2,
               borderLeft: "2px solid #C4956A",
-              paddingLeft: "1rem",
+              paddingLeft: "1.25rem",
               textAlign: "left",
             }}
           >
             "Dân ta phải biết sử ta, cho tường gốc tích nước nhà Việt Nam."
-            <footer style={{ color: "#A0794E", fontSize: "0.82rem", fontStyle: "normal", fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, marginTop: "0.5rem" }}>
+            <footer style={{ color: "#A0794E", fontSize: "0.88rem", fontStyle: "normal", fontFamily: "'Be Vietnam Pro', sans-serif", fontWeight: 600, marginTop: "0.6rem" }}>
               — Hồ Chí Minh
             </footer>
           </blockquote>
 
           {/* CTA buttons */}
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-            {/* Scroll xuống section Dự Án */}
+          <div style={{ display: "flex", gap: "1.25rem", justifyContent: "center", flexWrap: "wrap" }}>
             <button
               onClick={() => document.getElementById("du-an")?.scrollIntoView({ behavior: "smooth" })}
               style={{
@@ -466,48 +472,47 @@ export default function LandingPage() {
                 color: "#FDF5EE",
                 border: "none",
                 borderRadius: "8px",
-                padding: "0.9rem 2.25rem",
+                padding: "1.05rem 2.75rem",
                 fontWeight: 700,
-                fontSize: "0.85rem",
-                letterSpacing: "0.1em",
+                fontSize: "0.9rem",
+                letterSpacing: "0.12em",
                 cursor: "pointer",
                 transition: "background 0.2s, transform 0.2s, box-shadow 0.2s",
-                boxShadow: "0 4px 18px rgba(139,26,26,0.32)",
+                boxShadow: "0 4px 20px rgba(139,26,26,0.35)",
                 fontFamily: "'Be Vietnam Pro', sans-serif",
                 textTransform: "uppercase",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "#6B1414";
                 e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 8px 28px rgba(139,26,26,0.38)";
+                e.currentTarget.style.boxShadow = "0 10px 32px rgba(139,26,26,0.42)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "#8B1A1A";
                 e.currentTarget.style.transform = "";
-                e.currentTarget.style.boxShadow = "0 4px 18px rgba(139,26,26,0.32)";
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(139,26,26,0.35)";
               }}
             >
               KHÁM PHÁ NGAY
             </button>
-            {/* Scroll xuống section Kho Phim */}
             <button
               onClick={() => document.getElementById("phim")?.scrollIntoView({ behavior: "smooth" })}
               style={{
                 background: "transparent",
                 color: "#7B4A00",
-                border: "1px solid #C4956A",
+                border: "1.5px solid #C4956A",
                 borderRadius: "8px",
-                padding: "0.9rem 2.25rem",
+                padding: "1.05rem 2.75rem",
                 fontWeight: 600,
-                fontSize: "0.85rem",
-                letterSpacing: "0.08em",
+                fontSize: "0.9rem",
+                letterSpacing: "0.1em",
                 cursor: "pointer",
                 transition: "background 0.2s, transform 0.2s",
                 fontFamily: "'Be Vietnam Pro', sans-serif",
                 textTransform: "uppercase",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(196,149,106,0.10)";
+                e.currentTarget.style.background = "rgba(196,149,106,0.12)";
                 e.currentTarget.style.transform = "translateY(-2px)";
               }}
               onMouseLeave={(e) => {
@@ -961,6 +966,200 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ════════════════════════════════════════
+          4.5. FEATURED HEROES
+      ════════════════════════════════════════ */}
+      <section
+          id="anh-hung-noi-bat"
+          style={{
+            background: "#FDF5EE",
+            borderTop: "0.5px solid #D4B896",
+            padding: "6rem 1.5rem",
+          }}
+        >
+          <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+            <p style={{
+              color: "#8B1A1A",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textAlign: "center",
+              marginBottom: "0.5rem",
+              textTransform: "uppercase",
+              fontFamily: "'Be Vietnam Pro', sans-serif",
+              fontWeight: 600,
+            }}>
+              NHỮNG ANH HÙNG DÂN TỘC
+            </p>
+            <h2 style={{
+              color: "#3D2B1A",
+              textAlign: "center",
+              fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
+              marginBottom: "3.5rem",
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 700,
+            }}>
+              Anh Hùng Nổi Bật
+            </h2>
+
+            {featuredHeroes.length === 0 ? (
+              <div style={{
+                textAlign: "center",
+                padding: "4rem 1.5rem",
+                color: "#A0794E",
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                fontSize: "0.9rem",
+                border: "0.5px dashed rgba(196,149,106,0.45)",
+                borderRadius: "12px",
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 40, color: "rgba(196,149,106,0.45)", display: "block", marginBottom: "0.75rem" }}>
+                  shield_person
+                </span>
+                Chưa có anh hùng nổi bật nào được chọn.
+              </div>
+            ) : (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
+              gap: "1.5rem",
+            }}>
+              {featuredHeroes.map((hero) => (
+                <div
+                  key={hero.id}
+                  onClick={() => navigate(`/anh-hung/${hero.slug}`)}
+                  style={{
+                    background: "#FDF5EE",
+                    border: "0.5px solid #D4B896",
+                    borderRadius: "12px",
+                    padding: "1.75rem 1.5rem",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 12px rgba(61,43,26,0.07)",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = "0 10px 28px rgba(139,26,26,0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "";
+                    e.currentTarget.style.boxShadow = "0 2px 12px rgba(61,43,26,0.07)";
+                  }}
+                >
+                  {/* Avatar */}
+                  <div style={{
+                    width: 80, height: 80,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "2px solid #C4956A",
+                    boxShadow: "0 0 16px rgba(139,26,26,0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "linear-gradient(135deg, #FAE8DA, #F5D5C0)",
+                    margin: "0 auto 1.25rem",
+                  }}>
+                    {hero.avatar_url
+                      ? <img src={hero.avatar_url} alt={hero.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      : <span style={{ color: "#8B1A1A", fontSize: "1.8rem", fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>
+                          {hero.name?.[0] || "?"}
+                        </span>
+                    }
+                  </div>
+
+                  {/* Era badge */}
+                  {hero.era?.name && (
+                    <div style={{ marginBottom: "0.5rem" }}>
+                      <span style={{
+                        background: "rgba(196,149,106,0.12)",
+                        color: "#7B4A00",
+                        fontSize: "0.65rem",
+                        fontWeight: 600,
+                        letterSpacing: "0.1em",
+                        padding: "0.2rem 0.7rem",
+                        borderRadius: "9999px",
+                        border: "0.5px solid rgba(196,149,106,0.35)",
+                        fontFamily: "'Be Vietnam Pro', sans-serif",
+                      }}>
+                        {hero.era.name}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Name */}
+                  <h3 style={{
+                    color: "#3D2B1A",
+                    fontSize: "1.05rem",
+                    marginBottom: hero.title ? "0.25rem" : "0.75rem",
+                    fontFamily: "'Playfair Display', serif",
+                    fontWeight: 700,
+                    lineHeight: 1.3,
+                  }}>
+                    {hero.name}
+                  </h3>
+
+                  {/* Title */}
+                  {hero.title && (
+                    <p style={{
+                      color: "#C4956A",
+                      fontSize: "0.8rem",
+                      marginBottom: "0.75rem",
+                      fontFamily: "'Playfair Display', serif",
+                      fontStyle: "italic",
+                    }}>
+                      {hero.title}
+                    </p>
+                  )}
+
+                  {/* Years */}
+                  {(hero.birth_year != null || hero.death_year != null) && (
+                    <p style={{
+                      color: "#A0794E",
+                      fontSize: "0.75rem",
+                      fontFamily: "'Be Vietnam Pro', sans-serif",
+                      letterSpacing: "0.1em",
+                      margin: 0,
+                    }}>
+                      {formatYear(hero.birth_year)} – {formatYear(hero.death_year)}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+            )}
+
+            {/* View all link */}
+            <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
+              <button
+                onClick={() => navigate("/anh-hung")}
+                style={{
+                  background: "transparent",
+                  color: "#7B4A00",
+                  border: "1px solid #C4956A",
+                  borderRadius: "8px",
+                  padding: "0.75rem 2rem",
+                  fontWeight: 600,
+                  fontSize: "0.85rem",
+                  letterSpacing: "0.08em",
+                  cursor: "pointer",
+                  transition: "background 0.2s, transform 0.2s",
+                  fontFamily: "'Be Vietnam Pro', sans-serif",
+                  textTransform: "uppercase",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(196,149,106,0.10)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.transform = "";
+                }}
+              >
+                XEM TẤT CẢ ANH HÙNG
+              </button>
+            </div>
+          </div>
+        </section>
 
       {/* ════════════════════════════════════════
           5. TIER CARDS

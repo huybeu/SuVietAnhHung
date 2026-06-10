@@ -194,7 +194,7 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                 display: 'flex', alignItems: 'center', gap: '0.6rem',
                 padding: isCollapsed ? '0.55rem 0' : '0.45rem 0.625rem',
                 borderRadius: '0.375rem', textDecoration: 'none',
-                color: '#A0794E', background: 'transparent',
+                color: '#5C3A1E', background: 'transparent',
                 borderLeft: '2.5px solid transparent',
                 transition: 'all 0.15s',
                 fontFamily: "'Be Vietnam Pro', sans-serif",
@@ -202,9 +202,9 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                 whiteSpace: 'nowrap',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(139,26,26,0.06)'; e.currentTarget.style.color = '#3D2B1A' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#A0794E' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#5C3A1E' }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: 17, color: 'rgba(61,43,26,0.35)', flexShrink: 0 }}>home</span>
+              <span className="material-symbols-outlined" style={{ fontSize: 17, color: 'rgba(61,43,26,0.60)', flexShrink: 0 }}>home</span>
               {!isCollapsed && <span style={{ fontSize: '0.82rem' }}>Về Trang Chủ</span>}
             </Link>
           </SidebarTooltip>
@@ -230,7 +230,7 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                 >
                   <span style={{
                     fontFamily: "'Be Vietnam Pro', sans-serif",
-                    color: 'rgba(61,43,26,0.40)', fontSize: '0.58rem', letterSpacing: '0.15em',
+                    color: 'rgba(61,43,26,0.70)', fontSize: '0.58rem', letterSpacing: '0.15em',
                     textTransform: 'uppercase', fontWeight: 600,
                   }}>
                     {group.label}
@@ -238,7 +238,7 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                   <span
                     className="material-symbols-outlined"
                     style={{
-                      fontSize: 14, color: 'rgba(61,43,26,0.30)',
+                      fontSize: 14, color: 'rgba(61,43,26,0.55)',
                       transition: 'transform 0.2s ease',
                       transform: openGroups[gi] ? 'rotate(0deg)' : 'rotate(-90deg)',
                     }}
@@ -298,7 +298,7 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                           display: 'flex', alignItems: 'center', gap: '0.6rem',
                           padding: isCollapsed ? '0.55rem 0' : '0.45rem 0.625rem',
                           borderRadius: '0.375rem', textDecoration: 'none',
-                          color: active ? '#3D2B1A' : '#A0794E',
+                          color: active ? '#3D2B1A' : '#5C3A1E',
                           background: active ? 'rgba(139,26,26,0.10)' : 'transparent',
                           borderLeft: !isCollapsed && active ? '2.5px solid #8B1A1A' : '2.5px solid transparent',
                           transition: 'all 0.15s',
@@ -308,9 +308,9 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                           whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(139,26,26,0.06)'; e.currentTarget.style.color = '#3D2B1A' } }}
-                        onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#A0794E' } }}
+                        onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#5C3A1E' } }}
                       >
-                        <span className="material-symbols-outlined" style={{ fontSize: 17, color: active ? '#8B1A1A' : 'rgba(61,43,26,0.35)', flexShrink: 0 }}>{item.icon}</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: 17, color: active ? '#8B1A1A' : 'rgba(61,43,26,0.60)', flexShrink: 0 }}>{item.icon}</span>
                         {!isCollapsed && <span style={{ fontSize: '0.82rem', letterSpacing: '0.01em' }}>{item.label}</span>}
                       </Link>
                     </SidebarTooltip>
@@ -383,12 +383,12 @@ export default function AdminSidebar({ currentPath, isOpen, onClose, isCollapsed
                 style={{
                   display: 'flex', alignItems: 'center', gap: '0.4rem',
                   background: 'none', border: 'none', cursor: 'pointer',
-                  color: 'rgba(61,43,26,0.45)', fontSize: '0.75rem',
+                  color: 'rgba(61,43,26,0.65)', fontSize: '0.75rem',
                   fontFamily: "'Be Vietnam Pro', sans-serif", padding: 0,
                   transition: 'color 0.15s',
                 }}
                 onMouseEnter={e => e.currentTarget.style.color = '#8B1A1A'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(61,43,26,0.45)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(61,43,26,0.65)'}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: 15 }}>logout</span>
                 Đăng Xuất
