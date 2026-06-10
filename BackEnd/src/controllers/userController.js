@@ -6,8 +6,8 @@
  * Mọi lỗi đều được chuyển sang errorHandler middleware thông qua next(error).
  */
 
-const userService = require('../services/userService');
-const { sendSuccess, sendCreated, sendError } = require('../utils/response');
+import userService from '../services/userService.js';
+import { sendSuccess, sendCreated, sendError } from '../utils/response.js';
 
 const getAll = async (req, res, next) => {
   try {
@@ -55,4 +55,4 @@ const remove = async (req, res, next) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove };
+export { getAll, getById, create, update, remove };

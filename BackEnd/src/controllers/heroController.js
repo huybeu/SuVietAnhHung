@@ -1,5 +1,5 @@
-const heroService = require('../services/heroService');
-const { sendSuccess, sendCreated } = require('../utils/response');
+import heroService from '../services/heroService.js';
+import { sendSuccess, sendCreated } from '../utils/response.js';
 
 // ─── Public ──────────────────────────────────────────────────────────────────
 
@@ -99,7 +99,7 @@ const deleteHero = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   getPublicHeroes,
   getPublicHeroById,
   getHeroArticles,

@@ -1,21 +1,21 @@
-const { sequelize } = require('../config/database');
+import { sequelize } from '../config/database.js';
 
-const User         = require('./user');
-const RefreshToken = require('./refreshToken');
-const SiteConfig   = require('./siteConfig');
-const Era          = require('./era');
-const Hero         = require('./hero');
-const Tag          = require('./tag');
-const Article      = require('./article');
-const ArticleHero  = require('./articleHero');
-const ArticleTag   = require('./articleTag');
-const Video        = require('./video');
-const DonationTier = require('./donationTier');
-const Donation     = require('./donation');
-const SponsorTier  = require('./sponsorTier');
-const Sponsor      = require('./sponsor');
-const Media        = require('./media');
-const PageView     = require('./pageView');
+import User         from './user.js';
+import RefreshToken from './refreshToken.js';
+import SiteConfig   from './siteConfig.js';
+import Era          from './era.js';
+import Hero         from './hero.js';
+import Tag          from './tag.js';
+import Article      from './article.js';
+import ArticleHero  from './articleHero.js';
+import ArticleTag   from './articleTag.js';
+import Video        from './video.js';
+import DonationTier from './donationTier.js';
+import Donation     from './donation.js';
+import SponsorTier  from './sponsorTier.js';
+import Sponsor      from './sponsor.js';
+import Media        from './media.js';
+import PageView     from './pageView.js';
 
 // ─── refresh_tokens ─────────────────────────────────────────
 User.hasMany(RefreshToken, { foreignKey: 'user_id', as: 'refreshTokens', onDelete: 'CASCADE' });
@@ -99,7 +99,7 @@ Sponsor.belongsTo(User,        { foreignKey: 'updated_by', as: 'updater' });
 Media.belongsTo(User, { foreignKey: 'uploaded_by', as: 'uploader' });
 Media.belongsTo(User, { foreignKey: 'updated_by',  as: 'updater'  });
 
-module.exports = {
+export {
   sequelize,
   User,
   RefreshToken,

@@ -6,9 +6,9 @@
  * Mọi query phức tạp (join, subquery, raw SQL) đều nằm ở đây, không rải rác ở Service.
  */
 
-const { Op } = require('sequelize');
-const BaseRepository = require('./baseRepository');
-const { User } = require('../models');
+import { Op } from 'sequelize';
+import BaseRepository from './baseRepository.js';
+import { User } from '../models/index.js';
 
 class UserRepository extends BaseRepository {
   constructor() {
@@ -36,4 +36,4 @@ class UserRepository extends BaseRepository {
   }
 }
 
-module.exports = new UserRepository();
+export default new UserRepository();

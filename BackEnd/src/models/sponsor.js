@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.js';
 
 const Sponsor = sequelize.define(
   'Sponsor',
@@ -51,4 +51,4 @@ const Sponsor = sequelize.define(
   }
 );
 
-module.exports = Sponsor;
+export default Sponsor;

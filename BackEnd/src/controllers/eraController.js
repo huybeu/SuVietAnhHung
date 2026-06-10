@@ -1,5 +1,5 @@
-const eraService = require('../services/eraService');
-const { sendSuccess, sendCreated } = require('../utils/response');
+import eraService from '../services/eraService.js';
+import { sendSuccess, sendCreated } from '../utils/response.js';
 
 // ─── Public ──────────────────────────────────────────────────────────────────
 
@@ -108,7 +108,7 @@ const deleteEra = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   getPublicEras,
   getPublicEraById,
   getEraHeroes,

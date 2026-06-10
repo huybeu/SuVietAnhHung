@@ -6,15 +6,16 @@
  * Cũng xử lý route 404 cho các path không tồn tại.
  */
 
-const express = require('express');
+import express from 'express';
+import authRoutes from './authRoutes.js';
+import userRoutes from './userRoutes.js';
+import eraRoutes from './eraRoutes.js';
+import adminEraRoutes from './adminEraRoutes.js';
+import heroRoutes from './heroRoutes.js';
+import adminHeroRoutes from './adminHeroRoutes.js';
+import AppError from '../utils/AppError.js';
+
 const router = express.Router();
-const authRoutes = require('./authRoutes');
-const userRoutes = require('./userRoutes');
-const eraRoutes = require('./eraRoutes');
-const adminEraRoutes = require('./adminEraRoutes');
-const heroRoutes = require('./heroRoutes');
-const adminHeroRoutes = require('./adminHeroRoutes');
-const AppError = require('../utils/AppError');
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
@@ -28,4 +29,4 @@ router.all('*', (req, res, next) => {
   next(new AppError(`Không tìm thấy route: ${req.method} ${req.originalUrl}`, 404));
 });
 
-module.exports = router;
+export default router;

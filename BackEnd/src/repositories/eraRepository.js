@@ -1,6 +1,6 @@
-const BaseRepository = require('./baseRepository');
-const { Era, Hero, Article, ArticleHero, User } = require('../models');
-const { Op, fn, col, literal } = require('sequelize');
+import BaseRepository from './baseRepository.js';
+import { Era, Hero, Article, ArticleHero, User } from '../models/index.js';
+import { Op, fn, col, literal } from 'sequelize';
 
 class EraRepository extends BaseRepository {
   constructor() {
@@ -156,4 +156,4 @@ class EraRepository extends BaseRepository {
   }
 }
 
-module.exports = new EraRepository();
+export default new EraRepository();

@@ -6,9 +6,10 @@
  * Middleware xác thực, phân quyền được gắn tại đây trước handler chính.
  */
 
-const express = require('express');
+import express from 'express';
+import * as userController from '../controllers/userController.js';
+
 const router = express.Router();
-const userController = require('../controllers/userController');
 
 /**
  * @swagger
@@ -233,4 +234,4 @@ router.get('/:id', userController.getById);
 router.put('/:id', userController.update);
 router.delete('/:id', userController.remove);
 
-module.exports = router;
+export default router;

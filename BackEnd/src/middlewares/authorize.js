@@ -1,4 +1,4 @@
-const AppError = require('../utils/AppError');
+import AppError from '../utils/AppError.js';
 
 const ROLE_HIERARCHY = {
   superadmin: 3,
@@ -57,4 +57,4 @@ const authorizeOwnerOrAdmin = (getResourceUserId) => {
   };
 };
 
-module.exports = { authorize, authorizeOwnerOrAdmin };
+export { authorize, authorizeOwnerOrAdmin };

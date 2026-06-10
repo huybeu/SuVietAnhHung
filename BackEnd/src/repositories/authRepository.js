@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const { Op } = require('sequelize');
-const { RefreshToken, User } = require('../models');
+import crypto from 'crypto';
+import { Op } from 'sequelize';
+import { RefreshToken, User } from '../models/index.js';
 
 const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
 
@@ -47,4 +47,4 @@ const authRepository = {
   },
 };
 
-module.exports = authRepository;
+export default authRepository;

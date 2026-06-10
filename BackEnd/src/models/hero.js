@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.js';
 
 const Hero = sequelize.define(
   'Hero',
@@ -63,4 +63,4 @@ const Hero = sequelize.define(
   }
 );
 
-module.exports = Hero;
+export default Hero;

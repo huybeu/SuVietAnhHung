@@ -6,7 +6,7 @@
  * Export instance Sequelize dùng chung toàn ứng dụng.
  */
 
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -35,4 +35,4 @@ const connectDatabase = async () => {
   console.log('Kết nối database thành công.');
 };
 
-module.exports = { sequelize, connectDatabase };
+export { sequelize, connectDatabase };

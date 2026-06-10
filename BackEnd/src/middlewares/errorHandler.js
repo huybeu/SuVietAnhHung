@@ -7,8 +7,8 @@
  * Phải đặt CUỐI CÙNG trong chuỗi middleware của Express (4 tham số).
  */
 
-const AppError = require('../utils/AppError');
-const { sendError } = require('../utils/response');
+import AppError from '../utils/AppError.js';
+import { sendError } from '../utils/response.js';
 
 const handleSequelizeValidationError = (err) => {
   const messages = err.errors.map((e) => e.message).join(', ');
@@ -37,4 +37,4 @@ const errorHandler = (err, req, res, next) => {
   return sendError(res, error.message, error.statusCode, error.errors || null);
 };
 
-module.exports = errorHandler;
+export default errorHandler;

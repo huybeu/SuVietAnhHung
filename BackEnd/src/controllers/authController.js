@@ -1,5 +1,5 @@
-const authService = require('../services/authService');
-const { sendSuccess, sendCreated } = require('../utils/response');
+import authService from '../services/authService.js';
+import { sendSuccess, sendCreated } from '../utils/response.js';
 
 const getClientIp = (req) =>
   req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress;
@@ -148,4 +148,4 @@ const authController = {
   },
 };
 
-module.exports = authController;
+export default authController;

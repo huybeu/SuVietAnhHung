@@ -5,9 +5,10 @@
  * Chỉ trả về các thời kỳ có status = published.
  */
 
-const express = require('express');
+import express from 'express';
+import * as eraController from '../controllers/eraController.js';
+
 const router = express.Router();
-const eraController = require('../controllers/eraController');
 
 /**
  * @swagger
@@ -332,4 +333,4 @@ router.get('/:id/heroes', eraController.getEraHeroes);
  */
 router.get('/:id/articles', eraController.getEraArticles);
 
-module.exports = router;
+export default router;

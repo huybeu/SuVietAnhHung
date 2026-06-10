@@ -1,6 +1,6 @@
-const heroRepository = require('../repositories/heroRepository');
-const { Era, Video } = require('../models');
-const AppError = require('../utils/AppError');
+import heroRepository from '../repositories/heroRepository.js';
+import { Era, Video } from '../models/index.js';
+import AppError from '../utils/AppError.js';
 
 class HeroService {
   // ─── Public ─────────────────────────────────────────────────────────────────
@@ -282,4 +282,4 @@ class HeroService {
   }
 }
 
-module.exports = new HeroService();
+export default new HeroService();
