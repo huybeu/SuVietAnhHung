@@ -73,13 +73,22 @@ docker exec suvietanhhung-mysql mysql --default-character-set=utf8mb4 -u<DB_USER
 
 - [ ] **Step 1: Chạy lệnh xác minh** (PowerShell, từ gốc repo)
 
-```powershell
-Set-Location BackEnd; node -e 'const b=require("bcryptjs"); console.log(b.compareSync("Admin@123456","$2b$12$XddvlB7iP0gG2WO1SSLj..sKhpEEs6zMBR0enOL04y0nWVRyqOtTG"), b.compareSync("Editor@123456","$2b$12$0.UZYOBKVgFMHm4o.6CR8OdTiOngm.Fi9e0huC.QS9UTY.tOzL0RG"), b.compareSync("Viewer@123456","$2b$12$ke2WF.WDTDJTJFEzjbezyO..4T0JL8fvNJmZb5/447EzyBZ03VkFC"))'; Set-Location ..
+Tạo file tạm `BackEnd/verify-hash.tmp.cjs` (PHẢI là `.cjs` — BackEnd có `"type": "module"`; và KHÔNG dùng `node -e` vì PowerShell 5.1 nuốt nháy kép lồng nhau hoặc nội suy `$2b$...`):
+
+```js
+const b = require('bcryptjs');
+console.log(
+  b.compareSync('Admin@123456', '$2b$12$XddvlB7iP0gG2WO1SSLj..sKhpEEs6zMBR0enOL04y0nWVRyqOtTG'),
+  b.compareSync('Editor@123456', '$2b$12$0.UZYOBKVgFMHm4o.6CR8OdTiOngm.Fi9e0huC.QS9UTY.tOzL0RG'),
+  b.compareSync('Viewer@123456', '$2b$12$ke2WF.WDTDJTJFEzjbezyO..4T0JL8fvNJmZb5/447EzyBZ03VkFC')
+);
 ```
 
-LƯU Ý: toàn bộ đối số `-e` phải bọc trong **nháy đơn PowerShell** (chuỗi JS bên trong dùng nháy kép) — nếu dùng nháy kép bao ngoài, PowerShell sẽ nội suy `$2b$12$...` thành biến rỗng và kết quả luôn sai.
+```powershell
+Set-Location BackEnd; node verify-hash.tmp.cjs; if ($?) { Remove-Item verify-hash.tmp.cjs -Confirm:$false }; Set-Location ..
+```
 
-Expected: `true true true`. Nếu ra `false`, tính lại hash bằng `node -e 'console.log(require("bcryptjs").hashSync("<mật khẩu>",12))'` (chạy trong `BackEnd`) và thay cả 3 hash trong khối INSERT users ở Task 3.
+Expected: `true true true` (đã chạy đạt ngày 2026-06-11). Nếu ra `false`, tính lại hash tương tự qua file tạm `.cjs` dùng `b.hashSync('<mật khẩu>', 12)` và thay cả 3 hash trong khối INSERT users ở Task 3.
 
 ### Task 2: Tạo khung file mock_data.sql (header + TRUNCATE)
 
