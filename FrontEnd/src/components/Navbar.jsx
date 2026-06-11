@@ -2,6 +2,73 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+const C = {
+  bg: '#F5EFE6',
+  border: '#C8A882',
+  red: '#7B2226',
+  gold: '#A0784A',
+  text: '#5C4033',
+}
+
+function IconBell({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.text} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  )
+}
+
+function IconUser({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.text} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+    </svg>
+  )
+}
+
+function ActionBtn({ children, onClick, style, badge, label }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      aria-label={label}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        position: 'relative',
+        width: 36,
+        height: 36,
+        borderRadius: '50%',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: hov ? 'rgba(123,34,38,0.09)' : 'transparent',
+        transition: 'background 0.18s',
+        flexShrink: 0,
+        ...style,
+      }}
+    >
+      {children}
+      {badge && (
+        <span style={{
+          position: 'absolute',
+          top: 7,
+          right: 7,
+          width: 6,
+          height: 6,
+          borderRadius: '50%',
+          background: C.red,
+          border: `1.5px solid ${C.bg}`,
+        }} />
+      )}
+    </button>
+  )
+}
+
 export default function Navbar() {
   const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -11,25 +78,20 @@ export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const isAdmin  = user?.isAdmin
-  const userName = user?.displayName ?? user?.name ?? ''
-
+  const isAdmin = user?.isAdmin || ['superadmin', 'editor'].includes(user?.role)
+  const userName = user?.displayName ?? user?.username ?? user?.name ?? ''
   const activeKey = location.pathname
 
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    const fn = e => { if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setDropdownOpen(false) }
+    document.addEventListener('mousedown', fn)
+    return () => document.removeEventListener('mousedown', fn)
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const fn = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', fn)
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   useEffect(() => {
@@ -55,210 +117,204 @@ export default function Navbar() {
       <nav
         id="navbar"
         style={{
-          background: scrolled ? 'rgba(253,245,238,0.99)' : 'rgba(253,245,238,0.96)',
-          borderBottom: '1px solid rgba(196,149,106,0.30)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          boxShadow: scrolled ? '0 2px 16px rgba(61,43,26,0.12)' : '0 1px 4px rgba(61,43,26,0.06)',
-          transition: 'all 0.3s ease',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          height: 64,
+          background: C.bg,
+          borderBottom: `1.5px solid ${C.border}`,
+          boxShadow: scrolled ? '0 2px 12px rgba(91,48,26,0.10)' : 'none',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          transition: 'box-shadow 0.3s',
+          display: 'flex',
+          alignItems: 'center',
+          paddingLeft: 40,
+          paddingRight: 40,
         }}
-        className="fixed w-full top-0 z-50 h-[64px] flex items-center justify-between px-4 md:px-8"
       >
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 flex-shrink-0" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1rem, 3.5vw, 1.35rem)', fontWeight: 700, letterSpacing: '-0.01em' }}>
-            <span style={{ color: '#8B1A1A' }}>SỬ VIỆT</span>
-            <span style={{ color: '#C4956A', marginLeft: '0.3rem' }}>ANH HÙNG</span>
+        {/* Logo — trái */}
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          <span style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 17,
+            fontWeight: 700,
+            color: C.red,
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+            lineHeight: 1,
+          }}>
+            Sử Việt
+          </span>
+          <span style={{ width: 1, height: 18, background: C.border, flexShrink: 0 }} />
+          <span style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 12,
+            fontWeight: 500,
+            color: C.gold,
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            lineHeight: 1,
+          }}>
+            Anh Hùng
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Nav — căn giữa tuyệt đối */}
+        <div
+          className="hidden md:flex"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+          }}
+        >
           {links.map(({ label, key, to, exact }) => {
             const isActive = exact ? activeKey === key : activeKey.startsWith(key)
-            const linkStyle = {
-              color: isActive ? '#8B1A1A' : 'rgba(61,43,26,0.55)',
-              borderBottom: isActive ? '2px solid #8B1A1A' : '2px solid transparent',
-              paddingBottom: '4px',
-              textDecoration: 'none',
-            }
             return (
-              <Link
-                key={key}
-                to={to}
-                className="font-vietnam text-sm font-semibold tracking-wider uppercase transition-all"
-                style={linkStyle}
-                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#8B1A1A' }}
-                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'rgba(61,43,26,0.55)' }}
-              >
+              <NavLink key={key} to={to} isActive={isActive}>
                 {label}
-              </Link>
+              </NavLink>
             )
           })}
         </div>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-1 md:gap-3">
-          <button
-            className="hidden md:flex material-symbols-outlined"
-            style={{ color: 'rgba(61,43,26,0.45)', fontSize: '22px', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#8B1A1A'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(61,43,26,0.45)'}
-          >
-            notifications
-          </button>
+        {/* Actions — phải */}
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
+          {/* Desktop actions */}
+          <div className="hidden md:flex items-center" style={{ gap: 4 }}>
+            <ActionBtn label="Thông báo" badge={false}>
+              <IconBell />
+            </ActionBtn>
 
-          {/* Account dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 transition-all focus:outline-none min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 justify-center md:justify-start"
-            >
-              {user ? (
-                <>
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'rgba(139,26,26,0.28)', border: '1.5px solid rgba(196,149,106,0.45)' }}
-                  >
-                    <span style={{ color: '#C4956A', fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '0.85rem', lineHeight: 1 }}>
-                      {userName[0]?.toUpperCase() ?? '?'}
-                    </span>
-                  </div>
-                  <span className="hidden md:block font-vietnam text-sm font-semibold max-w-[120px] truncate"
-                    style={{ color: '#3D2B1A' }}>
-                    {userName}
-                  </span>
-                  <span
-                    className="hidden md:block material-symbols-outlined text-base"
-                    style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'rgba(61,43,26,0.45)' }}
-                  >
-                    expand_more
-                  </span>
-                </>
-              ) : (
-                <span className="material-symbols-outlined text-2xl" style={{ color: 'rgba(61,43,26,0.55)' }}>account_circle</span>
-              )}
-            </button>
+            <span style={{ width: 1, height: 20, background: C.border, margin: '0 4px' }} />
 
-            {/* Dropdown panel — light cream for readability */}
-            <div
-              className={`absolute right-0 mt-3 w-64 rounded-xl z-50 overflow-hidden transition-all duration-200 origin-top-right ${
-                dropdownOpen ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-95'
-              }`}
-              style={{
-                background: '#FDF5EE',
-                border: '0.5px solid #D4B896',
-                boxShadow: '0 8px 32px rgba(61,43,26,0.18), 0 2px 8px rgba(61,43,26,0.08)',
-              }}
-            >
-              <div style={{ padding: '0.75rem 1rem', borderBottom: '0.5px solid #D4B896', background: '#FAE8DA' }}>
+            {/* Account button */}
+            <div ref={dropdownRef} style={{ position: 'relative' }}>
+              <ActionBtn label="Tài khoản" onClick={() => setDropdownOpen(!dropdownOpen)}>
                 {user ? (
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'rgba(139,26,26,0.12)', border: '0.5px solid rgba(196,149,106,0.5)' }}>
-                      <span style={{ color: '#8B1A1A', fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1rem' }}>
-                        {userName[0]?.toUpperCase() ?? '?'}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-vietnam text-sm font-semibold truncate" style={{ color: '#3D2B1A' }}>{userName}</p>
-                      <p className="font-vietnam text-xs" style={{ color: '#5C3A1E' }}>
-                        {isAdmin ? 'Quản trị viên' : 'Thành viên'}
-                      </p>
-                    </div>
-                  </div>
+                  <span style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: C.red,
+                    lineHeight: 1,
+                  }}>
+                    {userName[0]?.toUpperCase() ?? '?'}
+                  </span>
                 ) : (
-                  <p className="font-vietnam text-[10px] uppercase tracking-widest" style={{ color: '#A0794E' }}>Tài khoản</p>
+                  <IconUser />
                 )}
-              </div>
+              </ActionBtn>
 
-              <div className="flex flex-col py-1">
-                {!user ? (
-                  <>
-                    <DropItem to="/dang-nhap" icon="login" label="Đăng nhập" onClick={() => setDropdownOpen(false)} />
-                    <DropItem to="/dang-ky" icon="person_add" label="Đăng ký" onClick={() => setDropdownOpen(false)} />
-                  </>
-                ) : (
-                  <>
-                    <DropItem to="/ho-so" icon="account_circle" label="Thông tin cá nhân" onClick={() => setDropdownOpen(false)} />
-                    {isAdmin && (
-                      <>
-                        <div style={{ height: '0.5px', background: '#D4B896', margin: '0.25rem 0.75rem' }} />
-                        <div className="px-4 py-1.5">
-                          <p className="font-vietnam text-[10px] uppercase tracking-widest flex items-center gap-1.5" style={{ color: '#A0794E' }}>
-                            <span className="material-symbols-outlined" style={{ fontSize: 12 }}>admin_panel_settings</span>
-                            Quản trị
-                          </p>
-                        </div>
-                        <DropItem to="/admin" icon="dashboard" label="Dashboard" indent onClick={() => setDropdownOpen(false)} />
-                        <DropItem to="/admin/nguoi-dung" icon="manage_accounts" label="Quản lý người dùng" indent onClick={() => setDropdownOpen(false)} />
-                      </>
-                    )}
-                    <div style={{ height: '0.5px', background: '#D4B896', margin: '0.25rem 0.75rem' }} />
-                    <button
-                      onClick={handleLogout}
-                      className="font-vietnam px-4 py-3 text-sm font-semibold flex items-center gap-3 text-left w-full transition-colors"
-                      style={{ color: '#8B1A1A', background: 'none', border: 'none', cursor: 'pointer' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,26,26,0.06)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                    >
-                      <span className="material-symbols-outlined text-lg">logout</span>
-                      Đăng xuất
-                    </button>
-                  </>
-                )}
+              {/* Dropdown */}
+              <div
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 'calc(100% + 10px)',
+                  width: 240,
+                  background: '#FDF8F2',
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 10,
+                  boxShadow: '0 8px 28px rgba(91,48,26,0.14)',
+                  overflow: 'hidden',
+                  opacity: dropdownOpen ? 1 : 0,
+                  visibility: dropdownOpen ? 'visible' : 'hidden',
+                  transform: dropdownOpen ? 'scale(1)' : 'scale(0.96)',
+                  transformOrigin: 'top right',
+                  transition: 'all 0.18s ease',
+                  zIndex: 60,
+                }}
+              >
+                {/* Header dropdown */}
+                <div style={{ padding: '10px 14px', borderBottom: `1px solid ${C.border}`, background: '#F0E5D8' }}>
+                  {user ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{
+                        width: 34, height: 34, borderRadius: '50%',
+                        background: 'rgba(123,34,38,0.12)',
+                        border: `1px solid rgba(200,168,130,0.5)`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                      }}>
+                        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, fontWeight: 700, color: C.red }}>
+                          {userName[0]?.toUpperCase() ?? '?'}
+                        </span>
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <p style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: C.text, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{userName}</p>
+                        <p style={{ fontFamily: 'Inter', fontSize: 11, color: C.gold, margin: 0 }}>{isAdmin ? 'Quản trị viên' : 'Thành viên'}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p style={{ fontFamily: 'Inter', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: C.gold, margin: 0 }}>Tài khoản</p>
+                  )}
+                </div>
+
+                {/* Items */}
+                <div style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  {!user ? (
+                    <>
+                      <DropItem to="/dang-nhap" icon="→" label="Đăng nhập" onClick={() => setDropdownOpen(false)} />
+                      <DropItem to="/dang-ky" icon="+" label="Đăng ký" onClick={() => setDropdownOpen(false)} />
+                    </>
+                  ) : (
+                    <>
+                      <DropItem to="/ho-so" icon="○" label="Thông tin cá nhân" onClick={() => setDropdownOpen(false)} />
+                      {isAdmin && (
+                        <>
+                          <div style={{ height: 1, background: C.border, margin: '4px 12px' }} />
+                          <p style={{ fontFamily: 'Inter', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: C.gold, margin: 0, padding: '6px 14px 2px' }}>Quản trị</p>
+                          <DropItem to="/admin" icon="▪" label="Dashboard" onClick={() => setDropdownOpen(false)} />
+                          <DropItem to="/admin/nguoi-dung" icon="▪" label="Quản lý người dùng" onClick={() => setDropdownOpen(false)} />
+                        </>
+                      )}
+                      <div style={{ height: 1, background: C.border, margin: '4px 12px' }} />
+                      <LogoutBtn onClick={handleLogout} />
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex items-center justify-center focus:outline-none"
-            style={{ minWidth: 44, minHeight: 44, background: 'none', border: 'none', cursor: 'pointer', padding: '0 6px' }}
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
-          >
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: '26px', color: 'rgba(61,43,26,0.75)', transition: 'color 0.2s' }}
-            >
-              {mobileOpen ? 'close' : 'menu'}
-            </span>
-          </button>
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu */}
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${
-          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
         <div
-          className={`absolute top-[64px] right-0 w-72 transition-transform duration-300 ${
-            mobileOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-          style={{ background: '#FDF5EE', borderLeft: '0.5px solid #D4B896', borderBottom: '0.5px solid #D4B896', boxShadow: '-4px 0 24px rgba(61,43,26,0.14)' }}
+          className={`absolute top-[64px] right-0 w-72 transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}`}
+          style={{ background: C.bg, borderLeft: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, boxShadow: '-4px 0 20px rgba(91,48,26,0.12)' }}
         >
-          {/* Nav links — mobile */}
-          <div className="flex flex-col" style={{ borderBottom: '0.5px solid #D4B896' }}>
+          <div style={{ borderBottom: `1px solid ${C.border}` }}>
             {links.map(({ label, key, to, exact }) => {
               const isActive = exact ? activeKey === key : activeKey.startsWith(key)
-              const mobileItemStyle = {
-                color: isActive ? '#8B1A1A' : '#5C3A1E',
-                background: isActive ? 'rgba(139,26,26,0.07)' : 'transparent',
-                borderLeft: isActive ? '3px solid #8B1A1A' : '3px solid transparent',
-                textDecoration: 'none',
-              }
               return (
                 <Link
                   key={key}
                   to={to}
                   onClick={() => setMobileOpen(false)}
-                  className="font-vietnam px-6 py-4 text-sm font-semibold tracking-wider uppercase transition-colors"
-                  style={mobileItemStyle}
+                  style={{
+                    display: 'block',
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    padding: '14px 24px',
+                    color: isActive ? C.red : C.text,
+                    background: isActive ? 'rgba(123,34,38,0.07)' : 'transparent',
+                    borderLeft: isActive ? `3px solid ${C.red}` : '3px solid transparent',
+                  }}
                 >
                   {label}
                 </Link>
@@ -266,98 +322,140 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="flex flex-col py-2">
+          <div style={{ padding: '8px 0' }}>
             {!user ? (
               <>
-                <MobileItem to="/dang-nhap" icon="login" label="Đăng nhập" onClick={() => setMobileOpen(false)} />
-                <MobileItem to="/dang-ky" icon="person_add" label="Đăng ký" onClick={() => setMobileOpen(false)} />
+                <MobileItem to="/dang-nhap" label="Đăng nhập" onClick={() => setMobileOpen(false)} />
+                <MobileItem to="/dang-ky" label="Đăng ký" onClick={() => setMobileOpen(false)} />
               </>
             ) : (
               <>
-                <div className="px-6 py-3 flex items-center gap-3" style={{ borderBottom: '0.5px solid rgba(212,184,150,0.3)' }}>
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center"
-                    style={{ background: 'rgba(139,26,26,0.12)', border: '0.5px solid rgba(196,149,106,0.5)' }}>
-                    <span style={{ color: '#8B1A1A', fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
-                      {userName[0]?.toUpperCase() ?? '?'}
-                    </span>
+                <div style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 10, borderBottom: `1px solid rgba(200,168,130,0.3)` }}>
+                  <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'rgba(123,34,38,0.1)', border: `1px solid rgba(200,168,130,0.4)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 14, color: C.red }}>{userName[0]?.toUpperCase() ?? '?'}</span>
                   </div>
                   <div>
-                    <p className="font-vietnam text-sm font-semibold" style={{ color: '#3D2B1A' }}>{userName}</p>
-                    <p className="font-vietnam text-xs" style={{ color: '#5C3A1E' }}>{isAdmin ? 'Quản trị viên' : 'Thành viên'}</p>
+                    <p style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: C.text, margin: 0 }}>{userName}</p>
+                    <p style={{ fontFamily: 'Inter', fontSize: 11, color: C.gold, margin: 0 }}>{isAdmin ? 'Quản trị viên' : 'Thành viên'}</p>
                   </div>
                 </div>
-
-                <MobileItem to="/ho-so" icon="account_circle" label="Thông tin cá nhân" onClick={() => setMobileOpen(false)} />
-
+                <MobileItem to="/ho-so" label="Thông tin cá nhân" onClick={() => setMobileOpen(false)} />
                 {isAdmin && (
                   <>
-                    <div className="px-6 py-1.5">
-                      <p className="font-vietnam text-[10px] uppercase tracking-widest flex items-center gap-1" style={{ color: '#A0794E' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: 12 }}>admin_panel_settings</span>Quản trị
-                      </p>
-                    </div>
-                    <MobileItem to="/admin" icon="dashboard" label="Dashboard" indent onClick={() => setMobileOpen(false)} />
-                    <MobileItem to="/admin/nguoi-dung" icon="manage_accounts" label="Quản lý người dùng" indent onClick={() => setMobileOpen(false)} />
+                    <MobileItem to="/admin" label="Dashboard" onClick={() => setMobileOpen(false)} />
+                    <MobileItem to="/admin/nguoi-dung" label="Quản lý người dùng" onClick={() => setMobileOpen(false)} />
                   </>
                 )}
-
-                <div style={{ height: '0.5px', background: '#D4B896', margin: '0.25rem 1rem' }} />
+                <div style={{ height: 1, background: C.border, margin: '4px 16px' }} />
                 <button
                   onClick={handleLogout}
-                  className="font-vietnam px-6 py-3.5 text-sm font-semibold flex items-center gap-3 text-left w-full"
-                  style={{ color: '#8B1A1A', background: 'none', border: 'none', cursor: 'pointer', transition: 'background 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,26,26,0.05)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: C.red, background: 'none', border: 'none', cursor: 'pointer', padding: '12px 24px', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8 }}
                 >
-                  <span className="material-symbols-outlined text-lg">logout</span>Đăng xuất
+                  Đăng xuất
                 </button>
               </>
             )}
           </div>
-
         </div>
       </div>
     </>
   )
 }
 
-/* ── Sub-components ── */
+function NavLink({ to, isActive, children }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <Link
+      to={to}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        fontSize: 12,
+        fontWeight: 500,
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        textDecoration: 'none',
+        color: isActive ? '#7B2226' : '#5C4033',
+        padding: '6px 12px',
+        borderRadius: 4,
+        background: isActive ? 'rgba(123,34,38,0.10)' : hov ? 'rgba(123,34,38,0.07)' : 'transparent',
+        borderBottom: isActive ? '2px solid #7B2226' : '2px solid transparent',
+        transition: 'background 0.18s',
+        position: 'relative',
+      }}
+    >
+      {children}
+    </Link>
+  )
+}
 
-function DropItem({ to, icon, label, indent, onClick }) {
+function DropItem({ to, label, onClick }) {
+  const [hov, setHov] = useState(false)
   return (
     <Link
       to={to}
       onClick={onClick}
-      className="font-vietnam text-sm font-semibold flex items-center gap-3 transition-colors"
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
       style={{
-        color: '#3D2B1A',
+        display: 'block',
+        fontFamily: 'Inter',
+        fontSize: 13,
+        fontWeight: 500,
+        color: '#5C4033',
         textDecoration: 'none',
-        padding: indent ? '0.625rem 1rem 0.625rem 2rem' : '0.75rem 1rem',
+        padding: '9px 14px',
+        background: hov ? 'rgba(123,34,38,0.06)' : 'transparent',
+        transition: 'background 0.15s',
       }}
-      onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,26,26,0.06)'}
-      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: indent ? 16 : 18, color: indent ? '#5C3A1E' : '#8B1A1A' }}>{icon}</span>
       {label}
     </Link>
   )
 }
 
-function MobileItem({ to, icon, label, indent, onClick }) {
+function LogoutBtn({ onClick }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        fontFamily: 'Inter',
+        fontSize: 13,
+        fontWeight: 600,
+        color: '#7B2226',
+        background: hov ? 'rgba(123,34,38,0.06)' : 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+        padding: '9px 14px',
+        width: '100%',
+        textAlign: 'left',
+        transition: 'background 0.15s',
+      }}
+    >
+      Đăng xuất
+    </button>
+  )
+}
+
+function MobileItem({ to, label, onClick }) {
   return (
     <Link
       to={to}
       onClick={onClick}
-      className="font-vietnam text-sm font-semibold flex items-center gap-3 transition-colors"
       style={{
-        color: '#3D2B1A',
+        display: 'block',
+        fontFamily: 'Inter',
+        fontSize: 13,
+        fontWeight: 500,
+        color: '#5C4033',
         textDecoration: 'none',
-        padding: indent ? '0.75rem 1.5rem 0.75rem 2.5rem' : '0.875rem 1.5rem',
+        padding: '12px 24px',
       }}
-      onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,26,26,0.05)'}
-      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: indent ? 16 : 18, color: indent ? '#5C3A1E' : '#8B1A1A' }}>{icon}</span>
       {label}
     </Link>
   )

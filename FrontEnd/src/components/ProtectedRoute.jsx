@@ -32,7 +32,7 @@ export default function ProtectedRoute({ children, requiredAction }) {
   }
 
   if (requiredAction) {
-    const role = user.role || (user.isAdmin ? 'superadmin' : 'editor')
+    const role = user.role || (user.isAdmin ? 'superadmin' : 'viewer')
     if (!can(role, requiredAction)) {
       return <Navigate to="/403" replace />
     }

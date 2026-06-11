@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
 
 let refreshCallback = null
 let logoutCallback  = null
@@ -82,7 +82,7 @@ async function request(makeOpts, retryFn) {
 export const httpClient = {
   get(path, signal) {
     const url  = `${BASE_URL}${path}`
-    const opts = () => ({ headers: getHeaders(), signal })
+    const opts = () => ({ headers: getHeaders(), credentials: 'include', signal })
     return request({ url, options: opts() }, () => fetch(url, opts()).then(parseResponse))
   },
 
@@ -90,9 +90,10 @@ export const httpClient = {
     const isFormData = body instanceof FormData
     const url        = `${BASE_URL}${path}`
     const opts       = () => ({
-      method:  'POST',
-      headers: getHeaders(isFormData),
-      body:    isFormData ? body : JSON.stringify(body),
+      method:      'POST',
+      headers:     getHeaders(isFormData),
+      body:        isFormData ? body : JSON.stringify(body),
+      credentials: 'include',
       signal,
     })
     return request({ url, options: opts() }, () => fetch(url, opts()).then(parseResponse))
@@ -100,13 +101,13 @@ export const httpClient = {
 
   patch(path, body, signal) {
     const url  = `${BASE_URL}${path}`
-    const opts = () => ({ method: 'PATCH', headers: getHeaders(), body: JSON.stringify(body), signal })
+    const opts = () => ({ method: 'PATCH', headers: getHeaders(), body: JSON.stringify(body), credentials: 'include', signal })
     return request({ url, options: opts() }, () => fetch(url, opts()).then(parseResponse))
   },
 
   delete(path, signal) {
     const url  = `${BASE_URL}${path}`
-    const opts = () => ({ method: 'DELETE', headers: getHeaders(), signal })
+    const opts = () => ({ method: 'DELETE', headers: getHeaders(), credentials: 'include', signal })
     return request({ url, options: opts() }, () => fetch(url, opts()).then(parseResponse))
   },
 }

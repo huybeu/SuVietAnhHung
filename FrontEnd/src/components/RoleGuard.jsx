@@ -11,7 +11,7 @@ import { can } from '../lib/permissions'
  */
 export default function RoleGuard({ children, action, fallback }) {
   const { user } = useAuth()
-  const role = user?.role || (user?.isAdmin ? 'superadmin' : 'editor')
+  const role = user?.role || (user?.isAdmin ? 'superadmin' : 'viewer')
 
   if (!can(role, action)) {
     return fallback ?? <Navigate to="/403" replace />

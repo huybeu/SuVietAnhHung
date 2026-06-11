@@ -29,13 +29,13 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault()
     setError('')
-    if (!username.trim()) { setError('Vui lòng nhập tên đăng nhập.'); return }
-    if (!password)         { setError('Vui lòng nhập mật khẩu.'); return }
+    if (!email.trim())  { setError('Vui lòng nhập email.'); return }
+    if (!password)      { setError('Vui lòng nhập mật khẩu.'); return }
 
     setSubmitting(true)
     try {
-      const user = await login(username.trim(), password)
-      navigate(user.isAdmin ? '/admin' : '/ho-so')
+      const user = await login(email.trim(), password)
+      navigate(['superadmin', 'editor'].includes(user.role) ? '/admin' : '/ho-so')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -73,7 +73,21 @@ export default function LoginPage() {
       {/* Đông Sơn subtle pattern */}
       <div className="dong-son-bg" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />
 
-      <div className="w-full max-w-[400px]" style={{ position: 'relative', zIndex: 1 }}>
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          width: '100%',
+          maxWidth: 480,
+          background: 'rgba(255,250,245,0.72)',
+          border: '1.5px solid #C8A882',
+          borderRadius: 20,
+          padding: '2rem 2.5rem 2.5rem',
+          boxShadow: '0 8px 40px rgba(91,48,26,0.13), 0 1.5px 6px rgba(200,168,130,0.18)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+        }}
+      >
 
         {/* Top bar */}
         <div className="flex items-center justify-between mb-8">
@@ -191,9 +205,9 @@ export default function LoginPage() {
           {!isRegister && (
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <FormField
-                id="username" label="Tên đăng nhập" type="text"
-                placeholder="Nhập tên đăng nhập..." value={username}
-                onChange={setUsername} autoComplete="username"
+                id="login-email" label="Email" type="email"
+                placeholder="email@example.com" value={email}
+                onChange={setEmail} autoComplete="email"
               />
               <FormPasswordField
                 id="password" label="Mật khẩu" placeholder="Nhập mật khẩu..."

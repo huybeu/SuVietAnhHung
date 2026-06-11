@@ -337,9 +337,9 @@ export default function ProfilePage() {
                 fontSize: '0.85rem', fontWeight: 600, fontFamily: "'Be Vietnam Pro', sans-serif",
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: '1rem', fontVariationSettings: "'FILL' 1" }}>
-                  {user?.isAdmin ? 'admin_panel_settings' : 'workspace_premium'}
+                  {(user?.isAdmin || ['superadmin', 'editor'].includes(user?.role)) ? 'admin_panel_settings' : 'workspace_premium'}
                 </span>
-                {user?.isAdmin ? 'Quản Trị Viên' : 'Người Gìn Giữ Sử Việt'}
+                {(user?.isAdmin || ['superadmin', 'editor'].includes(user?.role)) ? 'Quản Trị Viên' : 'Người Gìn Giữ Sử Việt'}
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A0794E', fontSize: '0.88rem', fontFamily: "'Be Vietnam Pro', sans-serif" }}>

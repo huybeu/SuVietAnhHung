@@ -35,7 +35,7 @@ export function useRole() {
     if (!u) return 'viewer'
     if (u.role) return u.role === 'admin' ? 'superadmin' : u.role
     if (u.isAdmin) return 'superadmin'
-    return 'editor'
+    return 'viewer'
   } catch {
     return 'viewer'
   }
