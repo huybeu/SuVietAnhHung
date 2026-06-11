@@ -141,4 +141,41 @@ INSERT INTO videos (id, title, description, url, embed_url, platform, thumbnail_
 (7, 'Tinh hoa văn hóa Đại Việt thời Lý – Trần', 'Kiến trúc, Phật giáo và văn học thời kỳ hoàng kim của văn minh Đại Việt.', 'https://www.youtube.com/watch?v=svahdemo007', 'https://www.youtube.com/embed/svahdemo007', 'youtube', 'https://picsum.photos/seed/video-7/640/360', 1410, 6320, NULL, 4, 'published', '2026-05-26 10:00:00', 2, 2, '2026-05-26 10:00:00', '2026-05-26 10:00:00'),
 (8, 'Lịch sử Việt Nam qua các thời kỳ (bản nháp)', 'Video tổng quan đang trong quá trình biên tập.', 'https://www.youtube.com/watch?v=svahdemo008', 'https://www.youtube.com/embed/svahdemo008', 'youtube', 'https://picsum.photos/seed/video-8/640/360', 3600, 0, NULL, NULL, 'draft', NULL, 2, 2, '2026-06-07 10:00:00', '2026-06-07 10:00:00');
 
+-- ─── donation_tiers ─────────────────────────────────────────────────────────
+INSERT INTO donation_tiers (id, name, amount_min, amount_max, perks, badge_url, color, sort_order, is_active, created_by, updated_by, created_at, updated_at) VALUES
+(1, 'Đồng', 10000, 199000, '["Ghi tên trên bảng vinh danh"]', 'https://picsum.photos/seed/badge-dong/100/100', '#b87333', 1, 1, 1, 1, '2026-04-11 09:00:00', '2026-04-11 09:00:00'),
+(2, 'Bạc', 200000, 999000, '["Ghi tên trên bảng vinh danh","Huy hiệu Bạc"]', 'https://picsum.photos/seed/badge-bac/100/100', '#c0c0c0', 2, 1, 1, 1, '2026-04-11 09:05:00', '2026-04-11 09:05:00'),
+(3, 'Vàng', 1000000, 4999000, '["Ghi tên trên bảng vinh danh","Huy hiệu Vàng","Thư cảm ơn từ dự án"]', 'https://picsum.photos/seed/badge-vang/100/100', '#ffd700', 3, 1, 1, 1, '2026-04-11 09:10:00', '2026-04-11 09:10:00'),
+(4, 'Kim Cương', 5000000, NULL, '["Ghi tên trên bảng vinh danh","Huy hiệu Kim Cương","Thư cảm ơn từ dự án","Vinh danh trên trang chủ"]', 'https://picsum.photos/seed/badge-kim-cuong/100/100', '#b9f2ff', 4, 1, 1, 1, '2026-04-11 09:15:00', '2026-04-11 09:15:00');
+
+-- ─── donations (7 confirmed, 3 pending, 2 rejected; 3 anonymous) ────────────
+INSERT INTO donations (id, public_id, tier_id, donor_name, donor_email, donor_phone, amount, message, is_anonymous, status, payment_method, payment_ref, confirmed_by, confirmed_at, show_on_board, created_at, updated_at) VALUES
+(1, 'd0000000-0000-4000-8000-000000000001', 2, 'Nguyễn Văn An', 'an.nguyen@example.com', '0911000001', 500000, 'Ủng hộ dự án lan tỏa lịch sử nước nhà!', 0, 'confirmed', 'bank_transfer', 'FT26041500001', 1, '2026-04-16 10:00:00', 1, '2026-04-15 09:30:00', '2026-04-16 10:00:00'),
+(2, 'd0000000-0000-4000-8000-000000000002', 1, 'Trần Thị Bình', 'binh.tran@example.com', '0911000002', 100000, 'Chúc dự án ngày càng phát triển.', 0, 'confirmed', 'qr', 'QR26042000002', 1, '2026-04-21 11:00:00', 1, '2026-04-20 14:20:00', '2026-04-21 11:00:00'),
+(3, 'd0000000-0000-4000-8000-000000000003', 4, NULL, NULL, NULL, 10000000, 'Mong các bạn trẻ thêm yêu sử Việt.', 1, 'confirmed', 'bank_transfer', 'FT26042800003', 1, '2026-04-29 09:00:00', 1, '2026-04-28 16:45:00', '2026-04-29 09:00:00'),
+(4, 'd0000000-0000-4000-8000-000000000004', 3, 'Lê Minh Châu', 'chau.le@example.com', '0911000004', 2000000, 'Tự hào lịch sử Việt Nam!', 0, 'confirmed', 'bank_transfer', 'FT26050500004', 1, '2026-05-06 10:30:00', 1, '2026-05-05 08:15:00', '2026-05-06 10:30:00'),
+(5, 'd0000000-0000-4000-8000-000000000005', 1, 'Phạm Quốc Dũng', 'dung.pham@example.com', '0911000005', 50000, NULL, 0, 'confirmed', 'qr', 'QR26051200005', 1, '2026-05-13 09:00:00', 1, '2026-05-12 19:30:00', '2026-05-13 09:00:00'),
+(6, 'd0000000-0000-4000-8000-000000000006', 2, NULL, NULL, NULL, 300000, NULL, 1, 'confirmed', 'qr', 'QR26051800006', 1, '2026-05-19 10:00:00', 1, '2026-05-18 12:00:00', '2026-05-19 10:00:00'),
+(7, 'd0000000-0000-4000-8000-000000000007', 3, 'Hoàng Thu Hà', 'ha.hoang@example.com', '0911000007', 1500000, 'Ủng hộ đội ngũ làm nội dung lịch sử chất lượng.', 0, 'confirmed', 'bank_transfer', 'FT26052500007', 1, '2026-05-26 14:00:00', 1, '2026-05-25 10:45:00', '2026-05-26 14:00:00'),
+(8, 'd0000000-0000-4000-8000-000000000008', 1, 'Vũ Đức Em', 'em.vu@example.com', '0911000008', 150000, 'Cố lên các bạn!', 0, 'pending', 'bank_transfer', NULL, NULL, NULL, 1, '2026-06-08 09:20:00', '2026-06-08 09:20:00'),
+(9, 'd0000000-0000-4000-8000-000000000009', 2, NULL, NULL, NULL, 250000, NULL, 1, 'pending', 'qr', NULL, NULL, NULL, 1, '2026-06-09 15:40:00', '2026-06-09 15:40:00'),
+(10, 'd0000000-0000-4000-8000-000000000010', 4, 'Đặng Gia Phúc', 'phuc.dang@example.com', '0911000010', 7000000, 'Mong dự án có thêm nhiều tư liệu quý.', 0, 'pending', 'bank_transfer', NULL, NULL, NULL, 1, '2026-06-10 11:10:00', '2026-06-10 11:10:00'),
+(11, 'd0000000-0000-4000-8000-000000000011', 1, 'Bùi Văn Giang', 'giang.bui@example.com', '0911000011', 20000, NULL, 0, 'rejected', 'bank_transfer', NULL, 1, '2026-05-30 09:00:00', 0, '2026-05-29 20:00:00', '2026-05-30 09:00:00'),
+(12, 'd0000000-0000-4000-8000-000000000012', 2, 'Đỗ Thị Hoa', 'hoa.do@example.com', '0911000012', 400000, 'Giao dịch trùng, vui lòng hủy giúp mình.', 0, 'rejected', 'qr', NULL, 1, '2026-06-02 10:00:00', 0, '2026-06-01 13:25:00', '2026-06-02 10:00:00');
+
+-- ─── sponsor_tiers ──────────────────────────────────────────────────────────
+INSERT INTO sponsor_tiers (id, name, sort_order, created_by, updated_by, created_at, updated_at) VALUES
+(1, 'Kim Cương', 1, 1, 1, '2026-04-11 10:00:00', '2026-04-11 10:00:00'),
+(2, 'Vàng', 2, 1, 1, '2026-04-11 10:00:00', '2026-04-11 10:00:00'),
+(3, 'Bạc', 3, 1, 1, '2026-04-11 10:00:00', '2026-04-11 10:00:00');
+
+-- ─── sponsors (tên đơn vị hư cấu) ───────────────────────────────────────────
+INSERT INTO sponsors (id, tier_id, name, logo_url, website_url, description, is_active, sort_order, sponsored_at, expires_at, created_by, updated_by, created_at, updated_at) VALUES
+(1, 1, 'Công ty TNHH Văn Hóa Việt', 'https://picsum.photos/seed/sponsor-1/300/150', 'https://vanhoaviet.example.com', 'Doanh nghiệp xuất bản sách và ấn phẩm văn hóa lịch sử.', 1, 1, '2026-04-15', '2027-04-15', 1, 1, '2026-04-15 09:00:00', '2026-04-15 09:00:00'),
+(2, 1, 'Quỹ Khuyến học Đại Việt', 'https://picsum.photos/seed/sponsor-2/300/150', 'https://daiviet.example.org', 'Quỹ hỗ trợ giáo dục và truyền bá tri thức lịch sử cho học sinh.', 1, 2, '2026-04-20', '2027-04-20', 1, 1, '2026-04-20 09:00:00', '2026-04-20 09:00:00'),
+(3, 2, 'Nhà sách Sử Xanh', 'https://picsum.photos/seed/sponsor-3/300/150', 'https://suxanh.example.com', 'Chuỗi nhà sách chuyên về sách lịch sử và văn hóa dân tộc.', 1, 1, '2026-05-01', '2026-11-01', 1, 1, '2026-05-01 09:00:00', '2026-05-01 09:00:00'),
+(4, 2, 'Công ty Du lịch Cội Nguồn', 'https://picsum.photos/seed/sponsor-4/300/150', 'https://coinguon.example.com', 'Đơn vị tổ chức tour tham quan di tích lịch sử trên cả nước.', 1, 2, '2026-05-10', '2026-11-10', 1, 1, '2026-05-10 09:00:00', '2026-05-10 09:00:00'),
+(5, 3, 'Xưởng phim Hồn Việt', 'https://picsum.photos/seed/sponsor-5/300/150', 'https://honviet.example.com', 'Đơn vị sản xuất phim tài liệu lịch sử.', 1, 1, '2026-05-20', '2026-08-20', 1, 1, '2026-05-20 09:00:00', '2026-05-20 09:00:00'),
+(6, 3, 'Trà Việt Cổ Truyền', 'https://picsum.photos/seed/sponsor-6/300/150', 'https://traviet.example.com', 'Thương hiệu trà truyền thống đồng hành cùng các sự kiện văn hóa.', 0, 2, '2025-12-01', '2026-06-01', 1, 1, '2026-04-11 09:00:00', '2026-06-02 09:00:00');
+
 SET FOREIGN_KEY_CHECKS = 1;
