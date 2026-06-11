@@ -18,10 +18,16 @@
 
 **Thông tin kết nối DB:** đọc từ `BackEnd/.env` các biến `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`. Mọi lệnh `mysql` bên dưới viết dạng `<DB_USER>`, `<DB_NAME>`... — thay bằng giá trị thật từ `.env` khi chạy.
 
-**Lệnh chạy file SQL** (PowerShell, từ gốc repo — KHÔNG dùng `<` redirect vì PowerShell không hỗ trợ):
+**Môi trường thực tế (đã xác minh 2026-06-11):** máy dev KHÔNG có mysql CLI trên PATH. MySQL chạy trong Docker container `suvietanhhung-mysql` (map cổng 3309→3306). Khởi động nếu chưa chạy: `docker start suvietanhhung-mysql` (cần Docker Desktop đang chạy). BE chạy ở cổng **8080** (biến `PORT` trong `.env`).
+
+**Lệnh chạy file SQL** — mọi lệnh `mysql ...` trong các task bên dưới đều thay bằng dạng `docker exec` sau (PowerShell không hỗ trợ `<` redirect nên dùng `cmd /c` khi cần nạp file):
 
 ```powershell
-mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
+# Nạp toàn bộ file SQL:
+cmd /c "docker exec -i suvietanhhung-mysql mysql --default-character-set=utf8mb4 -u<DB_USER> -p<DB_PASSWORD> <DB_NAME> < BackEnd\src\seeds\mock_data.sql"
+
+# Chạy query kiểm tra:
+docker exec suvietanhhung-mysql mysql --default-character-set=utf8mb4 -u<DB_USER> -p<DB_PASSWORD> <DB_NAME> -e "<QUERY>"
 ```
 
 **Encoding:** file phải lưu UTF-8 không BOM (tool Write mặc định đúng). Nội dung có dấu tiếng Việt — nếu thấy `?` trong DB là sai charset, kiểm tra lại flag `--default-character-set=utf8mb4`.
