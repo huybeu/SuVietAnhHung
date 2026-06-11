@@ -71,7 +71,7 @@ docker exec suvietanhhung-mysql mysql --default-character-set=utf8mb4 -u<DB_USER
 | editor01 | Editor@123456 | `$2b$12$0.UZYOBKVgFMHm4o.6CR8OdTiOngm.Fi9e0huC.QS9UTY.tOzL0RG` |
 | viewer01 | Viewer@123456 | `$2b$12$ke2WF.WDTDJTJFEzjbezyO..4T0JL8fvNJmZb5/447EzyBZ03VkFC` |
 
-- [ ] **Step 1: Chạy lệnh xác minh** (PowerShell, từ gốc repo)
+- [x] **Step 1: Chạy lệnh xác minh** (PowerShell, từ gốc repo)
 
 Tạo file tạm `BackEnd/verify-hash.tmp.cjs` (PHẢI là `.cjs` — BackEnd có `"type": "module"`; và KHÔNG dùng `node -e` vì PowerShell 5.1 nuốt nháy kép lồng nhau hoặc nội suy `$2b$...`):
 
@@ -95,7 +95,7 @@ Expected: `true true true` (đã chạy đạt ngày 2026-06-11). Nếu ra `fals
 **Files:**
 - Create: `BackEnd/src/seeds/mock_data.sql`
 
-- [ ] **Step 1: Tạo file với nội dung sau**
+- [x] **Step 1: Tạo file với nội dung sau**
 
 ```sql
 -- ============================================================================
@@ -142,7 +142,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 (Các Task sau sẽ chèn khối INSERT vào TRƯỚC dòng `SET FOREIGN_KEY_CHECKS = 1;` — dòng này luôn nằm cuối file.)
 
-- [ ] **Step 2: Chạy thử trên DB dev**
+- [x] **Step 2: Chạy thử trên DB dev**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -150,7 +150,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: không có output lỗi (exit code 0). Nếu lỗi `Table ... doesn't exist`: chạy BE một lần để sync tạo bảng rồi thử lại.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -162,7 +162,7 @@ git commit -m "feat(seed): add mock_data.sql skeleton (truncate 16 tables)"
 **Files:**
 - Modify: `BackEnd/src/seeds/mock_data.sql` (chèn trước `SET FOREIGN_KEY_CHECKS = 1;`)
 
-- [ ] **Step 1: Chèn khối SQL sau**
+- [x] **Step 1: Chèn khối SQL sau**
 
 ```sql
 -- ─── users ──────────────────────────────────────────────────────────────────
@@ -185,7 +185,7 @@ INSERT INTO site_config (id, `key`, value, value_type, `group`, updated_by, upda
 (10, 'fundraising_bank_account', '{"bank":"Vietcombank","account_number":"0123456789","account_name":"QUY SU VIET ANH HUNG"}', 'type_json', 'fundraising', 1, '2026-04-10 09:15:00');
 ```
 
-- [ ] **Step 2: Chạy file và kiểm tra**
+- [x] **Step 2: Chạy file và kiểm tra**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -194,7 +194,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: `users = 3`, `site_config = 10`, tên tiếng Việt hiển thị đúng dấu.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -206,7 +206,7 @@ git commit -m "feat(seed): mock users and site_config"
 **Files:**
 - Modify: `BackEnd/src/seeds/mock_data.sql` (chèn sau khối site_config, trước `SET FOREIGN_KEY_CHECKS = 1;`)
 
-- [ ] **Step 1: Chèn khối SQL sau**
+- [x] **Step 1: Chèn khối SQL sau**
 
 ```sql
 -- ─── eras (cột `order` là từ khóa — giữ backtick) ───────────────────────────
@@ -242,7 +242,7 @@ INSERT INTO heroes (id, era_id, name, birth_year, death_year, title, biography, 
 (18, 7, 'Phan Bội Châu', 1867, 1940, 'Chí sĩ yêu nước', 'Lãnh tụ phong trào Đông Du đầu thế kỷ XX, đưa thanh niên Việt Nam sang Nhật học tập với khát vọng canh tân cứu nước. Cuộc đời ông là tấm gương sáng về tinh thần yêu nước bất khuất.', 'https://picsum.photos/seed/phan-boi-chau/400/400', 'https://picsum.photos/seed/phan-boi-chau-cover/1200/500', 'phan-boi-chau', 0, 1, 1, 1, 1, '2026-04-13 10:25:00', '2026-04-13 10:25:00');
 ```
 
-- [ ] **Step 2: Chạy file và kiểm tra**
+- [x] **Step 2: Chạy file và kiểm tra**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -251,7 +251,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: `eras = 8`, `heroes = 18`, `featured = 8`, JOIN trả về tên hero kèm era đúng.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -263,7 +263,7 @@ git commit -m "feat(seed): mock eras and heroes"
 **Files:**
 - Modify: `BackEnd/src/seeds/mock_data.sql` (chèn sau khối heroes, trước `SET FOREIGN_KEY_CHECKS = 1;`)
 
-- [ ] **Step 1: Chèn khối SQL sau**
+- [x] **Step 1: Chèn khối SQL sau**
 
 ```sql
 -- ─── tags ───────────────────────────────────────────────────────────────────
@@ -307,7 +307,7 @@ INSERT INTO article_tags (article_id, tag_id) VALUES
 (1, 1), (1, 8), (2, 7), (2, 8), (2, 3), (3, 4), (3, 8), (4, 4), (4, 5), (4, 10), (5, 5), (5, 8), (6, 2), (6, 3), (7, 1), (7, 2), (8, 5), (8, 8), (8, 10), (9, 3), (9, 2), (10, 1), (10, 9), (11, 9), (11, 8), (12, 8), (12, 9), (13, 2), (13, 3), (14, 5), (14, 10), (15, 4), (15, 10), (16, 4), (16, 5);
 ```
 
-- [ ] **Step 2: Chạy file và kiểm tra**
+- [x] **Step 2: Chạy file và kiểm tra**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -316,7 +316,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: `tags = 10`; articles: `published 13, draft 2, archived 1`; `ah = 19`; `at = 35`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -328,7 +328,7 @@ git commit -m "feat(seed): mock tags, articles and junction tables"
 **Files:**
 - Modify: `BackEnd/src/seeds/mock_data.sql` (chèn sau khối article_tags, trước `SET FOREIGN_KEY_CHECKS = 1;`)
 
-- [ ] **Step 1: Chèn khối SQL sau**
+- [x] **Step 1: Chèn khối SQL sau**
 
 (URL YouTube là link mẫu cho demo, ID video không có thật.)
 
@@ -345,7 +345,7 @@ INSERT INTO videos (id, title, description, url, embed_url, platform, thumbnail_
 (8, 'Lịch sử Việt Nam qua các thời kỳ (bản nháp)', 'Video tổng quan đang trong quá trình biên tập.', 'https://www.youtube.com/watch?v=svahdemo008', 'https://www.youtube.com/embed/svahdemo008', 'youtube', 'https://picsum.photos/seed/video-8/640/360', 3600, 0, NULL, NULL, 'draft', NULL, 2, 2, '2026-06-07 10:00:00', '2026-06-07 10:00:00');
 ```
 
-- [ ] **Step 2: Chạy file và kiểm tra**
+- [x] **Step 2: Chạy file và kiểm tra**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -354,7 +354,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: `videos = 8`; `published 7, draft 1`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -366,7 +366,7 @@ git commit -m "feat(seed): mock videos"
 **Files:**
 - Modify: `BackEnd/src/seeds/mock_data.sql` (chèn sau khối videos, trước `SET FOREIGN_KEY_CHECKS = 1;`)
 
-- [ ] **Step 1: Chèn khối SQL sau**
+- [x] **Step 1: Chèn khối SQL sau**
 
 ```sql
 -- ─── donation_tiers ─────────────────────────────────────────────────────────
@@ -407,7 +407,7 @@ INSERT INTO sponsors (id, tier_id, name, logo_url, website_url, description, is_
 (6, 3, 'Trà Việt Cổ Truyền', 'https://picsum.photos/seed/sponsor-6/300/150', 'https://traviet.example.com', 'Thương hiệu trà truyền thống đồng hành cùng các sự kiện văn hóa.', 0, 2, '2025-12-01', '2026-06-01', 1, 1, '2026-04-11 09:00:00', '2026-06-02 09:00:00');
 ```
 
-- [ ] **Step 2: Chạy file và kiểm tra**
+- [x] **Step 2: Chạy file và kiểm tra**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -416,7 +416,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: `dt = 4`; donations: `confirmed 7, pending 3, rejected 2`; `st = 3`; `sp = 6`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -428,7 +428,7 @@ git commit -m "feat(seed): mock donations and sponsors"
 **Files:**
 - Modify: `BackEnd/src/seeds/mock_data.sql` (chèn sau khối sponsors, trước `SET FOREIGN_KEY_CHECKS = 1;`)
 
-- [ ] **Step 1: Chèn khối SQL sau**
+- [x] **Step 1: Chèn khối SQL sau**
 
 ```sql
 -- ─── media ──────────────────────────────────────────────────────────────────
@@ -478,7 +478,7 @@ INSERT INTO page_views (id, path, referrer, user_agent, ip_hash, created_at) VAL
 (30, '/', 'https://www.google.com/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'c7b9d2e6f5a8b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5', '2026-06-10 07:45:00');
 ```
 
-- [ ] **Step 2: Chạy file và kiểm tra**
+- [x] **Step 2: Chạy file và kiểm tra**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -487,7 +487,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: `media = 10`, `page_views = 30`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add BackEnd/src/seeds/mock_data.sql
@@ -496,7 +496,7 @@ git commit -m "feat(seed): mock media and page_views"
 
 ### Task 9: Kiểm chứng toàn bộ (definition of done của spec)
 
-- [ ] **Step 1: Chạy file 2 lần liên tiếp** — xác nhận chạy lại không lỗi (tính chất truncate-rồi-insert)
+- [x] **Step 1: Chạy file 2 lần liên tiếp** — xác nhận chạy lại không lỗi (tính chất truncate-rồi-insert)
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "source BackEnd/src/seeds/mock_data.sql"
@@ -505,7 +505,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: cả 2 lần đều exit 0, không lỗi.
 
-- [ ] **Step 2: Kiểm tra số lượng tất cả các bảng**
+- [x] **Step 2: Kiểm tra số lượng tất cả các bảng**
 
 ```powershell
 mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>" <DB_NAME> -e "SELECT 'users' t, COUNT(*) n FROM users UNION ALL SELECT 'site_config', COUNT(*) FROM site_config UNION ALL SELECT 'eras', COUNT(*) FROM eras UNION ALL SELECT 'heroes', COUNT(*) FROM heroes UNION ALL SELECT 'tags', COUNT(*) FROM tags UNION ALL SELECT 'articles', COUNT(*) FROM articles UNION ALL SELECT 'article_heroes', COUNT(*) FROM article_heroes UNION ALL SELECT 'article_tags', COUNT(*) FROM article_tags UNION ALL SELECT 'videos', COUNT(*) FROM videos UNION ALL SELECT 'donation_tiers', COUNT(*) FROM donation_tiers UNION ALL SELECT 'donations', COUNT(*) FROM donations UNION ALL SELECT 'sponsor_tiers', COUNT(*) FROM sponsor_tiers UNION ALL SELECT 'sponsors', COUNT(*) FROM sponsors UNION ALL SELECT 'media', COUNT(*) FROM media UNION ALL SELECT 'page_views', COUNT(*) FROM page_views UNION ALL SELECT 'refresh_tokens', COUNT(*) FROM refresh_tokens;"
@@ -513,7 +513,7 @@ mysql --default-character-set=utf8mb4 -h <DB_HOST> -u <DB_USER> -p"<DB_PASSWORD>
 
 Expected: users 3, site_config 10, eras 8, heroes 18, tags 10, articles 16, article_heroes 19, article_tags 35, videos 8, donation_tiers 4, donations 12, sponsor_tiers 3, sponsors 6, media 10, page_views 30, refresh_tokens 0.
 
-- [ ] **Step 3: Kiểm tra đăng nhập qua API** — khởi động BE rồi gọi login
+- [x] **Step 3: Kiểm tra đăng nhập qua API** — khởi động BE rồi gọi login
 
 ```powershell
 # Terminal 1 (hoặc chạy nền):
@@ -526,9 +526,9 @@ curl.exe -s -X POST http://localhost:3000/api/v1/auth/login -H "Content-Type: ap
 
 Expected: JSON chứa `accessToken` và thông tin user `admin`. Nếu 401: hash bcrypt sai — quay lại Task 1.
 
-- [ ] **Step 4: Kiểm tra FE không trang nào trống** — chạy FE (`Set-Location FrontEnd; npm run dev`), mở trang chủ, danh sách thời kỳ, anh hùng, bài viết — tất cả hiển thị dữ liệu tiếng Việt đúng dấu.
+- [x] **Step 4: Kiểm tra FE không trang nào trống** — chạy FE (`Set-Location FrontEnd; npm run dev`), mở trang chủ, danh sách thời kỳ, anh hùng, bài viết — tất cả hiển thị dữ liệu tiếng Việt đúng dấu.
 
-- [ ] **Step 5: Commit cuối (nếu còn thay đổi) và dọn dẹp**
+- [x] **Step 5: Commit cuối (nếu còn thay đổi) và dọn dẹp**
 
 ```powershell
 git status
