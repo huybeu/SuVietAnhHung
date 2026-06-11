@@ -167,9 +167,9 @@ git commit -m "feat(seed): add mock_data.sql skeleton (truncate 16 tables)"
 ```sql
 -- ─── users ──────────────────────────────────────────────────────────────────
 INSERT INTO users (id, username, email, password, role, avatar_url, is_active, last_login, created_at, updated_at) VALUES
-(1, 'admin', 'admin@suvietanhhung.vn', '$2b$12$XddvlB7iP0gG2WO1SSLj..sKhpEEs6zMBR0enOL04y0nWVRyqOtTG', 'superadmin', 'https://picsum.photos/seed/admin/200/200', 1, '2026-06-10 08:30:00', '2026-04-10 08:00:00', '2026-06-10 08:30:00'),
-(2, 'editor01', 'editor@suvietanhhung.vn', '$2b$12$0.UZYOBKVgFMHm4o.6CR8OdTiOngm.Fi9e0huC.QS9UTY.tOzL0RG', 'editor', 'https://picsum.photos/seed/editor01/200/200', 1, '2026-06-09 14:15:00', '2026-04-10 08:05:00', '2026-06-09 14:15:00'),
-(3, 'viewer01', 'viewer@suvietanhhung.vn', '$2b$12$ke2WF.WDTDJTJFEzjbezyO..4T0JL8fvNJmZb5/447EzyBZ03VkFC', 'viewer', NULL, 1, '2026-06-05 19:40:00', '2026-04-10 08:10:00', '2026-06-05 19:40:00');
+(1, 'admin', 'admin@suvietanhhung.vn', '$2b$12$XddvlB7iP0gG2WO1SSLj..sKhpEEs6zMBR0enOL04y0nWVRyqOtTG', 'superadmin', 'https://picsum.photos/seed/admin/200/200', 1, '2026-06-10 08:30:00', '2026-04-10 08:00:00', '2026-04-10 08:00:00'),
+(2, 'editor01', 'editor@suvietanhhung.vn', '$2b$12$0.UZYOBKVgFMHm4o.6CR8OdTiOngm.Fi9e0huC.QS9UTY.tOzL0RG', 'editor', 'https://picsum.photos/seed/editor01/200/200', 1, '2026-06-09 14:15:00', '2026-04-10 08:05:00', '2026-04-10 08:05:00'),
+(3, 'viewer01', 'viewer@suvietanhhung.vn', '$2b$12$ke2WF.WDTDJTJFEzjbezyO..4T0JL8fvNJmZb5/447EzyBZ03VkFC', 'viewer', NULL, 1, '2026-06-05 19:40:00', '2026-04-10 08:10:00', '2026-04-10 08:10:00');
 
 -- ─── site_config (không có created_at) ──────────────────────────────────────
 INSERT INTO site_config (id, `key`, value, value_type, `group`, updated_by, updated_at) VALUES
