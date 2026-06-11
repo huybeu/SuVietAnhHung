@@ -6,8 +6,10 @@
 --
 -- Điều kiện: các bảng đã tồn tại (chạy BE ít nhất 1 lần để Sequelize sync).
 --
--- Cách chạy (PowerShell, từ gốc repo; thông tin kết nối xem BackEnd/.env):
---   mysql --default-character-set=utf8mb4 -h <host> -u <user> -p"<password>" <db_name> -e "source BackEnd/src/seeds/mock_data.sql"
+-- Cách chạy (từ gốc repo; thông tin kết nối xem BackEnd/.env):
+--   cmd /c "mysql --default-character-set=utf8mb4 -h <host> -u <user> -p<password> <db_name> < BackEnd\src\seeds\mock_data.sql"
+-- Nếu MySQL chạy trong Docker (container suvietanhhung-mysql):
+--   cmd /c "docker exec -i suvietanhhung-mysql mysql --default-character-set=utf8mb4 -u<user> -p<password> <db_name> < BackEnd\src\seeds\mock_data.sql"
 -- hoặc mở file trong MySQL Workbench và Execute.
 --
 -- Tài khoản đăng nhập sau khi nạp:
