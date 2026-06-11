@@ -178,4 +178,50 @@ INSERT INTO sponsors (id, tier_id, name, logo_url, website_url, description, is_
 (5, 3, 'Xưởng phim Hồn Việt', 'https://picsum.photos/seed/sponsor-5/300/150', 'https://honviet.example.com', 'Đơn vị sản xuất phim tài liệu lịch sử.', 1, 1, '2026-05-20', '2026-08-20', 1, 1, '2026-05-20 09:00:00', '2026-05-20 09:00:00'),
 (6, 3, 'Trà Việt Cổ Truyền', 'https://picsum.photos/seed/sponsor-6/300/150', 'https://traviet.example.com', 'Thương hiệu trà truyền thống đồng hành cùng các sự kiện văn hóa.', 0, 2, '2025-12-01', '2026-06-01', 1, 1, '2026-04-11 09:00:00', '2026-06-02 09:00:00');
 
+-- ─── media ──────────────────────────────────────────────────────────────────
+INSERT INTO media (id, filename, original_name, url, mime_type, size_bytes, uploaded_by, updated_by, created_at, updated_at) VALUES
+(1, 'hero-tran-hung-dao-avatar.jpg', 'tran hung dao.jpg', 'https://picsum.photos/seed/tran-hung-dao/400/400', 'image/jpeg', 245760, 1, 1, '2026-04-13 09:50:00', '2026-04-13 09:50:00'),
+(2, 'hero-ngo-quyen-avatar.jpg', 'ngo quyen chan dung.jpg', 'https://picsum.photos/seed/ngo-quyen/400/400', 'image/jpeg', 198452, 1, 1, '2026-04-13 09:25:00', '2026-04-13 09:25:00'),
+(3, 'article-bach-dang-cover.jpg', 'bach dang 938.jpg', 'https://picsum.photos/seed/article-2-cover/1200/600', 'image/jpeg', 512000, 2, 2, '2026-04-17 09:10:00', '2026-04-17 09:10:00'),
+(4, 'article-dien-bien-phu-cover.jpg', 'dien bien phu 1954.jpg', 'https://picsum.photos/seed/article-13-cover/1200/600', 'image/jpeg', 487230, 1, 1, '2026-05-20 09:10:00', '2026-05-20 09:10:00'),
+(5, 'era-ly-tran-cover.jpg', 'thoi ly tran.jpg', 'https://picsum.photos/seed/thoi-ly-tran/1200/600', 'image/jpeg', 534120, 1, 1, '2026-04-12 09:15:00', '2026-04-12 09:15:00'),
+(6, 'video-thumb-dien-bien-phu.jpg', 'thumb dbp.jpg', 'https://picsum.photos/seed/video-6/640/360', 'image/jpeg', 145890, 1, 1, '2026-05-20 10:05:00', '2026-05-20 10:05:00'),
+(7, 'sponsor-van-hoa-viet-logo.png', 'logo VHV.png', 'https://picsum.photos/seed/sponsor-1/300/150', 'image/png', 56320, 1, 1, '2026-04-15 09:05:00', '2026-04-15 09:05:00'),
+(8, 'badge-kim-cuong.png', 'badge kc.png', 'https://picsum.photos/seed/badge-kim-cuong/100/100', 'image/png', 23450, 1, 1, '2026-04-11 09:15:00', '2026-04-11 09:15:00'),
+(9, 'site-logo.png', 'logo chinh thuc.png', 'https://picsum.photos/seed/svah-logo/300/100', 'image/png', 34210, 1, 1, '2026-04-10 09:00:00', '2026-04-10 09:00:00'),
+(10, 'hero-quang-trung-cover.jpg', 'quang trung cover.jpg', 'https://picsum.photos/seed/quang-trung-cover/1200/500', 'image/jpeg', 467800, 2, 2, '2026-04-13 10:10:00', '2026-04-13 10:10:00');
+
+-- ─── page_views (không có updated_at) ───────────────────────────────────────
+INSERT INTO page_views (id, path, referrer, user_agent, ip_hash, created_at) VALUES
+(1, '/', 'https://www.google.com/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'a3f5b8c2d1e4f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1', '2026-05-12 08:15:00'),
+(2, '/heroes', 'https://suvietanhhung.vn/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'a3f5b8c2d1e4f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1', '2026-05-12 08:17:00'),
+(3, '/heroes/tran-hung-dao', 'https://suvietanhhung.vn/heroes', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'a3f5b8c2d1e4f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1', '2026-05-12 08:20:00'),
+(4, '/', NULL, 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', 'b4a6c9d3e2f5a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2', '2026-05-13 12:30:00'),
+(5, '/articles', 'https://www.facebook.com/', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', 'b4a6c9d3e2f5a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2', '2026-05-13 12:32:00'),
+(6, '/articles/vo-nguyen-giap-va-chien-thang-dien-bien-phu', 'https://suvietanhhung.vn/articles', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', 'b4a6c9d3e2f5a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2', '2026-05-13 12:35:00'),
+(7, '/eras', NULL, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'c5b7d0e4f3a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3', '2026-05-15 09:00:00'),
+(8, '/eras/thoi-ly-tran', 'https://suvietanhhung.vn/eras', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'c5b7d0e4f3a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3', '2026-05-15 09:05:00'),
+(9, '/heroes/ngo-quyen', 'https://www.google.com/', 'Mozilla/5.0 (Linux; Android 14)', 'd6c8e1f5a4b7c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4', '2026-05-17 14:20:00'),
+(10, '/articles/chien-thang-bach-dang-nam-938', 'https://www.google.com/', 'Mozilla/5.0 (Linux; Android 14)', 'd6c8e1f5a4b7c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4', '2026-05-17 14:25:00'),
+(11, '/', 'https://www.youtube.com/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'e7d9f2a6b5c8d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5', '2026-05-19 19:45:00'),
+(12, '/videos', 'https://suvietanhhung.vn/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'e7d9f2a6b5c8d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5', '2026-05-19 19:47:00'),
+(13, '/donate', NULL, 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', 'f8e0a3b7c6d9e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6', '2026-05-21 10:10:00'),
+(14, '/heroes/quang-trung', 'https://www.facebook.com/', 'Mozilla/5.0 (Linux; Android 14)', 'a9f1b4c8d7e0f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7', '2026-05-23 16:30:00'),
+(15, '/articles/quang-trung-dai-pha-quan-thanh-tet-ky-dau-1789', 'https://suvietanhhung.vn/heroes/quang-trung', 'Mozilla/5.0 (Linux; Android 14)', 'a9f1b4c8d7e0f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7', '2026-05-23 16:35:00'),
+(16, '/', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'b0a2c5d9e8f1a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8', '2026-05-25 08:00:00'),
+(17, '/heroes', 'https://suvietanhhung.vn/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'b0a2c5d9e8f1a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8', '2026-05-25 08:03:00'),
+(18, '/heroes/hai-ba-trung', 'https://suvietanhhung.vn/heroes', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'b0a2c5d9e8f1a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8', '2026-05-25 08:06:00'),
+(19, '/articles/hai-ba-trung-phat-co-khoi-nghia-me-linh', 'https://suvietanhhung.vn/heroes/hai-ba-trung', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'b0a2c5d9e8f1a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8', '2026-05-25 08:10:00'),
+(20, '/eras/thoi-hung-vuong', 'https://www.google.com/', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'c1b3d6e0f9a2b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9', '2026-05-27 11:20:00'),
+(21, '/heroes/ho-chi-minh', 'https://www.google.com/', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', 'd2c4e7f1a0b3c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0', '2026-05-29 20:15:00'),
+(22, '/articles/ho-chi-minh-doc-tuyen-ngon-doc-lap-2-9-1945', 'https://suvietanhhung.vn/heroes/ho-chi-minh', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', 'd2c4e7f1a0b3c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0', '2026-05-29 20:18:00'),
+(23, '/videos', 'https://www.youtube.com/', 'Mozilla/5.0 (Linux; Android 14)', 'e3d5f8a2b1c4d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1', '2026-06-01 13:40:00'),
+(24, '/', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'f4e6a9b3c2d5e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2', '2026-06-03 09:30:00'),
+(25, '/donate', 'https://suvietanhhung.vn/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'f4e6a9b3c2d5e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2', '2026-06-03 09:35:00'),
+(26, '/sponsors', 'https://suvietanhhung.vn/donate', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'f4e6a9b3c2d5e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2', '2026-06-03 09:40:00'),
+(27, '/heroes/le-loi', 'https://www.facebook.com/', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'a5f7b0c4d3e6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3', '2026-06-05 15:50:00'),
+(28, '/articles/khoi-nghia-lam-son-muoi-nam-nem-mat-nam-gai', 'https://suvietanhhung.vn/heroes/le-loi', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'a5f7b0c4d3e6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3', '2026-06-05 15:55:00'),
+(29, '/heroes/vo-nguyen-giap', 'https://www.google.com/', 'Mozilla/5.0 (Linux; Android 14)', 'b6a8c1d5e4f7a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4', '2026-06-08 18:25:00'),
+(30, '/', 'https://www.google.com/', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'c7b9d2e6f5a8b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5', '2026-06-10 07:45:00');
+
 SET FOREIGN_KEY_CHECKS = 1;
