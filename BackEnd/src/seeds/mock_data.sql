@@ -39,4 +39,23 @@ TRUNCATE TABLE sponsor_tiers;
 TRUNCATE TABLE site_config;
 TRUNCATE TABLE users;
 
+-- ─── users ──────────────────────────────────────────────────────────────────
+INSERT INTO users (id, username, email, password, role, avatar_url, is_active, last_login, created_at, updated_at) VALUES
+(1, 'admin', 'admin@suvietanhhung.vn', '$2b$12$XddvlB7iP0gG2WO1SSLj..sKhpEEs6zMBR0enOL04y0nWVRyqOtTG', 'superadmin', 'https://picsum.photos/seed/admin/200/200', 1, '2026-06-10 08:30:00', '2026-04-10 08:00:00', '2026-06-10 08:30:00'),
+(2, 'editor01', 'editor@suvietanhhung.vn', '$2b$12$0.UZYOBKVgFMHm4o.6CR8OdTiOngm.Fi9e0huC.QS9UTY.tOzL0RG', 'editor', 'https://picsum.photos/seed/editor01/200/200', 1, '2026-06-09 14:15:00', '2026-04-10 08:05:00', '2026-06-09 14:15:00'),
+(3, 'viewer01', 'viewer@suvietanhhung.vn', '$2b$12$ke2WF.WDTDJTJFEzjbezyO..4T0JL8fvNJmZb5/447EzyBZ03VkFC', 'viewer', NULL, 1, '2026-06-05 19:40:00', '2026-04-10 08:10:00', '2026-06-05 19:40:00');
+
+-- ─── site_config (không có created_at) ──────────────────────────────────────
+INSERT INTO site_config (id, `key`, value, value_type, `group`, updated_by, updated_at) VALUES
+(1, 'site_name', 'Sử Việt Anh Hùng', 'type_string', 'general', 1, '2026-04-10 09:00:00'),
+(2, 'site_description', 'Trang web tôn vinh các anh hùng dân tộc trong lịch sử Việt Nam', 'type_string', 'general', 1, '2026-04-10 09:00:00'),
+(3, 'site_logo_url', 'https://picsum.photos/seed/svah-logo/300/100', 'type_string', 'general', 1, '2026-04-10 09:00:00'),
+(4, 'maintenance_mode', 'false', 'type_boolean', 'general', 1, '2026-04-10 09:00:00'),
+(5, 'featured_hero_limit', '6', 'type_number', 'hero', 1, '2026-04-10 09:05:00'),
+(6, 'contact_email', 'lienhe@suvietanhhung.vn', 'type_string', 'contact', 1, '2026-04-10 09:10:00'),
+(7, 'contact_phone', '0901234567', 'type_string', 'contact', 1, '2026-04-10 09:10:00'),
+(8, 'contact_address', 'Số 1 Lê Duẩn, Quận 1, TP. Hồ Chí Minh', 'type_string', 'contact', 1, '2026-04-10 09:10:00'),
+(9, 'social_links', '{"facebook":"https://facebook.com/suvietanhhung","youtube":"https://youtube.com/@suvietanhhung"}', 'type_json', 'contact', 1, '2026-04-10 09:10:00'),
+(10, 'fundraising_bank_account', '{"bank":"Vietcombank","account_number":"0123456789","account_name":"QUY SU VIET ANH HUNG"}', 'type_json', 'fundraising', 1, '2026-04-10 09:15:00');
+
 SET FOREIGN_KEY_CHECKS = 1;
